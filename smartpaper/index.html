@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartPaper – AI Practice Papers for Primary School</title>
+  <meta name="description" content="SmartPaper generates AI-powered Maths and English practice papers for primary school children (Years 2–6), with step-by-step feedback on every wrong answer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f9fafb; color: #1f2937; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 40px;
+      background: rgba(249,250,251,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.05rem; color: #4f46e5; }
+    .nav-back { font-size: 0.85rem; font-weight: 500; color: #6b7280; }
+    .nav-back:hover { color: #4f46e5; }
+    @media (max-width: 600px) { nav { padding: 14px 20px; } }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      padding: 80px 24px 88px; text-align: center;
+    }
+    .hero-emoji { font-size: 64px; margin-bottom: 20px; display: block; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: #fff; margin-bottom: 16px; letter-spacing: -1px; }
+    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.85); max-width: 520px; margin: 0 auto 12px; line-height: 1.7; }
+    .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); max-width: 440px; margin: 0 auto; }
+    .coming-soon {
+      display: inline-block; margin-top: 36px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50px; padding: 10px 28px;
+      font-size: 0.9rem; font-weight: 600; color: #fff;
+    }
+
+    /* FEATURES */
+    .features { padding: 80px 24px; background: #f9fafb; }
+    .features-inner { max-width: 860px; margin: 0 auto; }
+    .features h2 { text-align: center; font-size: 1.6rem; font-weight: 800; color: #111827; margin-bottom: 48px; letter-spacing: -0.3px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .feature-card { background: #fff; border-radius: 16px; padding: 28px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); border: 1px solid #e5e7eb; }
+    .feature-card .icon { font-size: 34px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 8px; }
+    .feature-card p { font-size: 0.88rem; color: #6b7280; line-height: 1.65; }
+
+    /* YEAR GROUPS */
+    .years { background: #eef2ff; padding: 52px 24px; text-align: center; }
+    .years h2 { font-size: 1.25rem; font-weight: 800; color: #4f46e5; margin-bottom: 8px; }
+    .years p { font-size: 0.92rem; color: #6b7280; margin-bottom: 24px; }
+    .year-pills { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .year-pill { background: #fff; border: 2px solid #4f46e5; color: #4f46e5; font-weight: 700; font-size: 0.9rem; padding: 8px 22px; border-radius: 50px; }
+
+    /* PRICING */
+    .pricing { padding: 80px 24px; background: #f9fafb; }
+    .pricing-inner { max-width: 680px; margin: 0 auto; }
+    .pricing h2 { text-align: center; font-size: 1.5rem; font-weight: 800; color: #111827; margin-bottom: 32px; letter-spacing: -0.3px; }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 520px) { .pricing-grid { grid-template-columns: 1fr; } }
+    .plan-free { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 24px; }
+    .plan-premium { background: linear-gradient(135deg, #4f46e5, #7c3aed); border-radius: 16px; padding: 28px 24px; box-shadow: 0 8px 24px rgba(79,70,229,0.3); }
+    .plan-free h3 { font-size: 1rem; font-weight: 800; margin-bottom: 16px; color: #111827; }
+    .plan-premium h3 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; color: #fff; }
+    .plan-premium .plan-tagline { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+    .plan-free ul { list-style: none; font-size: 0.88rem; color: #374151; line-height: 2.2; }
+    .plan-premium ul { list-style: none; font-size: 0.88rem; color: #fff; line-height: 2.2; }
+
+    /* CTA */
+    .cta { background: #111827; padding: 72px 24px; text-align: center; }
+    .cta-inner { max-width: 500px; margin: 0 auto; }
+    .cta .icon { font-size: 48px; margin-bottom: 20px; }
+    .cta h2 { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.3px; }
+    .cta p { font-size: 0.97rem; color: #9ca3af; margin-bottom: 32px; line-height: 1.7; }
+    .cta-btn {
+      display: inline-block; background: #4f46e5; color: #fff;
+      font-weight: 700; font-size: 1rem; padding: 16px 36px;
+      border-radius: 12px; transition: background 0.2s;
+    }
+    .cta-btn:hover { background: #4338ca; }
+    .cta-note { margin-top: 18px; font-size: 0.82rem; color: #6b7280; }
+    .cta-note a { color: #818cf8; }
+
+    /* FOOTER */
+    footer {
+      background: #070709; border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    footer p { font-size: 0.82rem; color: #374151; }
+    footer a { color: #4b5563; font-size: 0.82rem; }
+    footer a:hover { color: #9ca3af; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">📄 SmartPaper</span>
+  <a href="/" class="nav-back">← sagarjilka.com</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-emoji">📄</span>
+  <h1>SmartPaper</h1>
+  <p>AI-powered Maths &amp; English practice papers for primary school children.</p>
+  <p class="hero-sub">Personalised to your child's year group. Step-by-step AI feedback on every wrong answer.</p>
+  <div class="coming-soon">🚀 Coming soon to iOS &amp; Android</div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="features-inner">
+    <h2>Everything your child needs to practise with confidence</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">🧠</div>
+        <h3>AI-Generated Papers</h3>
+        <p>Fresh Maths and English papers tailored to your child's year group (Years 2–6), generated in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">💡</div>
+        <h3>Step-by-Step Feedback</h3>
+        <p>Every wrong answer gets a clear explanation — not just the correct answer, but <em>why</em>, with a worked example.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📈</div>
+        <h3>Progress Tracking</h3>
+        <p>Track scores over time and see exactly which topics need more work. Weak areas are surfaced automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🎯</div>
+        <h3>Adaptive Focus</h3>
+        <p>Opt in to boost weak topics — SmartPaper automatically includes more questions from areas your child struggles with.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⏱️</div>
+        <h3>Timed Mode</h3>
+        <p>Optional timer to build exam confidence and help children practise working under time pressure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">👨‍👩‍👧</div>
+        <h3>Built for Parents</h3>
+        <p>Add multiple children, switch between profiles, and review results together — designed for family use.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YEAR GROUPS -->
+<div class="years">
+  <h2>Covers Years 2 – 6</h2>
+  <p>Aligned to the England primary school curriculum for Maths and English.</p>
+  <div class="year-pills">
+    <span class="year-pill">Year 2</span>
+    <span class="year-pill">Year 3</span>
+    <span class="year-pill">Year 4</span>
+    <span class="year-pill">Year 5</span>
+    <span class="year-pill">Year 6</span>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing">
+  <div class="pricing-inner">
+    <h2>Free to get started</h2>
+    <div class="pricing-grid">
+      <div class="plan-free">
+        <h3>Free</h3>
+        <ul>
+          <li>✅ 3 AI papers per month</li>
+          <li>✅ Maths papers</li>
+          <li>✅ AI feedback on wrong answers</li>
+          <li>✅ Progress tracking</li>
+          <li>✅ 1 child profile</li>
+        </ul>
+      </div>
+      <div class="plan-premium">
+        <h3>Premium</h3>
+        <div class="plan-tagline">Unlimited everything</div>
+        <ul>
+          <li>✅ Unlimited AI papers</li>
+          <li>✅ Maths <strong>&amp; English</strong></li>
+          <li>✅ Unlimited AI feedback</li>
+          <li>✅ Full progress analytics</li>
+          <li>✅ Multiple child profiles</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cta-inner">
+    <div class="icon">📱</div>
+    <h2>Coming soon to iOS &amp; Android</h2>
+    <p>SmartPaper is currently in review on the App Store and Google Play. Drop your email and I'll let you know the moment it launches.</p>
+    <a href="mailto:jilka.labs@gmail.com?subject=SmartPaper – notify me when it launches" class="cta-btn">
+      Notify me when it launches
+    </a>
+    <p class="cta-note">Questions? <a href="mailto:jilka.labs@gmail.com">jilka.labs@gmail.com</a></p>
+  </div>
+</div>
+
+<footer>
+  <p style="color:#4b5563;">© 2026 SmartPaper · Built by <a href="/">Sagar Jilka</a></p>
+  <a href="https://sagarjilka.github.io/smartpaper-privacy/" target="_blank" rel="noopener">Privacy Policy</a>
+</footer>
+
+</body>
+</html>
