@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartPaper — Teacher Dashboard | Solihull Preparatory School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f3f4f6; color: #1f2937; font-size: 14px; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px; position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .logo { font-weight: 900; font-size: 1rem; color: #4f46e5; letter-spacing: -0.3px; }
+    .school-badge {
+      background: #eff6ff; color: #1d4ed8;
+      font-size: 0.75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid #bfdbfe;
+    }
+    .pilot-badge {
+      background: #fef3c7; color: #92400e;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px;
+      border: 1px solid #fcd34d;
+      letter-spacing: 0.3px;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-teacher { font-size: 0.8rem; color: #6b7280; font-weight: 500; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #4f46e5; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem;
+    }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 1.5rem; font-weight: 800; color: #111827; letter-spacing: -0.5px; }
+    .page-header-meta { font-size: 0.85rem; color: #6b7280; margin-top: 4px; }
+    .page-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .class-selector {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid #e5e7eb;
+      border-radius: 10px; padding: 8px 14px;
+      font-size: 0.85rem; font-weight: 600; color: #374151;
+      cursor: pointer;
+    }
+    .class-selector select { border: none; background: none; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: #374151; outline: none; cursor: pointer; }
+
+    /* ── STAT CARDS ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .stat-grid { grid-template-columns: 1fr; } }
+    .stat-card {
+      background: #fff; border-radius: 14px; padding: 20px 22px;
+      border: 1px solid #e5e7eb;
+    }
+    .stat-card-label { font-size: 0.72rem; font-weight: 700; color: #9ca3af; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .stat-card-value { font-size: 2rem; font-weight: 900; color: #111827; letter-spacing: -1px; line-height: 1; }
+    .stat-card-sub { font-size: 0.75rem; color: #6b7280; margin-top: 6px; }
+    .stat-card.green .stat-card-value { color: #059669; }
+    .stat-card.amber .stat-card-value { color: #d97706; }
+    .stat-card.red .stat-card-value { color: #dc2626; }
+    .trend-up { color: #059669; font-size: 0.75rem; font-weight: 700; }
+    .trend-down { color: #dc2626; font-size: 0.75rem; font-weight: 700; }
+
+    /* ── ATTENTION BANNER ── */
+    .attention-banner {
+      background: #fff7ed; border: 1px solid #fed7aa;
+      border-radius: 14px; padding: 18px 22px; margin-bottom: 28px;
+    }
+    .attention-banner h3 { font-size: 0.85rem; font-weight: 800; color: #9a3412; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .attention-pupils { display: flex; gap: 12px; flex-wrap: wrap; }
+    .attention-pill {
+      background: #fff; border: 1px solid #fed7aa; border-radius: 10px;
+      padding: 8px 14px; display: flex; align-items: center; gap: 10px;
+      cursor: pointer; transition: box-shadow 0.15s;
+    }
+    .attention-pill:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .attention-pill-name { font-weight: 700; font-size: 0.8rem; color: #111827; }
+    .attention-pill-reason { font-size: 0.72rem; color: #9a3412; font-weight: 600; }
+    .attention-mini-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.7rem; color: #fff; flex-shrink: 0;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title { font-size: 0.9rem; font-weight: 800; color: #374151; margin-bottom: 14px; letter-spacing: -0.2px; }
+
+    /* ── TWO-COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── STUDENT TABLE ── */
+    .card { background: #fff; border-radius: 14px; border: 1px solid #e5e7eb; overflow: hidden; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; }
+    .card-header-title { font-size: 0.85rem; font-weight: 800; color: #111827; }
+    .search-input {
+      border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 6px 12px; font-size: 0.8rem; font-family: inherit; color: #374151;
+      outline: none; width: 180px;
+    }
+    .search-input:focus { border-color: #4f46e5; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left; font-size: 0.7rem; font-weight: 700; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 10px 16px; border-bottom: 1px solid #f3f4f6;
+      background: #fafafa;
+    }
+    tbody tr { border-bottom: 1px solid #f9fafb; cursor: pointer; transition: background 0.1s; }
+    tbody tr:hover { background: #f9fafb; }
+    tbody tr.selected { background: #eff6ff; }
+    tbody tr:last-child { border-bottom: none; }
+    td { padding: 11px 16px; vertical-align: middle; }
+
+    .student-name-cell { display: flex; align-items: center; gap: 10px; }
+    .mini-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.75rem; color: #fff; flex-shrink: 0;
+    }
+    .student-name { font-weight: 700; font-size: 0.82rem; color: #111827; }
+    .student-year { font-size: 0.7rem; color: #9ca3af; }
+
+    .score-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 24px; border-radius: 6px;
+      font-size: 0.8rem; font-weight: 800;
+    }
+    .score-badge.high { background: #d1fae5; color: #065f46; }
+    .score-badge.mid { background: #fef9c3; color: #713f12; }
+    .score-badge.low { background: #fee2e2; color: #991b1b; }
+
+    .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
+    .spark-bar { width: 5px; border-radius: 2px; background: #4f46e5; opacity: 0.7; transition: opacity 0.2s; }
+    .spark-bar:last-child { opacity: 1; }
+    .spark-bar.down { background: #dc2626; }
+    .spark-bar.up { background: #059669; }
+
+    .streak-chip {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #fff7ed; border-radius: 6px; padding: 2px 7px;
+      font-size: 0.72rem; font-weight: 700; color: #c2410c;
+    }
+
+    .weak-chip {
+      display: inline-flex; align-items: center;
+      background: #fef2f2; color: #dc2626;
+      font-size: 0.65rem; font-weight: 700;
+      padding: 2px 6px; border-radius: 5px; margin: 1px;
+      border: 1px solid #fecaca;
+    }
+    .weak-chips { display: flex; flex-wrap: wrap; max-width: 200px; }
+
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-dot.active { background: #10b981; }
+    .status-dot.inactive { background: #f59e0b; }
+    .status-dot.new { background: #e5e7eb; }
+
+    /* ── RIGHT PANEL ── */
+    .panel-card { background: #fff; border-radius: 14px; border: 1px solid #e5e7eb; padding: 20px; }
+    .panel-title { font-size: 0.85rem; font-weight: 800; color: #111827; margin-bottom: 16px; }
+
+    /* Mastery heatmap */
+    .topic-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .topic-label { font-size: 0.72rem; color: #374151; font-weight: 600; width: 110px; flex-shrink: 0; }
+    .topic-bar-track { flex: 1; background: #f3f4f6; border-radius: 6px; height: 10px; overflow: hidden; }
+    .topic-bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s; }
+    .topic-pct { font-size: 0.7rem; font-weight: 700; width: 34px; text-align: right; flex-shrink: 0; }
+
+    /* ── CLASS TOPIC HEAT ── */
+    .heat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .heat-cell {
+      border-radius: 10px; padding: 10px 12px; text-align: center;
+    }
+    .heat-cell-topic { font-size: 0.65rem; font-weight: 700; color: #374151; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .heat-cell-pct { font-size: 1.1rem; font-weight: 900; }
+    .heat-cell.mastered { background: #d1fae5; }
+    .heat-cell.mastered .heat-cell-pct { color: #065f46; }
+    .heat-cell.secure { background: #e0f2fe; }
+    .heat-cell.secure .heat-cell-pct { color: #0369a1; }
+    .heat-cell.developing { background: #fef9c3; }
+    .heat-cell.developing .heat-cell-pct { color: #854d0e; }
+    .heat-cell.struggling { background: #fee2e2; }
+    .heat-cell.struggling .heat-cell-pct { color: #991b1b; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 18px; width: 90%; max-width: 600px;
+      max-height: 88vh; overflow-y: auto;
+      padding: 28px; position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: #f3f4f6; border: none; font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #6b7280;
+    }
+    .modal-close:hover { background: #e5e7eb; }
+    .modal-student-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+    .modal-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #fff; }
+    .modal-name { font-size: 1.1rem; font-weight: 800; color: #111827; }
+    .modal-meta { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
+    .modal-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .modal-stat { background: #f9fafb; border-radius: 10px; padding: 12px; text-align: center; }
+    .modal-stat-val { font-size: 1.3rem; font-weight: 900; color: #111827; }
+    .modal-stat-label { font-size: 0.68rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 3px; }
+    .modal-section-title { font-size: 0.78rem; font-weight: 800; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; margin-top: 20px; }
+    .modal-topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .modal-topic-label { font-size: 0.78rem; color: #374151; font-weight: 600; width: 130px; flex-shrink: 0; }
+    .modal-topic-track { flex: 1; background: #f3f4f6; border-radius: 6px; height: 12px; overflow: hidden; }
+    .modal-topic-fill { height: 100%; border-radius: 6px; }
+    .modal-topic-pct { font-size: 0.75rem; font-weight: 800; width: 36px; text-align: right; }
+    .modal-topic-bucket { font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; }
+    .bucket-mastered { background: #d1fae5; color: #065f46; }
+    .bucket-secure { background: #e0f2fe; color: #0369a1; }
+    .bucket-developing { background: #fef9c3; color: #854d0e; }
+    .bucket-new { background: #f3f4f6; color: #6b7280; }
+
+    .history-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+    .history-item:last-child { border-bottom: none; }
+    .history-date { font-size: 0.75rem; color: #6b7280; font-weight: 500; }
+    .history-score { font-size: 0.85rem; font-weight: 800; }
+    .history-qs { font-size: 0.72rem; color: #9ca3af; }
+
+    /* ── FOOTER ── */
+    .dash-footer { text-align: center; font-size: 0.72rem; color: #9ca3af; margin-top: 40px; }
+    .dash-footer a { color: #4f46e5; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 4px; background: #f3f4f6; border-radius: 10px; padding: 4px; margin-bottom: 20px; width: fit-content; }
+    .tab { padding: 6px 16px; border-radius: 7px; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: inherit; }
+    .tab.active { background: #fff; color: #4f46e5; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+    .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .tag-maths { background: #ede9fe; color: #5b21b6; }
+    .tag-english { background: #fce7f3; color: #9d174d; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">📄 SmartPaper</span>
+    <span class="school-badge">Solihull Preparatory School</span>
+    <span class="pilot-badge">🧪 PILOT</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-teacher">Ms. Thompson</span>
+    <div class="avatar">MT</div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <h1>Class I2A — Teacher Dashboard</h1>
+        <div class="page-header-meta">Year 2 · 22 pupils · Week ending 30 May 2026 · Maths</div>
+      </div>
+      <div class="class-selector">
+        <span>📋</span>
+        <select>
+          <option>Class I2A</option>
+          <option>Class I2B</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-card-label">Class Average Score</div>
+      <div class="stat-card-value">71</div>
+      <div class="stat-card-sub"><span class="trend-up">▲ +4 pts</span> vs last week</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-card-label">Practised this week</div>
+      <div class="stat-card-value">18</div>
+      <div class="stat-card-sub">of 22 pupils · <strong>82%</strong> participation</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-card-label">Need attention</div>
+      <div class="stat-card-value">4</div>
+      <div class="stat-card-sub">Score &lt; 55 or not active this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Questions answered</div>
+      <div class="stat-card-value">1,240</div>
+      <div class="stat-card-sub">avg 56 per active pupil this week</div>
+    </div>
+  </div>
+
+  <!-- ATTENTION BANNER -->
+  <div class="attention-banner">
+    <h3>⚠️ Pupils needing attention this week</h3>
+    <div class="attention-pupils" id="attention-pupils">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- TWO COL -->
+  <div class="two-col">
+
+    <!-- STUDENT TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-title">All pupils — click any row to see details</span>
+        <input class="search-input" type="text" placeholder="🔍  Search pupil..." id="search-input" />
+      </div>
+      <table id="student-table">
+        <thead>
+          <tr>
+            <th>Pupil</th>
+            <th>Score</th>
+            <th>Trend (6 wks)</th>
+            <th>Streak</th>
+            <th>Weak topics</th>
+            <th>Last active</th>
+          </tr>
+        </thead>
+        <tbody id="student-tbody">
+          <!-- filled by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- CLASS TOPIC HEAT -->
+      <div class="panel-card">
+        <div class="panel-title">📊 Class topic accuracy</div>
+        <div class="heat-grid" id="heat-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="panel-card">
+        <div class="panel-title">🕐 Recent activity</div>
+        <div id="recent-activity">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- STUDENT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="dash-footer">
+  SmartPaper Pilot · <a href="https://sagarjilka.com/smartpaper">sagarjilka.com/smartpaper</a> · Data shown is illustrative for pilot demonstration purposes
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const COLORS = ['#4f46e5','#7c3aed','#db2777','#059669','#d97706','#0284c7','#9333ea','#16a34a','#dc2626','#2563eb','#ca8a04','#0891b2'];
+
+const TOPICS = [
+  { tag: 'addition',           label: 'Addition',         classAcc: 82 },
+  { tag: 'subtraction',        label: 'Subtraction',      classAcc: 74 },
+  { tag: 'multiplication',     label: 'Multiplication',   classAcc: 61 },
+  { tag: 'place_value',        label: 'Place Value',      classAcc: 88 },
+  { tag: 'money',              label: 'Money',            classAcc: 56 },
+  { tag: 'time',               label: 'Time',             classAcc: 49 },
+  { tag: 'fractions',          label: 'Fractions',        classAcc: 67 },
+  { tag: 'measurement',        label: 'Measurement',      classAcc: 71 },
+  { tag: 'shapes',             label: '2D/3D Shapes',     classAcc: 79 },
+];
+
+const STUDENTS = [
+  { id:1,  name:'Aaliyah Patel',     score:88, trend:[70,74,78,80,85,88], streak:9,  lastActive:'Today',     weakTopics:['time'],                    color:'#4f46e5', history:[{date:'23 May',score:85,max:10},{date:'19 May',score:8,max:10},{date:'14 May',score:7,max:10}] },
+  { id:2,  name:'Benjamin Clarke',   score:41, trend:[55,51,48,44,40,41], streak:0,  lastActive:'11 days ago', weakTopics:['multiplication','time','money'], color:'#dc2626', history:[{date:'21 May',score:4,max:10},{date:'12 May',score:5,max:10}] },
+  { id:3,  name:'Chloe Whitmore',    score:76, trend:[68,70,72,73,75,76], streak:5,  lastActive:'Yesterday', weakTopics:['fractions'],               color:'#059669', history:[{date:'29 May',score:8,max:10},{date:'22 May',score:7,max:10}] },
+  { id:4,  name:'Dylan Osei',        score:63, trend:[58,60,62,61,64,63], streak:3,  lastActive:'Today',     weakTopics:['money','time'],            color:'#d97706', history:[{date:'30 May',score:6,max:10},{date:'26 May',score:7,max:10}] },
+  { id:5,  name:'Emma Thornton',     score:91, trend:[80,82,85,87,89,91], streak:14, lastActive:'Today',     weakTopics:[],                          color:'#7c3aed', history:[{date:'30 May',score:9,max:10},{date:'27 May',score:9,max:10}] },
+  { id:6,  name:'Freddie Adeyemi',   score:55, trend:[60,57,54,56,53,55], streak:2,  lastActive:'2 days ago',weakTopics:['multiplication','fractions'], color:'#db2777', history:[{date:'28 May',score:5,max:10},{date:'23 May',score:6,max:10}] },
+  { id:7,  name:'Grace Liu',         score:84, trend:[75,77,79,81,83,84], streak:7,  lastActive:'Today',     weakTopics:['time'],                    color:'#0284c7', history:[{date:'30 May',score:8,max:10},{date:'26 May',score:8,max:10}] },
+  { id:8,  name:'Harry Benson',      score:47, trend:[52,50,48,46,45,47], streak:1,  lastActive:'5 days ago',weakTopics:['time','measurement'],      color:'#9333ea', history:[{date:'25 May',score:5,max:10},{date:'20 May',score:4,max:10}] },
+  { id:9,  name:'Isla Mackenzie',    score:79, trend:[72,74,76,77,78,79], streak:6,  lastActive:'Today',     weakTopics:['money'],                   color:'#16a34a', history:[{date:'30 May',score:8,max:10},{date:'27 May',score:7,max:10}] },
+  { id:10, name:'Jasper Ramirez',    score:68, trend:[63,65,66,67,68,68], streak:4,  lastActive:'Yesterday', weakTopics:['fractions','time'],        color:'#ca8a04', history:[{date:'29 May',score:7,max:10},{date:'25 May',score:6,max:10}] },
+  { id:11, name:'Keira Nwosu',       score:93, trend:[84,86,88,90,92,93], streak:19, lastActive:'Today',     weakTopics:[],                          color:'#0891b2', history:[{date:'30 May',score:9,max:10},{date:'28 May',score:9,max:10}] },
+  { id:12, name:'Luca Ferreira',     score:72, trend:[65,67,69,70,71,72], streak:5,  lastActive:'Today',     weakTopics:['multiplication'],          color:'#4f46e5', history:[{date:'30 May',score:7,max:10},{date:'26 May',score:7,max:10}] },
+  { id:13, name:'Mia Johansson',     score:38, trend:[50,46,43,40,37,38], streak:0,  lastActive:'14 days ago', weakTopics:['time','money','multiplication','fractions'], color:'#dc2626', history:[{date:'16 May',score:4,max:10}] },
+  { id:14, name:'Noah Campbell',     score:81, trend:[73,75,77,79,80,81], streak:8,  lastActive:'Today',     weakTopics:['fractions'],               color:'#7c3aed', history:[{date:'30 May',score:8,max:10},{date:'27 May',score:8,max:10}] },
+  { id:15, name:'Olivia Sharma',     score:66, trend:[61,63,64,65,65,66], streak:3,  lastActive:'Yesterday', weakTopics:['time','shapes'],           color:'#059669', history:[{date:'29 May',score:7,max:10},{date:'24 May',score:6,max:10}] },
+  { id:16, name:'Patrick O\'Brien',  score:77, trend:[70,71,73,74,76,77], streak:6,  lastActive:'Today',     weakTopics:['money'],                   color:'#d97706', history:[{date:'30 May',score:8,max:10},{date:'26 May',score:7,max:10}] },
+  { id:17, name:'Quinn Bakker',      score:85, trend:[77,79,80,82,84,85], streak:10, lastActive:'Today',     weakTopics:[],                          color:'#db2777', history:[{date:'30 May',score:9,max:10},{date:'27 May',score:8,max:10}] },
+  { id:18, name:'Ruby Adebayo',      score:59, trend:[57,58,59,58,60,59], streak:2,  lastActive:'2 days ago',weakTopics:['multiplication','time'],   color:'#0284c7', history:[{date:'28 May',score:6,max:10},{date:'23 May',score:6,max:10}] },
+  { id:19, name:'Samuel Green',      score:74, trend:[67,69,71,72,73,74], streak:5,  lastActive:'Today',     weakTopics:['fractions'],               color:'#9333ea', history:[{date:'30 May',score:7,max:10},{date:'26 May',score:7,max:10}] },
+  { id:20, name:'Talia Okonkwo',     score:89, trend:[80,83,85,86,88,89], streak:12, lastActive:'Today',     weakTopics:[],                          color:'#16a34a', history:[{date:'30 May',score:9,max:10},{date:'28 May',score:8,max:10}] },
+  { id:21, name:'Umar Hussain',      score:61, trend:[59,60,61,60,62,61], streak:3,  lastActive:'Yesterday', weakTopics:['money','measurement'],     color:'#ca8a04', history:[{date:'29 May',score:6,max:10},{date:'24 May',score:6,max:10}] },
+  { id:22, name:'Violet Tran',       score:82, trend:[74,76,78,80,81,82], streak:7,  lastActive:'Today',     weakTopics:['time'],                    color:'#0891b2', history:[{date:'30 May',score:8,max:10},{date:'27 May',score:8,max:10}] },
+];
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+function scoreClass(s) {
+  if (s >= 75) return 'high';
+  if (s >= 55) return 'mid';
+  return 'low';
+}
+
+function topicLabel(tag) {
+  const t = TOPICS.find(t => t.tag === tag);
+  return t ? t.label : tag;
+}
+
+function heatClass(acc) {
+  if (acc >= 80) return 'mastered';
+  if (acc >= 65) return 'secure';
+  if (acc >= 50) return 'developing';
+  return 'struggling';
+}
+
+function barColor(acc) {
+  if (acc >= 80) return '#10b981';
+  if (acc >= 65) return '#3b82f6';
+  if (acc >= 50) return '#f59e0b';
+  return '#ef4444';
+}
+
+function sparkHTML(trend, score) {
+  const maxV = Math.max(...trend);
+  const minV = Math.min(...trend);
+  const range = maxV - minV || 1;
+  const up = trend[trend.length-1] >= trend[trend.length-2];
+  return trend.map((v, i) => {
+    const h = Math.round(((v - minV) / range) * 18 + 4);
+    const cls = i === trend.length-1 ? (up ? 'up' : 'down') : '';
+    return `<div class="spark-bar ${cls}" style="height:${h}px"></div>`;
+  }).join('');
+}
+
+// ─── RENDER ATTENTION BANNER ─────────────────────────────────────────────────
+
+function renderAttention() {
+  const needsAttention = STUDENTS.filter(s => s.score < 55 || s.lastActive.includes('days ago') && parseInt(s.lastActive) >= 5 || s.lastActive.includes('14 days'));
+  const el = document.getElementById('attention-pupils');
+  el.innerHTML = needsAttention.map(s => `
+    <div class="attention-pill" onclick="openModal(${s.id})">
+      <div class="attention-mini-avatar" style="background:${s.color}">${s.name[0]}</div>
+      <div>
+        <div class="attention-pill-name">${s.name}</div>
+        <div class="attention-pill-reason">${s.score < 55 ? `Score: ${s.score}` : ''}${s.score < 55 && (s.lastActive.includes('days') || s.lastActive.includes('14')) ? ' · ' : ''}${(s.lastActive.includes('days ago') && parseInt(s.lastActive) >= 5) || s.lastActive.includes('14 days') ? 'Not active: ' + s.lastActive : ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── RENDER HEAT GRID ─────────────────────────────────────────────────────────
+
+function renderHeat() {
+  const el = document.getElementById('heat-grid');
+  el.innerHTML = TOPICS.map(t => `
+    <div class="heat-cell ${heatClass(t.classAcc)}">
+      <div class="heat-cell-topic">${t.label}</div>
+      <div class="heat-cell-pct">${t.classAcc}%</div>
+    </div>
+  `).join('');
+}
+
+// ─── RENDER RECENT ACTIVITY ───────────────────────────────────────────────────
+
+function renderActivity() {
+  const recent = [
+    { name:'Keira Nwosu',     time:'10 mins ago', score:9, max:10, color:'#0891b2' },
+    { name:'Emma Thornton',   time:'23 mins ago', score:9, max:10, color:'#7c3aed' },
+    { name:'Talia Okonkwo',   time:'1 hr ago',    score:9, max:10, color:'#16a34a' },
+    { name:'Aaliyah Patel',   time:'2 hrs ago',   score:8, max:10, color:'#4f46e5' },
+    { name:'Grace Liu',       time:'2 hrs ago',   score:8, max:10, color:'#0284c7' },
+    { name:'Noah Campbell',   time:'3 hrs ago',   score:8, max:10, color:'#7c3aed' },
+  ];
+  const el = document.getElementById('recent-activity');
+  el.innerHTML = recent.map(r => `
+    <div class="history-item">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="mini-avatar" style="background:${r.color};width:24px;height:24px;font-size:0.65rem">${r.name[0]}</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#111827">${r.name}</div>
+          <div style="font-size:0.68rem;color:#9ca3af">${r.time}</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="score-badge ${r.score/r.max>=0.75?'high':r.score/r.max>=0.55?'mid':'low'}">${r.score}/${r.max}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── RENDER TABLE ─────────────────────────────────────────────────────────────
+
+let allStudents = [...STUDENTS];
+let searchQuery = '';
+
+function renderTable(students) {
+  const tbody = document.getElementById('student-tbody');
+  tbody.innerHTML = students.map(s => `
+    <tr onclick="openModal(${s.id})" id="row-${s.id}">
+      <td>
+        <div class="student-name-cell">
+          <div class="mini-avatar" style="background:${s.color}">${s.name[0]}</div>
+          <div>
+            <div class="student-name">${s.name}</div>
+            <div class="student-year">Year 2</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="score-badge ${scoreClass(s.score)}">${s.score}</span></td>
+      <td>
+        <div class="sparkline">${sparkHTML(s.trend, s.score)}</div>
+      </td>
+      <td>
+        ${s.streak > 0
+          ? `<span class="streak-chip">🔥 ${s.streak}d</span>`
+          : `<span style="font-size:0.72rem;color:#9ca3af">—</span>`}
+      </td>
+      <td>
+        <div class="weak-chips">
+          ${s.weakTopics.length === 0
+            ? '<span style="font-size:0.72rem;color:#10b981;font-weight:700">✓ All good</span>'
+            : s.weakTopics.slice(0,3).map(t => `<span class="weak-chip">${topicLabel(t)}</span>`).join('')}
+        </div>
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span class="status-dot ${s.lastActive==='Today'?'active':s.lastActive==='Yesterday'?'inactive':'new'}"></span>
+          <span style="font-size:0.75rem;color:#6b7280">${s.lastActive}</span>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('search-input').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  const filtered = STUDENTS.filter(s => s.name.toLowerCase().includes(q));
+  renderTable(filtered);
+});
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+
+function bucketLabel(acc) {
+  if (acc >= 80) return ['mastered', 'Mastered'];
+  if (acc >= 65) return ['secure', 'Secure'];
+  if (acc >= 50) return ['developing', 'Developing'];
+  return ['new', 'Needs practice'];
+}
+
+function openModal(id) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s) return;
+
+  // Build per-student topic accuracy (randomised around weak topics)
+  const studentTopics = TOPICS.map(t => {
+    let acc;
+    if (s.weakTopics.includes(t.tag)) {
+      acc = Math.round(30 + Math.random() * 25);
+    } else {
+      acc = Math.round(65 + Math.random() * 30);
+    }
+    return { ...t, studentAcc: acc };
+  });
+
+  const papersCompleted = s.history.length + Math.floor(Math.random() * 3) + 1;
+  const [bClass, bLabel] = bucketLabel(s.score);
+
+  const html = `
+    <div class="modal-student-header">
+      <div class="modal-avatar" style="background:${s.color}">${s.name[0]}</div>
+      <div>
+        <div class="modal-name">${s.name}</div>
+        <div class="modal-meta">Year 2 · Class I2A · Solihull Preparatory School</div>
+      </div>
+    </div>
+
+    <div class="modal-stats-row">
+      <div class="modal-stat">
+        <div class="modal-stat-val">${s.score}</div>
+        <div class="modal-stat-label">SmartPaper Score</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-val">${s.streak > 0 ? '🔥 ' + s.streak + 'd' : '—'}</div>
+        <div class="modal-stat-label">Current Streak</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-val">${papersCompleted}</div>
+        <div class="modal-stat-label">Papers done</div>
+      </div>
+    </div>
+
+    <div class="modal-section-title">Topic mastery breakdown</div>
+    ${studentTopics.map(t => {
+      const [bClass2, bLabel2] = bucketLabel(t.studentAcc);
+      return `
+        <div class="modal-topic-row">
+          <div class="modal-topic-label">${t.label}</div>
+          <div class="modal-topic-track">
+            <div class="modal-topic-fill" style="width:${t.studentAcc}%;background:${barColor(t.studentAcc)}"></div>
+          </div>
+          <div class="modal-topic-pct" style="color:${barColor(t.studentAcc)}">${t.studentAcc}%</div>
+          <span class="modal-topic-bucket bucket-${bClass2}">${bLabel2}</span>
+        </div>
+      `;
+    }).join('')}
+
+    <div class="modal-section-title">Recent paper history</div>
+    ${s.history.map(h => `
+      <div class="history-item">
+        <div class="history-date">${h.date}</div>
+        <div>
+          <span class="history-qs">${h.max} questions · </span>
+          <span class="history-score" style="color:${barColor((h.score/h.max)*100)}">${h.score}/${h.max} (${Math.round(h.score/h.max*100)}%)</span>
+        </div>
+      </div>
+    `).join('')}
+
+    ${s.weakTopics.length > 0 ? `
+      <div class="modal-section-title">SmartPaper recommendation</div>
+      <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;font-size:0.8rem;color:#78350f;line-height:1.6">
+        <strong>${s.name.split(' ')[0]}</strong>'s next paper will automatically include extra practice on
+        <strong>${s.weakTopics.map(topicLabel).join(', ')}</strong> — the topics where they need the most support.
+      </div>
+    ` : `
+      <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:10px;padding:12px 14px;font-size:0.8rem;color:#065f46;line-height:1.6">
+        ✅ <strong>${s.name.split(' ')[0]}</strong> is performing well across all topics. SmartPaper will continue to vary topics to maintain broad coverage.
+      </div>
+    `}
+  `;
+
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+
+renderAttention();
+renderHeat();
+renderActivity();
+renderTable(STUDENTS);
+</script>
+</body>
+</html>
