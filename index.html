@@ -1,417 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sagar Jilka – Data Scientist, Researcher & Builder</title>
-  <meta name="description" content="Sagar Jilka – PhD Neuroscientist, Data Scientist, Assistant Professor at University of Warwick, and founder of SmartPaper." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0f; color: #e2e8f0; line-height: 1.6; }
-    a { color: inherit; text-decoration: none; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sagar Jilka — Data Scientist · Neuroscientist · Builder</title>
+<meta name="description" content="Dr Sagar Jilka — PhD Neuroscientist, Data Scientist, Assistant Professor at the University of Warwick, and founder of SmartPaper. Digital health, machine learning, and AI products." />
+<meta name="theme-color" content="#07070c" />
+<meta property="og:title" content="Sagar Jilka — Data Scientist · Neuroscientist · Builder" />
+<meta property="og:description" content="Digital health, machine learning, and AI products — built on 15+ years across research, industry and startups." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://sagarjilka.com" />
+<link rel="icon" href="icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#07070c; --bg2:#0b0b14; --panel:#0e0e18;
+    --ink:#f4f5fb; --mut:#9aa0b4; --faint:#5b6072; --line:rgba(255,255,255,.08);
+    --iris:#6f6bff; --cyan:#3ee0d0; --violet:#a78bfa; --amber:#ffb877;
+    --grad:linear-gradient(115deg,#6f6bff 0%,#7c5cff 40%,#3ee0d0 100%);
+    --maxw:1180px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(111,107,255,.35);color:#fff}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+  .serif{font-family:'Fraunces',serif;font-weight:500}
 
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 40px;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .nav-logo { font-weight: 800; font-size: 1.1rem; color: #fff; letter-spacing: -0.3px; }
-    .nav-links { display: flex; gap: 32px; }
-    .nav-links a { font-size: 0.9rem; font-weight: 500; color: #94a3b8; transition: color 0.2s; }
-    .nav-links a:hover { color: #fff; }
-    @media (max-width: 600px) {
-      nav { padding: 16px 20px; }
-      .nav-links { gap: 20px; }
-      .nav-links a { font-size: 0.82rem; }
-    }
+  .grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 120px 24px 80px;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 70%);
-      text-align: center;
-    }
-    .hero-inner { max-width: 760px; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
-      border-radius: 50px; padding: 6px 16px; margin-bottom: 32px;
-      font-size: 0.82rem; font-weight: 600; color: #818cf8;
-    }
-    .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 900; color: #fff;
-      line-height: 1.08; letter-spacing: -1.5px;
-      margin-bottom: 24px;
-    }
-    .hero h1 span { color: #818cf8; }
-    .hero p {
-      font-size: 1.15rem; color: #94a3b8; max-width: 580px;
-      margin: 0 auto 40px; line-height: 1.75;
-    }
-    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-    .btn-primary {
-      background: #6366f1; color: #fff; font-weight: 700; font-size: 0.95rem;
-      padding: 14px 28px; border-radius: 10px; transition: background 0.2s, transform 0.15s;
-    }
-    .btn-primary:hover { background: #4f46e5; transform: translateY(-1px); }
-    .btn-secondary {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-      color: #e2e8f0; font-weight: 600; font-size: 0.95rem;
-      padding: 14px 28px; border-radius: 10px; transition: background 0.2s;
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:space-between;align-items:center;
+    padding:16px clamp(20px,4vw,44px);transition:background .4s,border-color .4s,padding .4s;border-bottom:1px solid transparent}
+  nav.scrolled{background:rgba(7,7,12,.72);backdrop-filter:blur(14px);border-color:var(--line);padding-top:12px;padding-bottom:12px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.02em;font-size:1.02rem}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--grad);box-shadow:0 0 16px rgba(111,107,255,.7)}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links a{font-size:.86rem;font-weight:500;color:var(--mut);transition:color .2s;position:relative}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1px;background:var(--cyan);transition:width .3s}
+  .nav-links a:hover{color:var(--ink)}.nav-links a:hover::after{width:100%}
+  .nav-cta{border:1px solid var(--line);padding:8px 16px;border-radius:100px;color:var(--ink)!important;background:rgba(255,255,255,.03);transition:border-color .3s,background .3s}
+  .nav-cta:hover{border-color:var(--iris);background:rgba(111,107,255,.12)}
+  .nav-cta::after{display:none}
+  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
 
-    /* SECTIONS */
-    section { padding: 96px 24px; }
-    .section-inner { max-width: 900px; margin: 0 auto; }
-    .section-label {
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      color: #6366f1; margin-bottom: 12px;
-    }
-    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 16px; }
-    .section-sub { font-size: 1rem; color: #64748b; max-width: 560px; line-height: 1.7; }
+  .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+  #neural{position:absolute;inset:0;z-index:0}
+  .hero-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(120% 90% at 78% 20%,rgba(111,107,255,.16),transparent 55%),
+      radial-gradient(90% 70% at 10% 90%,rgba(62,224,208,.10),transparent 60%),
+      linear-gradient(180deg,rgba(7,7,12,.2),rgba(7,7,12,.72) 78%,var(--bg))}
+  .hero .wrap{position:relative;z-index:3}
+  .hero-inner{max-width:920px}
+  .hero h1{font-weight:900;letter-spacing:-.04em;line-height:.96;font-size:clamp(2.9rem,8.4vw,6.6rem);margin:22px 0 6px}
+  .hero h1 .tint{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero h1 .serif{font-weight:500;letter-spacing:-.02em}
+  .hero-role{font-size:clamp(1.05rem,2.4vw,1.5rem);color:var(--mut);font-weight:500;max-width:640px;margin-top:20px}
+  .hero-role b{color:var(--ink);font-weight:600}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:38px}
+  .btn{position:relative;display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:.92rem;padding:14px 24px;border-radius:100px;transition:transform .25s,box-shadow .25s;will-change:transform}
+  .btn-primary{background:var(--grad);color:#0a0a12;box-shadow:0 10px 30px -8px rgba(111,107,255,.55)}
+  .btn-primary:hover{box-shadow:0 16px 44px -8px rgba(111,107,255,.7)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.02)}
+  .btn-ghost:hover{border-color:var(--iris)}
+  .scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--faint);font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.2em}
+  .scroll-cue .bar{width:1px;height:42px;background:linear-gradient(var(--cyan),transparent);animation:cue 2.2s ease-in-out infinite}
+  @keyframes cue{0%,100%{opacity:.25;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
 
-    /* ABOUT */
-    .about { background: #0d0d14; }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: start; }
-    @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
-    .about-text p { font-size: 0.97rem; color: #94a3b8; line-height: 1.85; margin-bottom: 16px; }
-    .about-text p:last-child { margin-bottom: 0; }
-    .about-text strong { color: #e2e8f0; }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-    .tag {
-      background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-      color: #a5b4fc; font-size: 0.8rem; font-weight: 600;
-      padding: 5px 12px; border-radius: 6px;
-    }
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .stat-card {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px; padding: 20px;
-    }
-    .stat-card .num { font-size: 1.8rem; font-weight: 900; color: #818cf8; letter-spacing: -1px; }
-    .stat-card .label { font-size: 0.82rem; color: #64748b; margin-top: 4px; line-height: 1.4; }
+  .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;overflow:hidden;white-space:nowrap;background:var(--bg2)}
+  .marquee .track{display:inline-flex;gap:46px;animation:scroll 34s linear infinite;will-change:transform}
+  .marquee span{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--faint);letter-spacing:.05em;display:inline-flex;align-items:center;gap:46px}
+  .marquee span::after{content:"◆";color:var(--iris);font-size:.6rem}
+  @keyframes scroll{to{transform:translateX(-50%)}}
 
-    /* CAREER */
-    .career { background: #0a0a0f; }
-    .timeline { margin-top: 48px; display: flex; flex-direction: column; gap: 0; }
-    .tl-item { display: grid; grid-template-columns: 180px 1fr; gap: 32px; padding-bottom: 40px; position: relative; }
-    .tl-item::before { content: ''; position: absolute; left: 179px; top: 8px; bottom: 0; width: 1px; background: rgba(255,255,255,0.07); }
-    .tl-item:last-child::before { display: none; }
-    @media (max-width: 640px) {
-      .tl-item { grid-template-columns: 1fr; gap: 6px; }
-      .tl-item::before { display: none; }
-      .tl-date { font-size: 0.78rem; }
-    }
-    .tl-dot { position: absolute; left: 173px; top: 7px; width: 13px; height: 13px; border-radius: 50%; background: #6366f1; border: 2px solid #0a0a0f; box-shadow: 0 0 0 3px rgba(99,102,241,0.3); }
-    @media (max-width: 640px) { .tl-dot { display: none; } }
-    .tl-date { font-size: 0.82rem; color: #475569; font-weight: 600; padding-top: 4px; text-align: right; padding-right: 28px; }
-    .tl-content h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
-    .tl-content .org { font-size: 0.88rem; color: #6366f1; font-weight: 600; margin-bottom: 8px; }
-    .tl-content p { font-size: 0.88rem; color: #64748b; line-height: 1.7; }
+  section{position:relative;padding:clamp(88px,12vw,150px) 0}
+  .sec-head{max-width:720px;margin-bottom:56px}
+  .sec-head h2{font-size:clamp(1.9rem,4.4vw,3.1rem);font-weight:800;letter-spacing:-.03em;line-height:1.06;margin-top:16px}
+  .sec-head p{color:var(--mut);font-size:1.05rem;margin-top:16px;max-width:560px}
+  .reveal{opacity:0;transform:translateY(28px)}
 
-    /* PROJECTS */
-    .projects { background: #0d0d14; }
-    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 48px; }
-    .project-card {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px; padding: 28px; transition: border-color 0.2s, transform 0.2s;
-    }
-    .project-card:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
-    .project-card .icon { font-size: 32px; margin-bottom: 16px; }
-    .project-card h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
-    .project-card p { font-size: 0.88rem; color: #64748b; line-height: 1.65; margin-bottom: 16px; }
-    .project-link { font-size: 0.82rem; font-weight: 600; color: #818cf8; }
-    .project-link:hover { color: #a5b4fc; }
+  .about-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:56px;align-items:start}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:40px}}
+  .about-copy p{color:#c3c7d6;font-size:1.06rem;margin-bottom:20px}
+  .about-copy p b{color:var(--ink);font-weight:600}
+  .stat-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),rgba(14,14,24,.4));border-radius:20px;padding:26px;position:relative;overflow:hidden}
+  .stat-card+.stat-card{margin-top:16px}
+  .stat-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad);opacity:.9}
+  .stat-num{font-size:2.4rem;font-weight:900;letter-spacing:-.03em;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat-lbl{color:var(--mut);font-size:.92rem;margin-top:8px;max-width:260px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--mut);border:1px solid var(--line);padding:7px 13px;border-radius:100px;background:rgba(255,255,255,.02);transition:border-color .25s,color .25s,transform .25s}
+  .chip:hover{border-color:var(--iris);color:var(--ink);transform:translateY(-2px)}
 
-    /* PUBLICATIONS */
-    .publications { background: #0a0a0f; }
-    .pub-list { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
-    .pub-item {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px; padding: 20px 24px;
-    }
-    .pub-item h4 { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; line-height: 1.5; }
-    .pub-item .pub-meta { font-size: 0.82rem; color: #475569; }
-    .pub-item .pub-meta span { color: #6366f1; font-weight: 600; }
+  .timeline{position:relative;max-width:840px;margin-left:auto;margin-right:auto}
+  .tl-line{position:absolute;left:15px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .tl-fill{position:absolute;left:0;top:0;width:100%;height:0;background:var(--grad);box-shadow:0 0 14px rgba(111,107,255,.5)}
+  .tl-item{position:relative;padding:0 0 44px 56px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-node{position:absolute;left:6px;top:4px;width:20px;height:20px;border-radius:50%;background:var(--bg2);border:2px solid var(--faint);z-index:2;transition:border-color .4s,box-shadow .4s}
+  .tl-item.lit .tl-node{border-color:var(--cyan);box-shadow:0 0 0 5px rgba(62,224,208,.14),0 0 20px rgba(62,224,208,.5)}
+  .tl-when{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--cyan);letter-spacing:.08em}
+  .tl-role{font-size:1.22rem;font-weight:700;letter-spacing:-.01em;margin-top:7px}
+  .tl-org{color:var(--iris);font-weight:600;font-size:.95rem;margin-top:2px}
+  .tl-desc{color:var(--mut);font-size:.96rem;margin-top:12px;max-width:600px}
 
-    /* CONTACT */
-    .contact { background: #0d0d14; text-align: center; }
-    .contact .section-inner { max-width: 560px; }
-    .contact .section-sub { margin: 0 auto 40px; }
-    .contact-links { display: flex; flex-direction: column; gap: 14px; align-items: center; }
-    .contact-link {
-      display: flex; align-items: center; gap: 12px;
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px; padding: 14px 24px; width: 100%; max-width: 360px;
-      font-size: 0.92rem; font-weight: 500; color: #94a3b8;
-      transition: background 0.2s, color 0.2s;
-    }
-    .contact-link:hover { background: rgba(99,102,241,0.1); color: #e2e8f0; border-color: rgba(99,102,241,0.3); }
-    .contact-link .cl-icon { font-size: 18px; width: 22px; text-align: center; }
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+  .proj{position:relative;border:1px solid var(--line);border-radius:22px;padding:30px;background:linear-gradient(180deg,var(--panel),rgba(11,11,20,.5));overflow:hidden;transition:transform .4s,border-color .4s}
+  .proj::after{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
+  .proj:hover{transform:translateY(-6px)}.proj:hover::after{opacity:.7}
+  .proj.feat{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;gap:34px;align-items:center;background:linear-gradient(120deg,rgba(111,107,255,.10),rgba(62,224,208,.05)),var(--panel)}
+  @media(max-width:760px){.proj.feat{grid-template-columns:1fr}}
+  .proj .badge{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  .proj h3{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:12px 0 10px;display:flex;align-items:center;gap:12px}
+  .proj p{color:var(--mut);font-size:.96rem;line-height:1.7}
+  .proj .go{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-weight:600;font-size:.9rem;color:var(--cyan)}
+  .proj .go svg{transition:transform .3s}.proj:hover .go svg{transform:translateX(5px)}
+  .proj .ic{font-size:2rem}
+  .mock{border-radius:20px;border:1px solid var(--line);background:linear-gradient(180deg,#101019,#0a0a12);padding:18px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+  .mock-bar{display:flex;gap:6px;margin-bottom:14px}.mock-bar i{width:9px;height:9px;border-radius:50%;background:#2a2a3a}
+  .mock-q{font-size:.82rem;color:var(--mut);margin-bottom:12px}
+  .mock-opts{display:grid;gap:8px}
+  .mock-opt{border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:.82rem;color:#c3c7d6;display:flex;justify-content:space-between;align-items:center}
+  .mock-opt.right{border-color:rgba(62,224,208,.5);background:rgba(62,224,208,.08);color:#fff}
 
-    /* FOOTER */
-    footer {
-      background: #070709; border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 28px 40px; display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
-    }
-    footer p { font-size: 0.82rem; color: #334155; }
-    footer a { color: #475569; font-size: 0.82rem; }
-    footer a:hover { color: #94a3b8; }
-  </style>
+  .pubs{max-width:900px}
+  .pub{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:26px 4px;border-top:1px solid var(--line);transition:padding-left .35s}
+  .pub:last-child{border-bottom:1px solid var(--line)}
+  .pub:hover{padding-left:14px}
+  .pub .yr{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:.8rem}
+  .pub .ti{font-weight:600;font-size:1.06rem;letter-spacing:-.01em}
+  .pub .ve{color:var(--faint);font-size:.86rem;margin-top:5px}
+  .pub .arw{color:var(--faint);transition:color .3s,transform .3s}
+  .pub:hover .arw{color:var(--cyan);transform:translate(4px,-4px)}
+  .pubs-foot{margin-top:30px;color:var(--mut);font-size:.95rem}
+  .pubs-foot a{color:var(--cyan);font-weight:600}
+
+  .contact{text-align:center}
+  .contact h2{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:900;letter-spacing:-.04em;line-height:1;margin:18px 0}
+  .contact h2 .tint{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .contact p{color:var(--mut);max-width:520px;margin:0 auto 40px;font-size:1.06rem}
+  .socials{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .soc{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);padding:13px 22px;border-radius:100px;font-weight:600;font-size:.92rem;background:rgba(255,255,255,.02);transition:transform .3s,border-color .3s,background .3s}
+  .soc:hover{transform:translateY(-3px);border-color:var(--iris);background:rgba(111,107,255,.1)}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--faint);font-size:.84rem;text-align:center;background:var(--bg2)}
+  footer .logo{justify-content:center;margin-bottom:12px;font-size:.95rem;color:var(--mut)}
+</style>
 </head>
 <body>
+<div class="grain"></div>
 
-<nav>
-  <a href="/" class="nav-logo">Sagar Jilka</a>
+<nav id="nav">
+  <a class="logo" href="#top"><span class="dot"></span> Sagar&nbsp;Jilka</a>
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#career">Career</a>
-    <a href="/smartpaper">SmartPaper</a>
-    <a href="#contact">Contact</a>
+    <a href="#about">Background</a>
+    <a href="#work">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#research">Research</a>
+    <a class="nav-cta" href="#contact">Get in touch</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge">
-      <span>🧠</span> PhD Neuroscience · Data Scientist · Builder
-    </div>
-    <h1>Turning data into<br /><span>insight and impact</span></h1>
-    <p>
-      Assistant Professor at the University of Warwick. I research digital health and AI in mental health — and build tools that put data to work for real people.
-    </p>
-    <div class="hero-ctas">
-      <a href="#about" class="btn-primary">About me</a>
-      <a href="/smartpaper" class="btn-secondary">📄 SmartPaper</a>
+<header class="hero" id="top">
+  <canvas id="neural"></canvas>
+  <div class="hero-veil"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="eyebrow" data-hero>Data Science · Digital Health · Neuroscience</span>
+      <h1 data-hero>
+        <span class="tint">Turning data</span><br>
+        into <span class="serif">decisions</span> &amp; <span class="serif">products</span>.
+      </h1>
+      <p class="hero-role" data-hero>
+        I'm <b>Dr Sagar Jilka</b> — a PhD neuroscientist and data scientist. Assistant Professor at the
+        <b>University of Warwick</b>, consultant across industry &amp; healthcare, and founder of <b>SmartPaper</b>.
+      </p>
+      <div class="hero-cta" data-hero>
+        <a class="btn btn-primary magnetic" href="#projects">View my work
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost magnetic" href="#contact">Let's talk</a>
+      </div>
     </div>
   </div>
-</section>
+  <div class="scroll-cue"><span>SCROLL</span><span class="bar"></span></div>
+</header>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="section-inner">
-    <div class="section-label">Background</div>
-    <h2 class="section-title">Research, data, and a bit of building</h2>
+<div class="marquee">
+  <div class="track">
+    <span>Machine Learning</span><span>Digital Health</span><span>Neuroimaging</span><span>NLP</span><span>Python</span><span>Digital Phenotyping</span><span>React Native</span><span>Applied AI</span>
+    <span>Machine Learning</span><span>Digital Health</span><span>Neuroimaging</span><span>NLP</span><span>Python</span><span>Digital Phenotyping</span><span>React Native</span><span>Applied AI</span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">01 — Background</span>
+      <h2>Research, data, and a habit of <span class="serif">building</span>.</h2>
+    </div>
     <div class="about-grid">
-      <div class="about-text">
-        <p>
-          I'm an <strong>Assistant Professor and Senior Research Fellow</strong> in the Mental Health &amp; Wellbeing Unit at the University of Warwick Medical School, and <strong>Digital Health and AI Theme Co-Lead</strong> at the Warwick Centre for Global Health (WCGH). I work at the intersection of data science, digital health, and cognitive neuroscience.
-        </p>
-        <p>
-          My PhD — completed jointly at <strong>Imperial College London</strong> and <strong>Goldsmiths, University of London</strong> — was in Neuroscience, building on an MRes in Brain Imaging from the University of Birmingham and a dual honours BSc in Psychology and Music from Keele University.
-        </p>
-        <p>
-          I've worked across King's College London, the Maudsley Biomedical Research Centre, and as a Football Data Scientist at a London tech startup. I also teach PhD students data science and Python from an industry perspective.
-        </p>
-        <p>
-          Outside academia I build digital products — most recently <strong>SmartPaper</strong>, an AI-powered practice paper app for primary school children.
-        </p>
-        <div class="tags">
-          <span class="tag">Machine Learning</span>
-          <span class="tag">Digital Health</span>
-          <span class="tag">Neuroimaging</span>
-          <span class="tag">NLP</span>
-          <span class="tag">Python</span>
-          <span class="tag">Digital Phenotyping</span>
-          <span class="tag">React Native</span>
-          <span class="tag">AI</span>
+      <div class="about-copy">
+        <p class="reveal">I'm an <b>Assistant Professor and Senior Research Fellow</b> in the Mental Health &amp; Wellbeing Unit at the University of Warwick Medical School, and Digital Health &amp; AI Theme Co-Lead at the Warwick Centre for Global Health. I work at the intersection of <b>data science, digital health, and cognitive neuroscience</b>.</p>
+        <p class="reveal">My PhD — completed jointly at <b>Imperial College London and Goldsmiths</b> — was in Neuroscience, building on an MRes in Brain Imaging from Birmingham and a dual-honours BSc in Psychology &amp; Music from Keele.</p>
+        <p class="reveal">I've worked across <b>King's College London</b>, the Maudsley Biomedical Research Centre, and as a <b>Football Data Scientist</b> at a London tech startup. I teach PhD students data science and Python from an industry perspective — and outside academia I build digital products, most recently <b>SmartPaper</b>.</p>
+        <div class="chips reveal">
+          <span class="chip">PhD Neuroscience</span><span class="chip">Machine Learning</span><span class="chip">Digital Phenotyping</span><span class="chip">NLP</span><span class="chip">Python</span><span class="chip">Neuroimaging</span><span class="chip">React Native</span><span class="chip">Applied AI</span>
         </div>
       </div>
       <div>
-        <div class="stat-grid">
-          <div class="stat-card">
-            <div class="num">PhD</div>
-            <div class="label">Neuroscience, Imperial College London &amp; Goldsmiths</div>
-          </div>
-          <div class="stat-card">
-            <div class="num">15+</div>
-            <div class="label">years across academia, industry &amp; startups</div>
-          </div>
-          <div class="stat-card">
-            <div class="num">🏆</div>
-            <div class="label">Scopus Young Researcher UK Award 2015</div>
-          </div>
-          <div class="stat-card">
-            <div class="num">3</div>
-            <div class="label">universities: Warwick, King's College, Imperial</div>
-          </div>
-        </div>
+        <div class="stat-card reveal"><div class="stat-num" data-count="15" data-suffix="+">0</div><div class="stat-lbl">years across academia, industry &amp; startups</div></div>
+        <div class="stat-card reveal"><div class="stat-num" data-count="3">0</div><div class="stat-lbl">universities — Warwick, King's College, Imperial</div></div>
+        <div class="stat-card reveal"><div class="stat-num" style="font-family:'Fraunces',serif;font-weight:600">2015</div><div class="stat-lbl">Scopus Young Researcher UK Award, for research impact</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CAREER -->
-<section class="career" id="career">
-  <div class="section-inner">
-    <div class="section-label">Experience</div>
-    <h2 class="section-title">Career</h2>
-    <p class="section-sub">From brain imaging to AI products — a career built across research, data science, and digital health.</p>
-    <div class="timeline">
-
-      <div class="tl-item">
-        <div class="tl-date">2020 – present</div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <h3>Assistant Professor &amp; Senior Research Fellow</h3>
-          <div class="org">University of Warwick Medical School</div>
-          <p>Mental Health &amp; Wellbeing Unit, Division of Health Sciences. Research focuses on digital phenotyping, smartphone-based interventions, and machine learning for mental health outcomes.</p>
-          <p style="margin-top:8px;font-size:0.88em;color:#6b7280;">Also serving as <strong>Digital Health and AI Theme Co-Lead</strong>, Warwick Centre for Global Health (WCGH).</p>
-        </div>
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">02 — Experience</span>
+      <h2>From brain imaging to <span class="serif">AI products</span>.</h2>
+      <p>A career built across research, data science, and digital health.</p>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="tl-line"><div class="tl-fill" id="tlFill"></div></div>
+      <div class="tl-item"><div class="tl-node"></div>
+        <div class="tl-when">2020 — PRESENT</div>
+        <div class="tl-role">Assistant Professor &amp; Senior Research Fellow</div>
+        <div class="tl-org">University of Warwick Medical School</div>
+        <div class="tl-desc">Mental Health &amp; Wellbeing Unit, Division of Health Sciences. Research on digital phenotyping, smartphone-based interventions, and machine learning for mental-health outcomes. Also Digital Health &amp; AI Theme Co-Lead at the Warwick Centre for Global Health.</div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2018 – 2020</div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <h3>PPI Coordinator &amp; Research Associate</h3>
-          <div class="org">Maudsley Biomedical Research Centre, King's College London</div>
-          <p>Patient and Public Involvement in psychiatric research. Developed NLP approaches to understand patient perspectives on ketamine as a depression treatment.</p>
-        </div>
+      <div class="tl-item"><div class="tl-node"></div>
+        <div class="tl-when">2018 — 2020</div>
+        <div class="tl-role">PPI Coordinator &amp; Research Associate</div>
+        <div class="tl-org">Maudsley BRC · King's College London</div>
+        <div class="tl-desc">Patient and Public Involvement in psychiatric research. Developed NLP approaches to understand patient perspectives on ketamine as a treatment for depression.</div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2015 – 2018</div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <h3>Research Associate</h3>
-          <div class="org">Imperial College London – Division of Surgery</div>
-          <p>Applied machine learning to healthcare data. Won the Scopus Young Researcher UK Award (Arts &amp; Humanities) in 2015 for research impact during this period.</p>
-        </div>
+      <div class="tl-item"><div class="tl-node"></div>
+        <div class="tl-when">2015 — 2018</div>
+        <div class="tl-role">Research Associate</div>
+        <div class="tl-org">Imperial College London · Division of Surgery</div>
+        <div class="tl-desc">Applied machine learning to healthcare data. Won the Scopus Young Researcher UK Award (Arts &amp; Humanities) in 2015 for research impact.</div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-date">Alongside academia</div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <h3>Football Data Scientist</h3>
-          <div class="org">London Tech Startup</div>
-          <p>Applied statistical modelling and data science to sports performance data.</p>
-        </div>
+      <div class="tl-item"><div class="tl-node"></div>
+        <div class="tl-when">ALONGSIDE ACADEMIA</div>
+        <div class="tl-role">Football Data Scientist</div>
+        <div class="tl-org">London Tech Startup</div>
+        <div class="tl-desc">Applied statistical modelling and data science to sports-performance data.</div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-date">Ongoing</div>
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <h3>Data Science &amp; Analytics Consultant</h3>
-          <div class="org">Independent</div>
-          <p>Consulting across industry and healthcare on data strategy, machine learning pipelines, and digital product development. Teaches PhD students Python and data science from an industry perspective.</p>
-        </div>
+      <div class="tl-item"><div class="tl-node"></div>
+        <div class="tl-when">ONGOING</div>
+        <div class="tl-role">Data Science &amp; Analytics Consultant</div>
+        <div class="tl-org">Independent</div>
+        <div class="tl-desc">Consulting across industry and healthcare on data strategy, ML pipelines, and digital-product development — and teaching PhD students Python from an industry perspective.</div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
-<section class="projects" id="projects">
-  <div class="section-inner">
-    <div class="section-label">Building</div>
-    <h2 class="section-title">Projects</h2>
-    <p class="section-sub">Applying research thinking to real-world products.</p>
-    <div class="project-grid">
-
-      <div class="project-card">
-        <div class="icon">📄</div>
-        <h3>SmartPaper</h3>
-        <p>AI-powered Maths and English practice papers for primary school children (Years 2–6). Adaptive learning, step-by-step feedback, and progress tracking. Built with React Native, Supabase, and Claude AI.</p>
-        <a href="/smartpaper" class="project-link">View project →</a>
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">03 — Building</span>
+      <h2>Research thinking, applied to <span class="serif">real products</span>.</h2>
+    </div>
+    <div class="proj-grid">
+      <a class="proj feat reveal" href="/smartpaper/">
+        <div>
+          <span class="badge">Featured · Live on the App Store</span>
+          <h3><span class="ic">📄</span> SmartPaper</h3>
+          <p>An AI-powered practice-paper app for UK primary children (Reception–Year&nbsp;7). Adaptive papers, seventeen interactive question types, step-by-step AI feedback, and a Bayesian progress score visualised as line &amp; radar charts. Built with React Native, Supabase and Claude&nbsp;AI.</p>
+          <span class="go">Explore SmartPaper
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <div class="mock-bar"><i></i><i></i><i></i></div>
+          <div class="mock-q">What fraction of the shape is shaded?</div>
+          <div class="mock-opts">
+            <div class="mock-opt">One quarter</div>
+            <div class="mock-opt right">Three quarters <span>✓</span></div>
+            <div class="mock-opt">One half</div>
+          </div>
+        </div>
+      </a>
+      <div class="proj reveal">
+        <span class="badge">Research</span>
+        <h3><span class="ic">🧠</span> Digital Phenotyping</h3>
+        <p>Using smartphone sensors and passive data collection to understand mental health at scale. Published in <b>Nature Communications Medicine</b> (2025).</p>
+        <a class="go" href="https://scholar.google.com" target="_blank" rel="noopener">View publications
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
-
-      <div class="project-card">
-        <div class="icon">🧠</div>
-        <h3>Digital Phenotyping Research</h3>
-        <p>Using smartphone sensors and passive data collection to understand mental health at scale. Published in Nature Communications Medicine (2025).</p>
-        <a href="https://scholar.google.com/citations?user=_2TAzuQAAAAJ&hl=en" class="project-link" target="_blank" rel="noopener">View publications →</a>
+      <div class="proj reveal">
+        <span class="badge">Applied AI</span>
+        <h3><span class="ic">🤖</span> AI for Mental-Health Stigma</h3>
+        <p>Machine-learning &amp; NLP algorithms to identify and analyse mental-health stigma across social-media platforms at scale.</p>
+        <a class="go" href="#research">Read the research
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
-
-      <div class="project-card">
-        <div class="icon">🤖</div>
-        <h3>AI for Mental Health Stigma</h3>
-        <p>Developed machine learning algorithms to identify and analyse mental health stigma on social media platforms at scale using NLP.</p>
-        <a href="https://scholar.google.com/citations?user=_2TAzuQAAAAJ&hl=en" class="project-link" target="_blank" rel="noopener">Read the research →</a>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- PUBLICATIONS -->
-<section class="publications" id="publications">
-  <div class="section-inner">
-    <div class="section-label">Research</div>
-    <h2 class="section-title">Selected Publications</h2>
-    <p class="section-sub">Peer-reviewed work across digital health, neuroscience, and AI.</p>
-    <div class="pub-list">
-
-      <div class="pub-item">
-        <h4>Smartphone-based digital phenotyping for mental health: passive sensing and behavioural markers</h4>
-        <div class="pub-meta"><span>Nature Communications Medicine</span> · 2025</div>
-      </div>
-
-      <div class="pub-item">
-        <h4>Using AI to identify what's important to patients in mental health research</h4>
-        <div class="pub-meta"><span>Elsevier / Patient-focused research</span> · King's College London</div>
-      </div>
-
-      <div class="pub-item">
-        <h4>Machine learning approaches for identifying stigma in social media mental health discourse</h4>
-        <div class="pub-meta"><span>Imperial College London</span> · Scopus Young Researcher Award work</div>
-      </div>
-
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">04 — Research</span>
+      <h2>Selected <span class="serif">publications</span>.</h2>
+      <p>Peer-reviewed work across digital health, neuroscience, and AI.</p>
     </div>
-    <p style="margin-top:24px;font-size:0.88rem;color:#475569;">
-      Full publication list on
-      <a href="https://scholar.google.com/citations?user=_2TAzuQAAAAJ&hl=en" target="_blank" rel="noopener" style="color:#6366f1;font-weight:600;">Google Scholar →</a>
-    </p>
+    <div class="pubs">
+      <a class="pub reveal" href="https://scholar.google.com" target="_blank" rel="noopener">
+        <span class="yr">2025</span>
+        <span><span class="ti">Smartphone-based digital phenotyping for mental health: passive sensing and behavioural markers</span><br><span class="ve">Nature Communications Medicine</span></span>
+        <svg class="arw" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </a>
+      <a class="pub reveal" href="https://scholar.google.com" target="_blank" rel="noopener">
+        <span class="yr">KCL</span>
+        <span><span class="ti">Using AI to identify what's important to patients in mental-health research</span><br><span class="ve">Elsevier · Patient-focused research, King's College London</span></span>
+        <svg class="arw" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </a>
+      <a class="pub reveal" href="https://scholar.google.com" target="_blank" rel="noopener">
+        <span class="yr">IMPERIAL</span>
+        <span><span class="ti">Machine-learning approaches for identifying stigma in social-media mental-health discourse</span><br><span class="ve">Imperial College London · Scopus Young Researcher Award work</span></span>
+        <svg class="arw" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </a>
+    </div>
+    <p class="pubs-foot reveal">Full publication list on <a href="https://scholar.google.com" target="_blank" rel="noopener">Google Scholar →</a></p>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="section-inner">
-    <div class="section-label">Get in touch</div>
-    <h2 class="section-title">Contact</h2>
-    <p class="section-sub">Open to research collaborations, consulting enquiries, and conversations about digital health and AI.</p>
-    <div class="contact-links">
-      <a href="mailto:sagarjilka@gmail.com" class="contact-link">
-        <span class="cl-icon">✉️</span> sagarjilka@gmail.com
-      </a>
-      <a href="https://www.linkedin.com/in/sagar-jilka-4a816a47/" target="_blank" rel="noopener" class="contact-link">
-        <span class="cl-icon">💼</span> LinkedIn
-      </a>
-      <a href="https://scholar.google.com/citations?user=_2TAzuQAAAAJ&hl=en" target="_blank" rel="noopener" class="contact-link">
-        <span class="cl-icon">📚</span> Google Scholar
-      </a>
-      <a href="https://twitter.com/DrSagarJilka" target="_blank" rel="noopener" class="contact-link">
-        <span class="cl-icon">𝕏</span> @DrSagarJilka
-      </a>
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="eyebrow reveal" style="justify-content:center">05 — Get in touch</span>
+    <h2 class="reveal">Let's build something <span class="tint">measurable</span>.</h2>
+    <p class="reveal">Open to research collaborations, consulting enquiries, and conversations about digital health and AI.</p>
+    <div class="socials reveal">
+      <a class="soc magnetic" href="mailto:sagarjilka@gmail.com">✉️ sagarjilka@gmail.com</a>
+      <a class="soc magnetic" href="https://www.linkedin.com/in/sagarjilka" target="_blank" rel="noopener">💼 LinkedIn</a>
+      <a class="soc magnetic" href="https://scholar.google.com" target="_blank" rel="noopener">📚 Google Scholar</a>
+      <a class="soc magnetic" href="https://x.com/DrSagarJilka" target="_blank" rel="noopener">𝕏 @DrSagarJilka</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2026 Sagar Jilka</p>
-  <div style="display:flex;gap:20px;">
-    <a href="/smartpaper">SmartPaper</a>
-    <a href="https://sagarjilka.github.io/smartpaper-privacy/" target="_blank">Privacy Policy</a>
-  </div>
+  <div class="logo"><span class="dot"></span> Sagar Jilka</div>
+  © <span id="yr"></span> Sagar Jilka · Data Scientist · Neuroscientist · Builder
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+
+/* THREE.JS NEURAL PARTICLE FIELD */
+(function(){
+  const canvas=document.getElementById('neural');
+  if(!window.THREE) return;
+  let renderer;
+  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});}catch(e){return;}
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,0.1,100);cam.position.z=15;
+  const DPR=Math.min(devicePixelRatio,2);
+  function size(){renderer.setPixelRatio(DPR);renderer.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
+  size();addEventListener('resize',size);
+  const N=innerWidth<760?60:120,R=13;
+  const pos=new Float32Array(N*3),vel=[];
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*R*2;pos[i*3+1]=(Math.random()-.5)*R*1.3;pos[i*3+2]=(Math.random()-.5)*R;
+    vel.push({x:(Math.random()-.5)*.012,y:(Math.random()-.5)*.012,z:(Math.random()-.5)*.012});}
+  const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const sprite=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');
+    const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(160,150,255,.9)');gr.addColorStop(1,'rgba(120,110,255,0)');
+    g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c);})();
+  const pMat=new THREE.PointsMaterial({size:.42,map:sprite,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,color:0xbfc0ff});
+  scene.add(new THREE.Points(pGeo,pMat));
+  const points=scene.children[0];
+  const lGeo=new THREE.BufferGeometry();
+  const lPos=new Float32Array(N*N*3);
+  const lMat=new THREE.LineBasicMaterial({color:0x6f6bff,transparent:true,opacity:.16,blending:THREE.AdditiveBlending});
+  const lines=new THREE.LineSegments(lGeo,lMat);scene.add(lines);
+  const mouse={x:0,y:0,tx:0,ty:0};
+  addEventListener('pointermove',e=>{mouse.tx=e.clientX/innerWidth-.5;mouse.ty=e.clientY/innerHeight-.5;});
+  const MAX2=4.4*4.4;
+  (function frame(){
+    for(let i=0;i<N;i++){pos[i*3]+=vel[i].x;pos[i*3+1]+=vel[i].y;pos[i*3+2]+=vel[i].z;
+      if(Math.abs(pos[i*3])>R)vel[i].x*=-1;if(Math.abs(pos[i*3+1])>R*.65)vel[i].y*=-1;if(Math.abs(pos[i*3+2])>R*.5)vel[i].z*=-1;}
+    pGeo.attributes.position.needsUpdate=true;
+    let k=0;
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const dx=pos[i*3]-pos[j*3],dy=pos[i*3+1]-pos[j*3+1],dz=pos[i*3+2]-pos[j*3+2],d2=dx*dx+dy*dy+dz*dz;
+      if(d2<MAX2&&k<lPos.length-6){lPos[k++]=pos[i*3];lPos[k++]=pos[i*3+1];lPos[k++]=pos[i*3+2];lPos[k++]=pos[j*3];lPos[k++]=pos[j*3+1];lPos[k++]=pos[j*3+2];}
+    }
+    lGeo.setAttribute('position',new THREE.BufferAttribute(lPos.subarray(0,k),3));lGeo.setDrawRange(0,k/3);
+    mouse.x+=(mouse.tx-mouse.x)*.05;mouse.y+=(mouse.ty-mouse.y)*.05;
+    points.rotation.y=lines.rotation.y=mouse.x*.5;points.rotation.x=lines.rotation.x=mouse.y*.3;
+    cam.position.x+=(mouse.x*3-cam.position.x)*.04;cam.lookAt(0,0,0);
+    renderer.render(scene,cam);requestAnimationFrame(frame);
+  })();
+})();
+
+/* GSAP */
+if(window.gsap){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.set('[data-hero]',{opacity:0,y:34});
+  gsap.to('[data-hero]',{opacity:1,y:0,duration:1,stagger:.13,ease:'power3.out',delay:.25});
+  gsap.utils.toArray('.reveal').forEach(el=>gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 86%'}}));
+  gsap.utils.toArray('[data-count]').forEach(el=>{const end=+el.dataset.count,suf=el.dataset.suffix||'';
+    ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter(){gsap.to({v:0},{v:end,duration:1.4,ease:'power2.out',onUpdate(){el.textContent=Math.round(this.targets()[0].v)+suf;}});}});});
+  gsap.to('#tlFill',{height:'100%',ease:'none',scrollTrigger:{trigger:'#timeline',start:'top 62%',end:'bottom 72%',scrub:.6}});
+  gsap.utils.toArray('.tl-item').forEach(it=>ScrollTrigger.create({trigger:it,start:'top 70%',onEnter:()=>it.classList.add('lit'),onLeaveBack:()=>it.classList.remove('lit')}));
+}
+document.querySelectorAll('.magnetic').forEach(el=>{
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.28}px,${(e.clientY-r.top-r.height/2)*.4}px)`;});
+  el.addEventListener('pointerleave',()=>el.style.transform='');
+});
+</script>
 </body>
 </html>

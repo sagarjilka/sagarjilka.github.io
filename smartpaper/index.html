@@ -1,230 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartPaper – AI Practice Papers for Primary School</title>
-  <meta name="description" content="SmartPaper generates AI-powered Maths and English practice papers for primary school children (Years 2–6), with step-by-step feedback on every wrong answer." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: #f9fafb; color: #1f2937; line-height: 1.6; }
-    a { text-decoration: none; color: inherit; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SmartPaper — AI Practice Papers Your Child Will Want to Do</title>
+<meta name="description" content="SmartPaper turns entrance-exam practice into a game. Adaptive Maths & English papers for Reception–Year 7, 17 interactive question types, instant AI feedback, and progress charts parents love. Try a question right now." />
+<meta name="theme-color" content="#FBFAF7" />
+<meta property="og:title" content="SmartPaper — practice papers your child will actually want to do" />
+<meta property="og:description" content="Adaptive Maths & English for Reception–Year 7. Try a real question in your browser, then watch the progress charts come to life." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://sagarjilka.com/smartpaper/" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#FBFAF7; --card:#FFFFFF; --sunk:#F0EDE6;
+    --ink:#1C1B19; --ink2:#6E6A62; --faint:#A8A49B; --line:#EFEBE3; --line2:#E4E0D7;
+    --violet:#6354D6; --violetL:#EFEDFB; --teal:#18B69E; --tealDeep:#0E8E7C; --tealL:#E6F5F1;
+    --terra:#C2603F; --terraL:#F8EAE4; --amber:#B07A1F; --amberL:#FBF3E4;
+    --aurora:linear-gradient(115deg,#6354D6 0%,#7C5CE6 42%,#18B69E 100%);
+    --maxw:1140px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;overflow-x:hidden}
+  a{text-decoration:none;color:inherit}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;letter-spacing:-.01em}
+  ::selection{background:rgba(99,84,214,.2)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .grad-text{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--violet)}
 
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 40px;
-      background: rgba(249,250,251,0.9);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .nav-logo { font-weight: 800; font-size: 1.05rem; color: #4f46e5; }
-    .nav-back { font-size: 0.85rem; font-weight: 500; color: #6b7280; }
-    .nav-back:hover { color: #4f46e5; }
-    @media (max-width: 600px) { nav { padding: 14px 20px; } }
+  /* NAV */
+  nav{position:sticky;top:0;z-index:60;display:flex;justify-content:space-between;align-items:center;
+    padding:14px clamp(18px,4vw,40px);background:rgba(251,250,247,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:700;font-size:1.15rem}
+  .brand .mk{width:30px;height:30px;border-radius:9px;background:var(--aurora);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(99,84,214,.35)}
+  .nav-r{display:flex;align-items:center;gap:20px}
+  .nav-back{font-size:.85rem;color:var(--ink2);font-weight:500}
+  .nav-back:hover{color:var(--violet)}
+  .store-mini{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-weight:600;font-size:.82rem;padding:9px 16px;border-radius:100px;transition:transform .25s}
+  .store-mini:hover{transform:translateY(-2px)}
+  @media(max-width:620px){.nav-back{display:none}}
 
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      padding: 80px 24px 88px; text-align: center;
-    }
-    .hero-emoji { font-size: 64px; margin-bottom: 20px; display: block; }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: #fff; margin-bottom: 16px; letter-spacing: -1px; }
-    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.85); max-width: 520px; margin: 0 auto 12px; line-height: 1.7; }
-    .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); max-width: 440px; margin: 0 auto; }
-    .store-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
-    .store-btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: #fff; color: #111827;
-      font-weight: 700; font-size: 0.9rem; padding: 12px 22px;
-      border-radius: 12px; transition: opacity 0.2s;
-    }
-    .store-btn:hover { opacity: 0.9; }
-    .store-btn.coming { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+  /* HERO */
+  .hero{position:relative;padding:clamp(56px,9vw,104px) 0 clamp(60px,8vw,96px);overflow:hidden}
+  #aurora{position:absolute;inset:0;z-index:0;opacity:.9}
+  .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  @media(max-width:880px){.hero .wrap{grid-template-columns:1fr;gap:36px;text-align:center}}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line2);border-radius:100px;padding:7px 15px;font-size:.8rem;font-weight:600;color:var(--ink2);box-shadow:0 6px 20px -12px rgba(28,27,25,.4)}
+  .hero-badge .star{color:var(--amber)}
+  .hero h1{font-size:clamp(2.3rem,6vw,4.05rem);font-weight:700;line-height:1.02;margin:20px 0 18px}
+  .hero p.lede{font-size:clamp(1.02rem,2vw,1.22rem);color:var(--ink2);max-width:520px;margin-bottom:30px}
+  @media(max-width:880px){.hero p.lede{margin-left:auto;margin-right:auto}}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  @media(max-width:880px){.hero-cta{justify-content:center}}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:.95rem;padding:14px 24px;border-radius:100px;transition:transform .25s,box-shadow .25s;cursor:pointer;border:none;font-family:inherit}
+  .btn-app{background:var(--ink);color:#fff;box-shadow:0 12px 30px -12px rgba(28,27,25,.6)}
+  .btn-app:hover{transform:translateY(-3px)}
+  .btn-try{background:var(--aurora);color:#fff;box-shadow:0 12px 30px -10px rgba(99,84,214,.6)}
+  .btn-try:hover{transform:translateY(-3px)}
+  .btn-out{background:var(--card);border:1.5px solid var(--line2);color:var(--ink)}
+  .btn-out:hover{border-color:var(--violet);transform:translateY(-3px)}
+  .hero-trust{display:flex;gap:22px;margin-top:26px;flex-wrap:wrap;font-size:.82rem;color:var(--ink2)}
+  @media(max-width:880px){.hero-trust{justify-content:center}}
+  .hero-trust b{color:var(--ink);font-family:'Fredoka';font-weight:600}
 
-    /* FEATURES */
-    .features { padding: 80px 24px; background: #f9fafb; }
-    .features-inner { max-width: 860px; margin: 0 auto; }
-    .features h2 { text-align: center; font-size: 1.6rem; font-weight: 800; color: #111827; margin-bottom: 48px; letter-spacing: -0.3px; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-    .feature-card { background: #fff; border-radius: 16px; padding: 28px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); border: 1px solid #e5e7eb; }
-    .feature-card .icon { font-size: 34px; margin-bottom: 14px; }
-    .feature-card h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 8px; }
-    .feature-card p { font-size: 0.88rem; color: #6b7280; line-height: 1.65; }
+  /* floating question cards */
+  .float-stage{position:relative;height:440px}
+  @media(max-width:880px){.float-stage{height:340px;max-width:420px;margin:0 auto}}
+  .fcard{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;box-shadow:0 24px 50px -24px rgba(28,27,25,.4);will-change:transform}
+  .fcard .ft{font-size:.7rem;font-weight:700;color:var(--violet);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+  .fcard .fb{font-size:.9rem;font-weight:600}
+  .f1{top:6%;left:2%;width:210px}
+  .f2{top:40%;right:0;width:196px}
+  .f3{bottom:4%;left:16%;width:220px}
+  .pill-emoji{width:44px;height:44px;border-radius:12px;background:var(--violetL);display:grid;place-items:center;font-size:22px;margin-bottom:10px}
+  .mini-opt{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line2);border-radius:10px;padding:7px 11px;font-size:.82rem;margin-top:6px}
+  .mini-opt.ok{border-color:var(--teal);background:var(--tealL);color:var(--tealDeep);font-weight:600}
 
-    /* YEAR GROUPS */
-    .years { background: #eef2ff; padding: 52px 24px; text-align: center; }
-    .years h2 { font-size: 1.25rem; font-weight: 800; color: #4f46e5; margin-bottom: 8px; }
-    .years p { font-size: 0.92rem; color: #6b7280; margin-bottom: 24px; }
-    .year-pills { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .year-pill { background: #fff; border: 2px solid #4f46e5; color: #4f46e5; font-weight: 700; font-size: 0.9rem; padding: 8px 22px; border-radius: 50px; }
+  /* SECTION */
+  section{position:relative;padding:clamp(64px,9vw,110px) 0}
+  .sec-head{text-align:center;max-width:660px;margin:0 auto 52px}
+  .sec-head h2{font-size:clamp(1.8rem,4.4vw,2.8rem);font-weight:700;line-height:1.08;margin:14px 0}
+  .sec-head p{color:var(--ink2);font-size:1.05rem}
+  .reveal{opacity:0;transform:translateY(28px)}
 
-    /* PRICING */
-    .pricing { padding: 80px 24px; background: #f9fafb; }
-    .pricing-inner { max-width: 680px; margin: 0 auto; }
-    .pricing h2 { text-align: center; font-size: 1.5rem; font-weight: 800; color: #111827; margin-bottom: 32px; letter-spacing: -0.3px; }
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 520px) { .pricing-grid { grid-template-columns: 1fr; } }
-    .plan-free { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 24px; }
-    .plan-premium { background: linear-gradient(135deg, #4f46e5, #7c3aed); border-radius: 16px; padding: 28px 24px; box-shadow: 0 8px 24px rgba(79,70,229,0.3); }
-    .plan-free h3 { font-size: 1rem; font-weight: 800; margin-bottom: 16px; color: #111827; }
-    .plan-premium h3 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; color: #fff; }
-    .plan-premium .plan-tagline { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
-    .plan-free ul { list-style: none; font-size: 0.88rem; color: #374151; line-height: 2.2; }
-    .plan-premium ul { list-style: none; font-size: 0.88rem; color: #fff; line-height: 2.2; }
+  /* ===== DEMO ===== */
+  .demo{background:linear-gradient(180deg,#fff 0%,var(--violetL) 100%)}
+  .demo-shell{max-width:720px;margin:0 auto}
+  .demo-card{background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:0 40px 90px -40px rgba(99,84,214,.5);overflow:hidden}
+  .demo-top{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .demo-prog{display:flex;gap:6px}
+  .demo-prog i{width:26px;height:6px;border-radius:6px;background:var(--line2);transition:background .4s}
+  .demo-prog i.on{background:var(--aurora)}
+  .demo-step{font-size:.78rem;color:var(--ink2);font-weight:600}
+  .demo-body{padding:30px 26px 26px;min-height:400px;display:flex;flex-direction:column}
+  .q-tag{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:8px}
+  .q-body{font-size:1.28rem;font-weight:600;font-family:'Fredoka';margin-bottom:22px;line-height:1.3}
+  .q-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+  .q-hint{font-size:.82rem;color:var(--faint);font-weight:600}
+  .badge-count{font-size:.82rem;color:var(--ink2);font-weight:600;padding:5px 12px;border:1px solid var(--line2);border-radius:100px}
+  .demo-foot{display:flex;align-items:center;justify-content:space-between;padding:18px 26px;border-top:1px solid var(--line);gap:14px}
+  .fb-msg{font-size:.9rem;font-weight:600;flex:1}
+  .fb-msg.ok{color:var(--tealDeep)}.fb-msg.no{color:var(--terra)}
+  .demo-next{background:var(--aurora);color:#fff;border:none;font-family:'Fredoka';font-weight:600;font-size:.95rem;padding:12px 26px;border-radius:100px;cursor:pointer;transition:transform .2s,opacity .2s}
+  .demo-next:hover{transform:translateY(-2px)}
+  .demo-next:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-    /* CTA */
-    .cta { background: #111827; padding: 72px 24px; text-align: center; }
-    .cta-inner { max-width: 500px; margin: 0 auto; }
-    .cta .icon { font-size: 48px; margin-bottom: 20px; }
-    .cta h2 { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.3px; }
-    .cta p { font-size: 0.97rem; color: #9ca3af; margin-bottom: 32px; line-height: 1.7; }
-    .cta-btn {
-      display: inline-block; background: #4f46e5; color: #fff;
-      font-weight: 700; font-size: 1rem; padding: 16px 36px;
-      border-radius: 12px; transition: background 0.2s;
-    }
-    .cta-btn:hover { background: #4338ca; }
-    .cta-note { margin-top: 18px; font-size: 0.82rem; color: #6b7280; }
-    .cta-note a { color: #818cf8; }
+  /* fraction circle */
+  .frac-seg{cursor:pointer;transition:fill .2s,opacity .2s}
+  /* number line */
+  .nl-tick{cursor:pointer}
+  .nl-hit{cursor:pointer}
+  /* matching */
+  .match-wrap{display:flex;gap:10px;align-items:stretch;width:100%;max-width:420px}
+  .match-col{flex:1;display:flex;flex-direction:column;gap:12px}
+  .match-cell{border:2px solid var(--line2);border-radius:14px;height:58px;display:grid;place-items:center;font-weight:600;font-size:1rem;background:#fff;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+  .match-cell.emoji{font-size:30px}
+  .match-cell.sel{border-color:var(--violet);background:var(--violetL);transform:scale(1.03)}
+  .match-cell.done{border-color:var(--teal);background:var(--tealL)}
+  .match-strip{width:54px;flex:none}
 
-    /* FOOTER */
-    footer {
-      background: #070709; border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    footer p { font-size: 0.82rem; color: #374151; }
-    footer a { color: #4b5563; font-size: 0.82rem; }
-    footer a:hover { color: #9ca3af; }
-  </style>
+  /* results */
+  .results{display:none;padding:30px 26px 30px}
+  .res-score{text-align:center;margin-bottom:8px}
+  .res-score .n{font-family:'Fredoka';font-weight:700;font-size:4rem;line-height:1;background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .res-score .l{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+  .res-msg{text-align:center;color:var(--ink2);max-width:460px;margin:6px auto 26px;font-size:.95rem}
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:600px){.charts{grid-template-columns:1fr}}
+  .chart-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--paper)}
+  .chart-card h4{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:10px;font-family:'Space Grotesk'}
+  .res-cta{text-align:center;margin-top:26px}
+
+  /* FEATURES */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .35s,box-shadow .35s}
+  .feat:hover{transform:translateY(-5px);box-shadow:0 24px 50px -30px rgba(28,27,25,.4)}
+  .feat .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;margin-bottom:16px}
+  .feat h3{font-size:1.12rem;font-weight:600;margin-bottom:8px}
+  .feat p{color:var(--ink2);font-size:.92rem;line-height:1.65}
+
+  /* TYPES marquee */
+  .types{background:var(--ink);color:#fff;overflow:hidden}
+  .types .sec-head h2{color:#fff}.types .sec-head p{color:rgba(255,255,255,.7)}
+  .type-row{display:flex;gap:14px;white-space:nowrap;margin-bottom:14px}
+  .type-track{display:inline-flex;gap:14px;animation:tmarq 40s linear infinite}
+  .type-track.rev{animation-direction:reverse;animation-duration:48s}
+  .tchip{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 18px;font-weight:600;font-size:.9rem;flex:none}
+  .tchip .e{font-size:20px}
+  @keyframes tmarq{to{transform:translateX(-50%)}}
+
+  /* YEARS */
+  .years{text-align:center}
+  .year-pills{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .yp{background:var(--card);border:2px solid var(--violet);color:var(--violet);font-family:'Fredoka';font-weight:600;font-size:.92rem;padding:9px 20px;border-radius:100px;transition:transform .25s,background .25s,color .25s}
+  .yp:hover{transform:translateY(-4px);background:var(--violet);color:#fff}
+
+  /* PRICING */
+  .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto}
+  @media(max-width:560px){.pricing-grid{grid-template-columns:1fr}}
+  .plan{border-radius:22px;padding:30px 26px}
+  .plan-free{background:var(--card);border:1.5px solid var(--line2)}
+  .plan-prem{background:var(--aurora);color:#fff;box-shadow:0 24px 60px -24px rgba(99,84,214,.6);position:relative;overflow:hidden}
+  .plan-prem::after{content:"POPULAR";position:absolute;top:16px;right:-34px;background:#fff;color:var(--violet);font-size:.66rem;font-weight:800;letter-spacing:.1em;padding:5px 40px;transform:rotate(45deg)}
+  .plan h3{font-size:1.15rem;font-weight:700;margin-bottom:6px}
+  .plan .price{font-family:'Fredoka';font-weight:700;font-size:2.4rem;line-height:1;margin-bottom:18px}
+  .plan .price small{font-size:.9rem;font-weight:500;opacity:.7}
+  .plan ul{list-style:none;display:grid;gap:11px}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+  .plan li .tick{flex:none;font-weight:800}
+  .plan-free .tick{color:var(--teal)}.plan-prem .tick{color:#fff}
+  .plan-prem li{color:rgba(255,255,255,.95)}
+
+  footer{background:var(--ink);color:rgba(255,255,255,.7);padding:44px 0 30px;text-align:center}
+  footer .brand{justify-content:center;color:#fff;margin-bottom:16px}
+  .foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;font-size:.86rem}
+  .foot-links a:hover{color:#fff}
+  .foot-copy{font-size:.78rem;color:rgba(255,255,255,.45)}
+</style>
 </head>
 <body>
 
 <nav>
-  <span style="display:flex;align-items:center;gap:8px;"><img src="../icon.png" alt="SmartPaper" style="height:32px;width:32px;border-radius:8px;" /><span class="nav-logo">SmartPaper</span></span>
-  <a href="/" class="nav-back">← sagarjilka.com</a>
+  <a class="brand" href="#top"><span class="mk">📄</span> SmartPaper</a>
+  <div class="nav-r">
+    <a class="nav-back" href="https://sagarjilka.com">← sagarjilka.com</a>
+    <a class="store-mini" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener"> App Store</a>
+  </div>
 </nav>
 
 <!-- HERO -->
-<div class="hero">
-  <img src="../icon.png" alt="SmartPaper icon" style="width:96px;height:96px;border-radius:22px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto;" />
-  <h1>SmartPaper</h1>
-  <p>AI-powered Maths &amp; English practice papers for primary school children.</p>
-  <p class="hero-sub">Personalised to your child's year group. Step-by-step AI feedback on every wrong answer.</p>
-  <div class="store-btns">
-    <a href="https://apps.apple.com/app/smartpaper-ai/id6761371880" class="store-btn" target="_blank" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-      Download on the App Store
-    </a>
-    <span class="store-btn coming">🤖 Android — coming soon</span>
+<header class="hero" id="top">
+  <canvas id="aurora"></canvas>
+  <div class="wrap">
+    <div>
+      <span class="hero-badge" data-h><span class="star">★★★★★</span> Loved by parents · Live on the App Store</span>
+      <h1 data-h>Practice papers your child will <span class="grad-text">actually want</span> to do.</h1>
+      <p class="lede" data-h>Adaptive Maths &amp; English for Reception–Year&nbsp;7. Seventeen playful, tap-to-answer question types, instant AI feedback, and progress charts that finally make sense — built by a data scientist, powered by AI.</p>
+      <div class="hero-cta" data-h>
+        <a class="btn btn-app" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">Download free</a>
+        <button class="btn btn-try" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try a question ↓</button>
+      </div>
+      <div class="hero-trust" data-h>
+        <span><b>1,900+</b> vetted questions</span>
+        <span><b>17</b> question types</span>
+        <span><b>Reception–Y7</b> covered</span>
+      </div>
+    </div>
+    <div class="float-stage" data-h>
+      <div class="fcard f1"><div class="pill-emoji">🎨</div><div class="ft">Colour the fraction</div><div class="fb">Shade ¾ of the shape</div></div>
+      <div class="fcard f2"><div class="ft">Tap in order</div><div class="fb">Smallest first</div>
+        <div class="mini-opt">12</div><div class="mini-opt ok">18 ✓</div></div>
+      <div class="fcard f3"><div class="pill-emoji" style="background:var(--tealL)">📏</div><div class="ft">Number line</div><div class="fb">Tap where 30 goes</div></div>
+    </div>
   </div>
-</div>
+</header>
+
+<!-- INTERACTIVE DEMO -->
+<section class="demo" id="demo">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Try it now — no download</span>
+      <h2>Answer a few questions.<br>Then watch the <span class="grad-text">insights</span> appear.</h2>
+      <p>This is exactly how SmartPaper works. Have a go — your child's progress charts build themselves.</p>
+    </div>
+    <div class="demo-shell reveal">
+      <div class="demo-card">
+        <div class="demo-top">
+          <div class="demo-prog"><i class="on"></i><i></i><i></i></div>
+          <div class="demo-step" id="demoStep">Question 1 of 3</div>
+        </div>
+
+        <!-- QUESTION AREA -->
+        <div class="demo-body" id="demoBody"><!-- injected --></div>
+        <div class="demo-foot" id="demoFoot">
+          <div class="fb-msg" id="fbMsg"></div>
+          <button class="demo-next" id="demoNext" disabled>Check</button>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results" id="results">
+          <div class="res-score"><div class="n" id="scoreN">0</div><div class="l">SmartPaper Score</div></div>
+          <p class="res-msg" id="scoreMsg"></p>
+          <div class="charts">
+            <div class="chart-card"><h4>Progress over time</h4><svg id="lineChart" viewBox="0 0 300 170" width="100%"></svg></div>
+            <div class="chart-card"><h4>Topic strengths</h4><svg id="radarChart" viewBox="0 0 220 200" width="100%"></svg></div>
+          </div>
+          <div class="res-cta">
+            <a class="btn btn-app" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">Get the full app — free</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- FEATURES -->
-<div class="features">
-  <div class="features-inner">
-    <h2>Everything your child needs to practise with confidence</h2>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="icon">🧠</div>
-        <h3>AI-Generated Papers</h3>
-        <p>Fresh Maths and English papers tailored to your child's year group (Years 2–6), generated in seconds.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">💡</div>
-        <h3>Step-by-Step Feedback</h3>
-        <p>Every wrong answer gets a clear explanation — not just the correct answer, but <em>why</em>, with a worked example.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📈</div>
-        <h3>Progress Tracking</h3>
-        <p>Track scores over time and see exactly which topics need more work. Weak areas are surfaced automatically.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">🎯</div>
-        <h3>Adaptive Focus</h3>
-        <p>Opt in to boost weak topics — SmartPaper automatically includes more questions from areas your child struggles with.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">⏱️</div>
-        <h3>Timed Mode</h3>
-        <p>Optional timer to build exam confidence and help children practise working under time pressure.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">👨‍👩‍👧</div>
-        <h3>Built for Parents</h3>
-        <p>Add multiple children, switch between profiles, and review results together — designed for family use.</p>
-      </div>
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Why parents love it</span>
+      <h2>Built like a tutor. Feels like a game.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">🧭</div><h3>Adaptive papers</h3><p>Every paper is built fresh for your child — preferring questions they haven't seen and quietly targeting the topics they find hard.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">✋</div><h3>17 tap-to-answer types</h3><p>Colour fractions, draw lines of symmetry, tap number lines, match with real drawn connectors, build numbers from digit cards — far beyond multiple choice.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--amberL)">💬</div><h3>Instant AI feedback</h3><p>Get it wrong? A friendly, step-by-step explanation and a worked example appear — so mistakes become the moment they learn.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">📈</div><h3>Progress you can read</h3><p>A single SmartPaper Score, a line graph over time, and a spider chart of topic strengths vs the app average. Data science, made parent-friendly.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">📚</div><h3>Reading comprehension</h3><p>Whole-passage comprehension with a calm reading screen first — reading time never counts against the clock.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--terraL)">🏆</div><h3>Streaks &amp; leaderboard</h3><p>XP, daily streaks and an anonymous leaderboard that rewards accuracy and effort — the gentle nudge to come back tomorrow.</p></div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- YEAR GROUPS -->
-<div class="years">
-  <h2>Covers Years 1 – 6</h2>
-  <p>Aligned to the England primary school curriculum for Maths and English.</p>
-  <div class="year-pills">
-    <span class="year-pill">Year 1</span>
-    <span class="year-pill">Year 2</span>
-    <span class="year-pill">Year 3</span>
-    <span class="year-pill">Year 4</span>
-    <span class="year-pill">Year 5</span>
-    <span class="year-pill">Year 6</span>
+<!-- TYPES MARQUEE -->
+<section class="types">
+  <div class="wrap"><div class="sec-head reveal">
+    <span class="eyebrow" style="color:#a99cff">Seventeen ways to answer</span>
+    <h2>Questions that make children think.</h2>
+    <p>Interaction is the point — a tap-question only tests understanding when the answer isn't just sitting there to be picked.</p>
+  </div></div>
+  <div class="type-row"><div class="type-track" id="tt1"></div></div>
+  <div class="type-row"><div class="type-track rev" id="tt2"></div></div>
+</section>
+
+<!-- YEARS -->
+<section class="years">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:8px">
+      <span class="eyebrow">Every stage covered</span>
+      <h2>From first counting to 11+ &amp; 12+.</h2>
+    </div>
+    <div class="year-pills reveal">
+      <a class="yp" href="#">Reception</a><a class="yp" href="#">Year 1</a><a class="yp" href="#">Year 2</a>
+      <a class="yp" href="#">Year 3</a><a class="yp" href="#">Year 4</a><a class="yp" href="#">Year 5</a>
+      <a class="yp" href="#">Year 6</a><a class="yp" href="#">Year 7</a>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- PRICING -->
-<div class="pricing">
-  <div class="pricing-inner">
-    <h2>Free to get started</h2>
+<section style="background:linear-gradient(180deg,var(--paper),#fff)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Simple pricing</span>
+      <h2>Start free. Upgrade if you love it.</h2>
+    </div>
     <div class="pricing-grid">
-      <div class="plan-free">
+      <div class="plan plan-free reveal">
         <h3>Free</h3>
+        <div class="price">£0</div>
         <ul>
-          <li>✅ 3 AI papers per month</li>
-          <li>✅ Maths papers</li>
-          <li>✅ AI feedback on wrong answers</li>
-          <li>✅ Progress tracking</li>
-          <li>✅ 1 child profile</li>
+          <li><span class="tick">✓</span> Daily adaptive papers</li>
+          <li><span class="tick">✓</span> All 17 question types</li>
+          <li><span class="tick">✓</span> SmartPaper Score &amp; streaks</li>
+          <li><span class="tick">✓</span> A few AI explanations to try</li>
         </ul>
       </div>
-      <div class="plan-premium">
+      <div class="plan plan-prem reveal">
         <h3>Premium</h3>
-        <div class="plan-tagline">Unlimited everything</div>
+        <div class="price">£4.99<small>/mo</small></div>
         <ul>
-          <li>✅ Unlimited AI papers</li>
-          <li>✅ Maths <strong>&amp; English</strong></li>
-          <li>✅ Unlimited AI feedback</li>
-          <li>✅ Full progress analytics</li>
-          <li>✅ Multiple child profiles</li>
+          <li><span class="tick">✓</span> Unlimited AI feedback &amp; worked examples</li>
+          <li><span class="tick">✓</span> Full progress history + spider charts</li>
+          <li><span class="tick">✓</span> Topic-by-topic breakdowns</li>
+          <li><span class="tick">✓</span> Multiple children on one account</li>
         </ul>
       </div>
     </div>
   </div>
-</div>
-
-<!-- CTA -->
-<div class="cta">
-  <div class="cta-inner">
-    <img src="../icon.png" alt="SmartPaper" style="width:72px;height:72px;border-radius:18px;margin-bottom:20px;" />
-    <h2>Start practising today</h2>
-    <p>Download SmartPaper on iPhone and give your child the edge they need — fresh papers, instant feedback, and smart progress tracking.</p>
-    <a href="https://apps.apple.com/app/smartpaper-ai/id6761371880" class="cta-btn" target="_blank" rel="noopener">
-      Download on the App Store
-    </a>
-    <p class="cta-note" style="margin-top:16px;">Android coming soon · Questions? <a href="mailto:jilka.labs@gmail.com">jilka.labs@gmail.com</a></p>
-  </div>
-</div>
+</section>
 
 <footer>
-  <p style="color:#4b5563;">© 2026 SmartPaper · Built by <a href="/">Sagar Jilka</a></p>
-  <a href="https://sagarjilka.github.io/smartpaper-privacy/" target="_blank" rel="noopener">Privacy Policy</a>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="mk">📄</span> SmartPaper</a>
+    <div class="foot-links">
+      <a href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">App Store</a>
+      <a href="/smartpaper-privacy/">Privacy Policy</a>
+      <a href="delete-account.html">Delete Account</a>
+      <a href="https://sagarjilka.com">About the founder</a>
+      <a href="mailto:sagarjilka@gmail.com">Contact</a>
+    </div>
+    <div class="foot-copy">© <span id="yr"></span> SmartPaper · Made by Dr Sagar Jilka · Reception–Year 7 Maths &amp; English</div>
+  </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+const V='#6354D6', T='#18B69E', TD='#0E8E7C', TERRA='#C2603F';
+
+/* ---------- HERO AURORA (canvas blobs) ---------- */
+(function(){
+  const cv=document.getElementById('aurora'),ctx=cv.getContext('2d');
+  let W,H;function size(){W=cv.width=cv.offsetWidth*Math.min(devicePixelRatio,2);H=cv.height=cv.offsetHeight*Math.min(devicePixelRatio,2);}
+  size();addEventListener('resize',size);
+  const blobs=[{x:.2,y:.3,r:.5,c:'99,84,214',p:0},{x:.8,y:.25,r:.45,c:'24,182,158',p:2},{x:.6,y:.8,r:.5,c:'124,92,230',p:4},{x:.35,y:.7,r:.4,c:'24,182,158',p:1}];
+  (function draw(t){t*=.0004;ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='lighter';
+    blobs.forEach(b=>{const x=(b.x+Math.sin(t+b.p)*.06)*W,y=(b.y+Math.cos(t*1.2+b.p)*.06)*H,r=b.r*Math.min(W,H);
+      const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${b.c},.28)`);g.addColorStop(1,`rgba(${b.c},0)`);
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();});
+    requestAnimationFrame(draw);})(0);
+})();
+
+/* ---------- GSAP reveals + hero + floats ---------- */
+if(window.gsap){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.set('[data-h]',{opacity:0,y:30});
+  gsap.to('[data-h]',{opacity:1,y:0,duration:.9,stagger:.12,ease:'power3.out',delay:.15});
+  gsap.utils.toArray('.reveal').forEach(el=>gsap.to(el,{opacity:1,y:0,duration:.85,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}}));
+  gsap.to('.f1',{y:-16,duration:3.4,repeat:-1,yoyo:true,ease:'sine.inOut'});
+  gsap.to('.f2',{y:18,duration:4.1,repeat:-1,yoyo:true,ease:'sine.inOut'});
+  gsap.to('.f3',{y:-13,duration:3.8,repeat:-1,yoyo:true,ease:'sine.inOut'});
+}
+
+/* ---------- TYPE MARQUEE ---------- */
+const TYPES=[['🎨','Colour the fraction'],['🪞','Draw the symmetry line'],['📏','Tap the number line'],['🔗','Match with lines'],['👆','Tap the grid'],['🔢','Tap in order'],['🗂️','Sort into groups'],['🧱','Build the number'],['🖼️','Pick the picture'],['🕐','Set the clock'],['📊','Read the bar chart'],['🎯','Estimate'],['🧮','Budget shopping'],['📐','Coordinates'],['✍️','Short answer'],['🔘','Multiple choice'],['📚','Comprehension']];
+function fillTrack(id){const el=document.getElementById(id);const html=TYPES.concat(TYPES).map(t=>`<span class="tchip"><span class="e">${t[0]}</span>${t[1]}</span>`).join('');el.innerHTML=html;}
+fillTrack('tt1');fillTrack('tt2');
+
+/* ================= INTERACTIVE DEMO ================= */
+const body=document.getElementById('demoBody'),foot=document.getElementById('demoFoot'),
+  nextBtn=document.getElementById('demoNext'),fbMsg=document.getElementById('fbMsg'),
+  stepEl=document.getElementById('demoStep'),progEl=document.querySelectorAll('.demo-prog i');
+let qi=0, answered=false, correctCount=0, current=null;
+
+const QS=[
+  {tag:'Fractions · tap to colour', body:'Colour <b>three quarters</b> (¾) of the circle.', render:fraction, check:()=>current.shaded.size===3, hint:'Tap parts to colour them — tap again to rub out'},
+  {tag:'Number · tap the line', body:'Tap where <b>30</b> belongs on the number line.', render:numline, check:()=>current.val===30, hint:'Only the tens are labelled — find the tick for 30'},
+  {tag:'Vocabulary · draw the lines', body:'Match each word to its picture.', render:matching, check:()=>current.done()===3, hint:'Tap a word, then tap its picture'}
+];
+
+function loadQ(){
+  const q=QS[qi]; answered=false; fbMsg.textContent=''; fbMsg.className='fb-msg';
+  nextBtn.textContent='Check'; nextBtn.disabled=true;
+  stepEl.textContent=`Question ${qi+1} of ${QS.length}`;
+  progEl.forEach((p,i)=>p.classList.toggle('on',i<=qi));
+  body.innerHTML=`<div class="q-tag">${q.tag}</div><div class="q-body">${q.body}</div><div class="q-stage" id="qStage"></div><div style="text-align:center;margin-top:12px"><span class="q-hint">${q.hint}</span></div>`;
+  current=q.render(document.getElementById('qStage'));
+}
+function ready(){ nextBtn.disabled=false; }
+
+nextBtn.addEventListener('click',()=>{
+  const q=QS[qi];
+  if(!answered){
+    answered=true;
+    const ok=q.check();
+    if(ok){correctCount++;fbMsg.textContent='Correct! Nice work. ✓';fbMsg.className='fb-msg ok';}
+    else{fbMsg.textContent='Not quite — but that\'s how SmartPaper teaches.';fbMsg.className='fb-msg no';}
+    nextBtn.textContent = qi<QS.length-1?'Next question →':'See the insights ✨';
+  } else {
+    qi++;
+    if(qi<QS.length) loadQ(); else showResults();
+  }
+});
+
+/* ---- Q1: fraction shade (circle, 4 parts) ---- */
+function fraction(stage){
+  const R=76,cx=90,cy=90,parts=4,shaded=new Set();
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 180 180');svg.setAttribute('width','196');
+  function seg(i){const a0=i/parts*2*Math.PI-Math.PI/2,a1=(i+1)/parts*2*Math.PI-Math.PI/2;
+    return `M${cx} ${cy} L${cx+R*Math.cos(a0)} ${cy+R*Math.sin(a0)} A${R} ${R} 0 0 1 ${cx+R*Math.cos(a1)} ${cy+R*Math.sin(a1)} Z`;}
+  for(let i=0;i<parts;i++){const p=document.createElementNS(ns,'path');p.setAttribute('d',seg(i));
+    p.setAttribute('fill','#f9fafb');p.setAttribute('stroke','#374151');p.setAttribute('stroke-width','2');p.setAttribute('class','frac-seg');
+    p.addEventListener('click',()=>{if(shaded.has(i)){shaded.delete(i);p.setAttribute('fill','#f9fafb');}else{shaded.add(i);p.setAttribute('fill',V);p.setAttribute('fill-opacity','.85');}
+      badge.textContent=`Coloured: ${shaded.size} / 4`; ready();});
+    svg.appendChild(p);}
+  stage.appendChild(svg);
+  const badge=document.createElement('div');badge.className='badge-count';badge.textContent='Coloured: 0 / 4';stage.appendChild(badge);
+  return {shaded};
+}
+
+/* ---- Q2: number line (0-50 step 5, tens labelled, tap 30) ---- */
+function numline(stage){
+  const ns='http://www.w3.org/2000/svg',W=340,PAD=24,lineY=52,min=0,max=50,step=5,n=(max-min)/step;
+  const sx=v=>PAD+(v-min)/(max-min)*(W-PAD*2);
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox',`0 0 ${W} 90`);svg.setAttribute('width','100%');svg.style.maxWidth='360px';
+  const base=document.createElementNS(ns,'line');base.setAttribute('x1',PAD-6);base.setAttribute('y1',lineY);base.setAttribute('x2',W-PAD+6);base.setAttribute('y2',lineY);base.setAttribute('stroke','#374151');base.setAttribute('stroke-width','2.5');svg.appendChild(base);
+  const state={val:null};let selDot=null;
+  for(let i=0;i<=n;i++){const v=min+i*step,x=sx(v),lab=v%10===0;
+    const tk=document.createElementNS(ns,'line');tk.setAttribute('x1',x);tk.setAttribute('y1',lineY-(lab?10:6));tk.setAttribute('x2',x);tk.setAttribute('y2',lineY+(lab?10:6));tk.setAttribute('stroke','#374151');tk.setAttribute('stroke-width',lab?2:1.2);svg.appendChild(tk);
+    if(lab){const t=document.createElementNS(ns,'text');t.setAttribute('x',x);t.setAttribute('y',lineY+28);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','12');t.setAttribute('fill','#6E6A62');t.textContent=v;svg.appendChild(t);}
+    const hit=document.createElementNS(ns,'circle');hit.setAttribute('cx',x);hit.setAttribute('cy',lineY);hit.setAttribute('r',15);hit.setAttribute('fill','transparent');hit.setAttribute('class','nl-hit');
+    hit.addEventListener('click',()=>{state.val=v;
+      if(selDot)selDot.remove();
+      const g=document.createElementNS(ns,'g');
+      const halo=document.createElementNS(ns,'circle');halo.setAttribute('cx',x);halo.setAttribute('cy',lineY);halo.setAttribute('r',11);halo.setAttribute('fill',V);halo.setAttribute('fill-opacity','.22');
+      const dot=document.createElementNS(ns,'circle');dot.setAttribute('cx',x);dot.setAttribute('cy',lineY);dot.setAttribute('r',6);dot.setAttribute('fill',V);
+      g.appendChild(halo);g.appendChild(dot);svg.appendChild(g);selDot=g;ready();});
+    svg.appendChild(hit);
+  }
+  stage.appendChild(svg);
+  return state;
+}
+
+/* ---- Q3: matching (3 pairs, draw lines) ---- */
+function matching(stage){
+  const pairs=[['dog','🐶'],['cat','🐱'],['sun','☀️']];
+  const rights=pairs.map(p=>p[1]).sort(()=>Math.random()-.5);
+  const colors=[V,T,TERRA];
+  const matches={}; let sel=null; // word -> emoji
+  const state={ done:()=>pairs.filter(p=>matches[p[0]]===p[1]).length };
+  const wrap=document.createElement('div');wrap.className='match-wrap';
+  const left=document.createElement('div');left.className='match-col';
+  const strip=document.createElement('div');strip.className='match-col match-strip';
+  const right=document.createElement('div');right.className='match-col';
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('width','54');svg.setAttribute('height','212');svg.style.overflow='visible';strip.appendChild(svg);
+  const colorFor=w=>colors[pairs.findIndex(p=>p[0]===w)];
+  function redraw(){svg.innerHTML='';Object.entries(matches).forEach(([w,em])=>{
+    const li=pairs.findIndex(p=>p[0]===w), ri=rights.indexOf(em);
+    const y1=li*70+29,y2=ri*70+29,c=colorFor(w);
+    const ln=document.createElementNS(ns,'line');ln.setAttribute('x1',2);ln.setAttribute('y1',y1);ln.setAttribute('x2',52);ln.setAttribute('y2',y2);ln.setAttribute('stroke',c);ln.setAttribute('stroke-width',3);ln.setAttribute('stroke-linecap','round');svg.appendChild(ln);});}
+  function updateReady(){ if(Object.keys(matches).length===3) ready(); }
+  pairs.forEach(p=>{const c=document.createElement('div');c.className='match-cell';c.textContent=p[0];c.dataset.w=p[0];
+    c.addEventListener('click',()=>{left.querySelectorAll('.match-cell').forEach(x=>x.classList.remove('sel'));
+      if(matches[p[0]]){delete matches[p[0]];c.classList.remove('done');redraw();return;}
+      sel=p[0];c.classList.add('sel');});left.appendChild(c);});
+  rights.forEach(em=>{const c=document.createElement('div');c.className='match-cell emoji';c.textContent=em;
+    c.addEventListener('click',()=>{if(!sel)return;
+      Object.keys(matches).forEach(w=>{if(matches[w]===em)delete matches[w];});
+      left.querySelectorAll('.match-cell.done').forEach(x=>{ if(!matches[x.dataset.w]) x.classList.remove('done'); });
+      matches[sel]=em;
+      left.querySelectorAll('.match-cell').forEach(x=>{if(x.dataset.w===sel)x.classList.add('done');x.classList.remove('sel');});
+      sel=null;redraw();updateReady();});right.appendChild(c);});
+  wrap.appendChild(left);wrap.appendChild(strip);wrap.appendChild(right);stage.appendChild(wrap);
+  return state;
+}
+
+/* ---------- RESULTS ---------- */
+function showResults(){
+  foot.style.display='none'; body.style.display='none';
+  document.querySelector('.demo-prog').innerHTML='<i class="on"></i><i class="on"></i><i class="on"></i>';
+  stepEl.textContent='Your insights';
+  const res=document.getElementById('results');res.style.display='block';
+  // Bayesian SmartPaper Score (the app's real base formula), framed friendly
+  const base=Math.round((correctCount+2.5)/(QS.length+5)*100);
+  const score=Math.min(100,base+ (correctCount===QS.length?8:0));
+  gsap.to({v:0},{v:score,duration:1.3,ease:'power2.out',onUpdate(){document.getElementById('scoreN').textContent=Math.round(this.targets()[0].v);}});
+  document.getElementById('scoreMsg').innerHTML = correctCount===QS.length
+    ? 'Brilliant — three from three! In the app this score climbs as your child does more questions, and the charts below fill in over every paper.'
+    : `You got <b>${correctCount} of ${QS.length}</b>. The score smooths short papers and rewards accuracy <b>and</b> effort — here's how it looks over time in the app.`;
+  drawLine(score); drawRadar();
+  gsap.fromTo(res,{opacity:0,y:20},{opacity:1,y:0,duration:.7,ease:'power3.out'});
+}
+
+function drawLine(finalScore){
+  const svg=document.getElementById('lineChart');svg.innerHTML='';
+  const ns='http://www.w3.org/2000/svg',W=300,H=170,PAD=26;
+  const data=[52,58,63,61,72, Math.max(60,finalScore)];
+  const max=100,min=40;
+  const X=i=>PAD+i/(data.length-1)*(W-PAD*2), Y=v=>H-24-(v-min)/(max-min)*(H-54);
+  // grid
+  [40,60,80,100].forEach(g=>{const l=document.createElementNS(ns,'line');l.setAttribute('x1',PAD);l.setAttribute('y1',Y(g));l.setAttribute('x2',W-PAD);l.setAttribute('y2',Y(g));l.setAttribute('stroke','#EFEBE3');l.setAttribute('stroke-width',1);svg.appendChild(l);});
+  const d=data.map((v,i)=>`${i?'L':'M'}${X(i)} ${Y(v)}`).join(' ');
+  const area=document.createElementNS(ns,'path');area.setAttribute('d',`${d} L${X(data.length-1)} ${H-24} L${X(0)} ${H-24} Z`);area.setAttribute('fill','url(#lg)');area.setAttribute('opacity','.18');
+  const defs=document.createElementNS(ns,'defs');defs.innerHTML=`<linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${V}"/><stop offset="1" stop-color="${V}" stop-opacity="0"/></linearGradient>`;svg.appendChild(defs);svg.appendChild(area);
+  const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',V);path.setAttribute('stroke-width','3');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');svg.appendChild(path);
+  const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
+  gsap.to(path.style,{strokeDashoffset:0,duration:1.4,ease:'power2.inOut'});
+  data.forEach((v,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',X(i));c.setAttribute('cy',Y(v));c.setAttribute('r',i===data.length-1?5:3.5);c.setAttribute('fill',i===data.length-1?T:V);c.setAttribute('opacity',0);svg.appendChild(c);
+    gsap.to(c,{attr:{opacity:1},duration:.3,delay:.5+i*.12});});
+}
+
+function drawRadar(){
+  const svg=document.getElementById('radarChart');svg.innerHTML='';
+  const ns='http://www.w3.org/2000/svg',cx=110,cy=98,R=70;
+  const axes=['Number','Times\ntables','Fractions','Shape','Data','Reasoning'];
+  const mine=[82,74,68,88,60,71], avg=[64,60,58,66,55,60];
+  const N=axes.length, ang=i=>i/N*2*Math.PI-Math.PI/2;
+  [.33,.66,1].forEach(r=>{const pts=axes.map((_,i)=>`${cx+Math.cos(ang(i))*R*r},${cy+Math.sin(ang(i))*R*r}`).join(' ');
+    const pg=document.createElementNS(ns,'polygon');pg.setAttribute('points',pts);pg.setAttribute('fill','none');pg.setAttribute('stroke','#EBE7DF');pg.setAttribute('stroke-width',1);svg.appendChild(pg);});
+  axes.forEach((a,i)=>{const x=cx+Math.cos(ang(i))*R,y=cy+Math.sin(ang(i))*R;
+    const ln=document.createElementNS(ns,'line');ln.setAttribute('x1',cx);ln.setAttribute('y1',cy);ln.setAttribute('x2',x);ln.setAttribute('y2',y);ln.setAttribute('stroke','#EBE7DF');svg.appendChild(ln);
+    const lx=cx+Math.cos(ang(i))*(R+16),ly=cy+Math.sin(ang(i))*(R+16);
+    a.split('\n').forEach((line,li)=>{const t=document.createElementNS(ns,'text');t.setAttribute('x',lx);t.setAttribute('y',ly+li*9-(a.includes('\n')?4:0));t.setAttribute('text-anchor','middle');t.setAttribute('font-size','8.5');t.setAttribute('font-weight','600');t.setAttribute('fill','#A8A49B');t.textContent=line;svg.appendChild(t);});});
+  function poly(vals,stroke,fill,w){const pts=vals.map((v,i)=>`${cx+Math.cos(ang(i))*R*v/100},${cy+Math.sin(ang(i))*R*v/100}`).join(' ');
+    const pg=document.createElementNS(ns,'polygon');pg.setAttribute('points',pts);pg.setAttribute('fill',fill);pg.setAttribute('stroke',stroke);pg.setAttribute('stroke-width',w);pg.setAttribute('stroke-linejoin','round');
+    pg.style.transformOrigin=`${cx}px ${cy}px`;svg.appendChild(pg);return pg;}
+  const avgP=poly(avg,'#A8A49B','none',1.5);avgP.setAttribute('stroke-dasharray','4 4');
+  const mineP=poly(mine,V,'rgba(99,84,214,.18)',2.5);
+  gsap.fromTo([avgP,mineP],{scale:0,opacity:0},{scale:1,opacity:1,duration:1,ease:'back.out(1.5)',stagger:.15});
+}
+
+loadQ();
+</script>
 </body>
 </html>
