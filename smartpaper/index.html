@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SmartPaper — AI Practice Papers Your Child Will Want to Do</title>
+<title>SmartPaper - AI Practice Papers Your Child Will Want to Do</title>
 <meta name="description" content="SmartPaper turns entrance-exam practice into a game. Adaptive Maths & English papers for Reception–Year 7, 17 interactive question types, instant AI feedback, and progress charts parents love. Try a question right now." />
 <meta name="theme-color" content="#FBFAF7" />
-<meta property="og:title" content="SmartPaper — practice papers your child will actually want to do" />
+<meta property="og:title" content="SmartPaper - practice papers your child will actually want to do" />
 <meta property="og:description" content="Adaptive Maths & English for Reception–Year 7. Try a real question in your browser, then watch the progress charts come to life." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://sagarjilka.com/smartpaper/" />
@@ -97,6 +97,7 @@
   .demo-prog i.on{background:var(--aurora)}
   .demo-step{font-size:.78rem;color:var(--ink2);font-weight:600}
   .demo-body{padding:30px 26px 26px;min-height:400px;display:flex;flex-direction:column}
+  .q-year{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
   .q-tag{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:8px}
   .q-body{font-size:1.28rem;font-weight:600;font-family:'Fredoka';margin-bottom:22px;line-height:1.3}
   .q-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
@@ -133,6 +134,16 @@
   @media(max-width:600px){.charts{grid-template-columns:1fr}}
   .chart-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--paper)}
   .chart-card h4{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:10px;font-family:'Space Grotesk'}
+  .lb-card{border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--paper);margin-top:18px}
+  .lb-card h4{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:4px;font-family:'Space Grotesk'}
+  .lb-sub{font-size:.85rem;color:var(--ink2);margin-bottom:14px}
+  .lb-list{display:grid;gap:8px}
+  .lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);opacity:0}
+  .lb-row .rank{width:26px;font-family:'Fredoka';font-weight:600;font-size:.95rem;color:var(--ink2);text-align:center;flex:none}
+  .lb-row .alias{flex:1;font-weight:600;font-size:.92rem}
+  .lb-row .sc{font-family:'Fredoka';font-weight:700;font-size:1.02rem;color:var(--violet)}
+  .lb-row.me{background:var(--violetL);border-color:var(--violet);box-shadow:0 6px 18px -10px rgba(99,84,214,.6)}
+  .lb-row.me .alias{color:var(--violet)}
   .res-cta{text-align:center;margin-top:26px}
 
   /* FEATURES */
@@ -199,15 +210,15 @@
     <div>
       <span class="hero-badge" data-h><span class="star">★★★★★</span> Loved by parents · Live on the App Store</span>
       <h1 data-h>Practice papers your child will <span class="grad-text">actually want</span> to do.</h1>
-      <p class="lede" data-h>Adaptive Maths &amp; English for Reception–Year&nbsp;7. Seventeen playful, tap-to-answer question types, instant AI feedback, and progress charts that finally make sense — built by a data scientist, powered by AI.</p>
+      <p class="lede" data-h>Adaptive Maths &amp; English for Reception-Year&nbsp;6. National Curriculum based, playful, but challenging questions personalised to your child, instant AI-feedback, and progress charts that finally make sense - built by a parent and data scientist.</p>
       <div class="hero-cta" data-h>
         <a class="btn btn-app" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">Download free</a>
         <button class="btn btn-try" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try a question ↓</button>
       </div>
       <div class="hero-trust" data-h>
-        <span><b>1,900+</b> vetted questions</span>
-        <span><b>17</b> question types</span>
-        <span><b>Reception–Y7</b> covered</span>
+        <span><b>Teacher-vetted</b> questions</span>
+        <span><b>Interactive</b> question types</span>
+        <span><b>Reception-Y6</b> covered</span>
       </div>
     </div>
     <div class="float-stage" data-h>
@@ -223,9 +234,9 @@
 <section class="demo" id="demo">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Try it now — no download</span>
+      <span class="eyebrow">Try it now</span>
       <h2>Answer a few questions.<br>Then watch the <span class="grad-text">insights</span> appear.</h2>
-      <p>This is exactly how SmartPaper works. Have a go — your child's progress charts build themselves.</p>
+      <p>This is how SmartPaper works. Have a go - SmartPaper learns your child's strengths and weaknesses, generates personalised papers, and progress charts build themselves for you.</p>
     </div>
     <div class="demo-shell reveal">
       <div class="demo-card">
@@ -249,8 +260,13 @@
             <div class="chart-card"><h4>Progress over time</h4><svg id="lineChart" viewBox="0 0 300 170" width="100%"></svg></div>
             <div class="chart-card"><h4>Topic strengths</h4><svg id="radarChart" viewBox="0 0 220 200" width="100%"></svg></div>
           </div>
+          <div class="lb-card">
+            <h4>Climb the leaderboard</h4>
+            <p class="lb-sub">Watch as your child climbs the global leaderboard.</p>
+            <div class="lb-list" id="lbList"></div>
+          </div>
           <div class="res-cta">
-            <a class="btn btn-app" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">Get the full app — free</a>
+            <a class="btn btn-app" href="https://apps.apple.com/app/smartpaper-ai/id6761371880" target="_blank" rel="noopener">Get the full app, free</a>
           </div>
         </div>
       </div>
@@ -266,12 +282,12 @@
       <h2>Built like a tutor. Feels like a game.</h2>
     </div>
     <div class="feat-grid">
-      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">🧭</div><h3>Adaptive papers</h3><p>Every paper is built fresh for your child — preferring questions they haven't seen and quietly targeting the topics they find hard.</p></div>
-      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">✋</div><h3>17 tap-to-answer types</h3><p>Colour fractions, draw lines of symmetry, tap number lines, match with real drawn connectors, build numbers from digit cards — far beyond multiple choice.</p></div>
-      <div class="feat reveal"><div class="ic" style="background:var(--amberL)">💬</div><h3>Instant AI feedback</h3><p>Get it wrong? A friendly, step-by-step explanation and a worked example appear — so mistakes become the moment they learn.</p></div>
-      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">📈</div><h3>Progress you can read</h3><p>A single SmartPaper Score, a line graph over time, and a spider chart of topic strengths vs the app average. Data science, made parent-friendly.</p></div>
-      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">📚</div><h3>Reading comprehension</h3><p>Whole-passage comprehension with a calm reading screen first — reading time never counts against the clock.</p></div>
-      <div class="feat reveal"><div class="ic" style="background:var(--terraL)">🏆</div><h3>Streaks &amp; leaderboard</h3><p>XP, daily streaks and an anonymous leaderboard that rewards accuracy and effort — the gentle nudge to come back tomorrow.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">🧭</div><h3>Adaptive, personalised papers</h3><p>Every paper is built fresh for your child, preferring questions they haven't seen and quietly targeting the topics they find hard.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">✋</div><h3>Engaging question types</h3><p>Colour fractions, draw lines of symmetry, tap number lines, match with real drawn connectors, build numbers from digit cards, and far more.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--amberL)">💬</div><h3>Instant AI feedback</h3><p>Get it wrong? A friendly, step-by-step explanation and a worked example appear, so mistakes become the moment they learn.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--violetL)">📈</div><h3>Progress you can read</h3><p>A single score, a line graph over time, and a spider chart of your child's topic strengths vs the app average. Your child's mind through data, made parent-friendly.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--tealL)">📚</div><h3>Reading comprehension</h3><p>Whole-passage comprehension with a calm reading screen first, followed by comprehension questions designed to engage your child.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:var(--terraL)">🏆</div><h3>Streaks &amp; leaderboard</h3><p>XP, daily streaks and an anonymous leaderboard that rewards accuracy and effort, the gentle nudge to come back tomorrow.</p></div>
     </div>
   </div>
 </section>
@@ -279,9 +295,9 @@
 <!-- TYPES MARQUEE -->
 <section class="types">
   <div class="wrap"><div class="sec-head reveal">
-    <span class="eyebrow" style="color:#a99cff">Seventeen ways to answer</span>
+    <span class="eyebrow" style="color:#a99cff">Watch your child grow</span>
     <h2>Questions that make children think.</h2>
-    <p>Interaction is the point — a tap-question only tests understanding when the answer isn't just sitting there to be picked.</p>
+    <p>Imagine your school's workbooks, test papers and resources packaged into an interactive app, designed to help your child grow and you to see the progress.</p>
   </div></div>
   <div class="type-row"><div class="type-track" id="tt1"></div></div>
   <div class="type-row"><div class="type-track rev" id="tt2"></div></div>
@@ -292,12 +308,12 @@
   <div class="wrap">
     <div class="sec-head reveal" style="margin-bottom:8px">
       <span class="eyebrow">Every stage covered</span>
-      <h2>From first counting to 11+ &amp; 12+.</h2>
+      <h2>From first counting to 11+.</h2>
     </div>
     <div class="year-pills reveal">
       <a class="yp" href="#">Reception</a><a class="yp" href="#">Year 1</a><a class="yp" href="#">Year 2</a>
       <a class="yp" href="#">Year 3</a><a class="yp" href="#">Year 4</a><a class="yp" href="#">Year 5</a>
-      <a class="yp" href="#">Year 6</a><a class="yp" href="#">Year 7</a>
+      <a class="yp" href="#">Year 6</a>
     </div>
   </div>
 </section>
@@ -390,9 +406,9 @@ const body=document.getElementById('demoBody'),foot=document.getElementById('dem
 let qi=0, answered=false, correctCount=0, current=null;
 
 const QS=[
-  {tag:'Fractions · tap to colour', body:'Colour <b>three quarters</b> (¾) of the circle.', render:fraction, check:()=>current.shaded.size===3, hint:'Tap parts to colour them — tap again to rub out'},
-  {tag:'Number · tap the line', body:'Tap where <b>30</b> belongs on the number line.', render:numline, check:()=>current.val===30, hint:'Only the tens are labelled — find the tick for 30'},
-  {tag:'Vocabulary · draw the lines', body:'Match each word to its picture.', render:matching, check:()=>current.done()===3, hint:'Tap a word, then tap its picture'}
+  {yr:'Year 2 · Maths', tag:'Fractions · tap to colour', body:'Colour <b>three quarters</b> (¾) of the circle.', render:fraction, check:()=>current.shaded.size===3, hint:'Tap parts to colour them, tap again to rub out'},
+  {yr:'Year 3 · Maths', tag:'Number · tap the line', body:'Tap where <b>35</b> belongs on the number line.', render:numline, check:()=>current.val===35, hint:''},
+  {yr:'Reception · English', tag:'Vocabulary · draw the lines', body:'Match each word to its picture.', render:matching, check:()=>current.done()===3, hint:'Tap a word, then tap its picture'}
 ];
 
 function loadQ(){
@@ -400,7 +416,7 @@ function loadQ(){
   nextBtn.textContent='Check'; nextBtn.disabled=true;
   stepEl.textContent=`Question ${qi+1} of ${QS.length}`;
   progEl.forEach((p,i)=>p.classList.toggle('on',i<=qi));
-  body.innerHTML=`<div class="q-tag">${q.tag}</div><div class="q-body">${q.body}</div><div class="q-stage" id="qStage"></div><div style="text-align:center;margin-top:12px"><span class="q-hint">${q.hint}</span></div>`;
+  body.innerHTML=`<div class="q-year">${q.yr}</div><div class="q-tag">${q.tag}</div><div class="q-body">${q.body}</div><div class="q-stage" id="qStage"></div>${q.hint?`<div style="text-align:center;margin-top:12px"><span class="q-hint">${q.hint}</span></div>`:''}`;
   current=q.render(document.getElementById('qStage'));
 }
 function ready(){ nextBtn.disabled=false; }
@@ -411,7 +427,7 @@ nextBtn.addEventListener('click',()=>{
     answered=true;
     const ok=q.check();
     if(ok){correctCount++;fbMsg.textContent='Correct! Nice work. ✓';fbMsg.className='fb-msg ok';}
-    else{fbMsg.textContent='Not quite — but that\'s how SmartPaper teaches.';fbMsg.className='fb-msg no';}
+    else{fbMsg.textContent='Not quite - but that\'s how SmartPaper learns about you and teaches.';fbMsg.className='fb-msg no';}
     nextBtn.textContent = qi<QS.length-1?'Next question →':'See the insights ✨';
   } else {
     qi++;
@@ -428,11 +444,10 @@ function fraction(stage){
     return `M${cx} ${cy} L${cx+R*Math.cos(a0)} ${cy+R*Math.sin(a0)} A${R} ${R} 0 0 1 ${cx+R*Math.cos(a1)} ${cy+R*Math.sin(a1)} Z`;}
   for(let i=0;i<parts;i++){const p=document.createElementNS(ns,'path');p.setAttribute('d',seg(i));
     p.setAttribute('fill','#f9fafb');p.setAttribute('stroke','#374151');p.setAttribute('stroke-width','2');p.setAttribute('class','frac-seg');
-    p.addEventListener('click',()=>{if(shaded.has(i)){shaded.delete(i);p.setAttribute('fill','#f9fafb');}else{shaded.add(i);p.setAttribute('fill',V);p.setAttribute('fill-opacity','.85');}
-      badge.textContent=`Coloured: ${shaded.size} / 4`; ready();});
+    p.addEventListener('click',()=>{if(shaded.has(i)){shaded.delete(i);p.setAttribute('fill','#f9fafb');p.removeAttribute('fill-opacity');}else{shaded.add(i);p.setAttribute('fill',V);p.setAttribute('fill-opacity','.85');}
+      ready();});
     svg.appendChild(p);}
   stage.appendChild(svg);
-  const badge=document.createElement('div');badge.className='badge-count';badge.textContent='Coloured: 0 / 4';stage.appendChild(badge);
   return {shaded};
 }
 
@@ -504,10 +519,28 @@ function showResults(){
   const score=Math.min(100,base+ (correctCount===QS.length?8:0));
   gsap.to({v:0},{v:score,duration:1.3,ease:'power2.out',onUpdate(){document.getElementById('scoreN').textContent=Math.round(this.targets()[0].v);}});
   document.getElementById('scoreMsg').innerHTML = correctCount===QS.length
-    ? 'Brilliant — three from three! In the app this score climbs as your child does more questions, and the charts below fill in over every paper.'
-    : `You got <b>${correctCount} of ${QS.length}</b>. The score smooths short papers and rewards accuracy <b>and</b> effort — here's how it looks over time in the app.`;
-  drawLine(score); drawRadar();
+    ? 'Brilliant, three from three! In the app this score climbs as your child does more questions, and the charts below fill in over every paper.'
+    : `You got <b>${correctCount} of ${QS.length}</b>. The score smooths short papers and rewards accuracy <b>and</b> effort. Here's how it looks over time in the app.`;
+  drawLine(score); drawRadar(); drawLeaderboard(score);
   gsap.fromTo(res,{opacity:0,y:20},{opacity:1,y:0,duration:.7,ease:'power3.out'});
+}
+
+function drawLeaderboard(score){
+  const list=document.getElementById('lbList');list.innerHTML='';
+  const medal={1:'🥇',2:'🥈',3:'🥉'};
+  const childScore=Math.max(86,Math.min(88,Math.round(score)||87));
+  const rows=[
+    {a:'Swift Falcon',s:94},{a:'Brave Otter',s:91},{a:'Clever Fox',s:89},
+    {a:'Your child',s:childScore,me:true},{a:'Mighty Panda',s:85},{a:'Lucky Hawk',s:83}
+  ].sort((x,y)=>y.s-x.s);
+  rows.forEach((r,i)=>{
+    const row=document.createElement('div');row.className='lb-row'+(r.me?' me':'');
+    row.innerHTML=`<div class="rank">${medal[i+1]||(i+1)}</div><div class="alias">${r.a}</div><div class="sc">${r.s}</div>`;
+    list.appendChild(row);
+    gsap.fromTo(row,{opacity:0,x:-18},{opacity:1,x:0,duration:.5,delay:.35+i*.12,ease:'power3.out'});
+  });
+  const me=list.querySelector('.me');
+  if(me) gsap.fromTo(me,{scale:.95},{scale:1,duration:.5,delay:1.15,ease:'back.out(2.2)'});
 }
 
 function drawLine(finalScore){
