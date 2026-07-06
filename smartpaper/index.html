@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SmartPaper - AI Practice Papers Your Child Will Want to Do</title>
-<meta name="description" content="SmartPaper turns entrance-exam practice into a game. Adaptive Maths & English papers for Reception–Year 7, 17 interactive question types, instant AI feedback, and progress charts parents love. Try a question right now." />
+<meta name="description" content="SmartPaper turns practice papers into a game. Adaptive, National Curriculum Maths &amp; English for Reception to Year 6, with playful interactive questions, instant AI feedback, and progress charts parents love. Try a question right now." />
 <meta name="theme-color" content="#FBFAF7" />
 <meta property="og:title" content="SmartPaper - practice papers your child will actually want to do" />
-<meta property="og:description" content="Adaptive Maths & English for Reception–Year 7. Try a real question in your browser, then watch the progress charts come to life." />
+<meta property="og:description" content="Adaptive Maths &amp; English for Reception to Year 6. Try a real question in your browser, then watch the progress charts come to life." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://sagarjilka.com/smartpaper/" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -134,6 +134,11 @@
   @media(max-width:600px){.charts{grid-template-columns:1fr}}
   .chart-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--paper)}
   .chart-card h4{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:10px;font-family:'Space Grotesk'}
+  .radar-key{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:.74rem;color:var(--ink2);font-weight:600}
+  .radar-key span{display:inline-flex;align-items:center;gap:6px}
+  .radar-key i{display:inline-block;width:16px;height:0;flex:none}
+  .radar-key .k-mine{height:3px;border-radius:2px;background:var(--violet)}
+  .radar-key .k-avg{border-top:2px dashed #A8A49B}
   .lb-card{border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--paper);margin-top:18px}
   .lb-card h4{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:4px;font-family:'Space Grotesk'}
   .lb-sub{font-size:.85rem;color:var(--ink2);margin-bottom:14px}
@@ -223,9 +228,9 @@
     </div>
     <div class="float-stage" data-h>
       <div class="fcard f1"><div class="pill-emoji">🎨</div><div class="ft">Colour the fraction</div><div class="fb">Shade ¾ of the shape</div></div>
-      <div class="fcard f2"><div class="ft">Tap in order</div><div class="fb">Smallest first</div>
-        <div class="mini-opt">12</div><div class="mini-opt ok">18 ✓</div></div>
-      <div class="fcard f3"><div class="pill-emoji" style="background:var(--tealL)">📏</div><div class="ft">Number line</div><div class="fb">Tap where 30 goes</div></div>
+      <div class="fcard f2"><div class="ft">Tap in order</div><div class="fb">Largest first</div>
+        <div class="mini-opt ok">18 ✓</div><div class="mini-opt">12</div><div class="mini-opt">11</div></div>
+      <div class="fcard f3"><div class="pill-emoji" style="background:var(--tealL)">📏</div><div class="ft">Number line</div><div class="fb">Tap where 35 goes</div></div>
     </div>
   </div>
 </header>
@@ -258,7 +263,9 @@
           <p class="res-msg" id="scoreMsg"></p>
           <div class="charts">
             <div class="chart-card"><h4>Progress over time</h4><svg id="lineChart" viewBox="0 0 300 170" width="100%"></svg></div>
-            <div class="chart-card"><h4>Topic strengths</h4><svg id="radarChart" viewBox="0 0 220 200" width="100%"></svg></div>
+            <div class="chart-card"><h4>Topic strengths</h4><svg id="radarChart" viewBox="0 0 220 200" width="100%"></svg>
+              <div class="radar-key"><span><i class="k-mine"></i> Your child</span><span><i class="k-avg"></i> App average</span></div>
+            </div>
           </div>
           <div class="lb-card">
             <h4>Climb the leaderboard</h4>
@@ -331,7 +338,7 @@
         <div class="price">£0</div>
         <ul>
           <li><span class="tick">✓</span> Daily adaptive papers</li>
-          <li><span class="tick">✓</span> All 17 question types</li>
+          <li><span class="tick">✓</span> All interactive question types</li>
           <li><span class="tick">✓</span> SmartPaper Score &amp; streaks</li>
           <li><span class="tick">✓</span> A few AI explanations to try</li>
         </ul>
@@ -360,7 +367,7 @@
       <a href="https://sagarjilka.com">About the founder</a>
       <a href="mailto:sagarjilka@gmail.com">Contact</a>
     </div>
-    <div class="foot-copy">© <span id="yr"></span> SmartPaper · Made by Dr Sagar Jilka · Reception–Year 7 Maths &amp; English</div>
+    <div class="foot-copy">© <span id="yr"></span> SmartPaper · Made by Dr Sagar Jilka · Reception to Year 6 Maths &amp; English</div>
   </div>
 </footer>
 
