@@ -279,8 +279,22 @@
     .tag-maths { background: var(--violet-soft); color: var(--violet); }
     .tag-english { background: var(--terra-soft); color: var(--terra-ink); }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+<div id="login-gate" style="position:fixed;inset:0;background:#FDFBF7;display:none;z-index:9999;align-items:center;justify-content:center;padding:24px;font-family:'Space Grotesk',system-ui,sans-serif;">
+  <div style="max-width:400px;width:100%;text-align:center;">
+    <div style="font-size:40px;">📄</div>
+    <h1 style="font-size:22px;margin:12px 0 6px;color:#1C1B19;">Teacher Dashboard</h1>
+    <p style="color:#56524B;font-size:14px;margin-bottom:20px;">Sign in with your school email — we'll email you a secure sign-in link.</p>
+    <input id="login-email" type="email" placeholder="you@school.com" autocomplete="email"
+      style="width:100%;padding:14px;border:1.5px solid #EBE7DF;border-radius:12px;font-size:15px;margin-bottom:12px;box-sizing:border-box;font-family:inherit;">
+    <button id="login-btn" style="width:100%;padding:14px;background:#6354D6;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">Send sign-in link</button>
+    <p id="login-msg" style="font-size:13px;color:#56524B;margin-top:14px;min-height:18px;"></p>
+  </div>
+</div>
+
 
 <!-- TOP BAR -->
 <div class="topbar">
@@ -424,44 +438,16 @@
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
 // Harmonious Paper & Aurora avatar palette (violets, teals, slate-blue, sage, plum)
+const SB_URL = 'https://nzeladoubwjtcgnddmim.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56ZWxhZG91YndqdGNnbmRkbWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNjU4MDEsImV4cCI6MjA4OTk0MTgwMX0.HZzClE2pt2h8maQIOOfst5T5QWSs8P74qjETauuID-c';
+const sb = window.supabase.createClient(SB_URL, SB_ANON, { auth: { detectSessionInUrl: true, persistSession: true } });
 const PALETTE = ['#6354D6','#7A6BF0','#4F7CC9','#18B69E','#2A9D8F','#0E8E7C','#7A8C5A','#9C6BB0','#C08A3C'];
 
-const TOPICS = [
-  { tag: 'addition',           label: 'Addition',         classAcc: 82 },
-  { tag: 'subtraction',        label: 'Subtraction',      classAcc: 74 },
-  { tag: 'multiplication',     label: 'Multiplication',   classAcc: 61 },
-  { tag: 'place_value',        label: 'Place Value',      classAcc: 88 },
-  { tag: 'money',              label: 'Money',            classAcc: 56 },
-  { tag: 'time',               label: 'Time',             classAcc: 49 },
-  { tag: 'fractions',          label: 'Fractions',        classAcc: 67 },
-  { tag: 'measurement',        label: 'Measurement',      classAcc: 71 },
-  { tag: 'shapes',             label: '2D/3D Shapes',     classAcc: 79 },
-];
+let TOPICS = [];
 
-const STUDENTS = [
-  { id:1,  name:'Aaliyah Patel',     score:88, trend:[70,74,78,80,85,88], streak:9,  lastActive:'Today',     weakTopics:['time'],                    history:[{date:'23 May',score:9,max:10},{date:'19 May',score:8,max:10},{date:'14 May',score:7,max:10}] },
-  { id:2,  name:'Benjamin Clarke',   score:41, trend:[55,51,48,44,40,41], streak:0,  lastActive:'11 days ago', weakTopics:['multiplication','time','money'], history:[{date:'21 May',score:4,max:10},{date:'12 May',score:5,max:10}] },
-  { id:3,  name:'Chloe Whitmore',    score:76, trend:[68,70,72,73,75,76], streak:5,  lastActive:'Yesterday', weakTopics:['fractions'],               history:[{date:'29 May',score:8,max:10},{date:'22 May',score:7,max:10}] },
-  { id:4,  name:'Dylan Osei',        score:63, trend:[58,60,62,61,64,63], streak:3,  lastActive:'Today',     weakTopics:['money','time'],            history:[{date:'30 May',score:6,max:10},{date:'26 May',score:7,max:10}] },
-  { id:5,  name:'Emma Thornton',     score:91, trend:[80,82,85,87,89,91], streak:14, lastActive:'Today',     weakTopics:[],                          history:[{date:'30 May',score:9,max:10},{date:'27 May',score:9,max:10}] },
-  { id:6,  name:'Freddie Adeyemi',   score:55, trend:[60,57,54,56,53,55], streak:2,  lastActive:'2 days ago',weakTopics:['multiplication','fractions'], history:[{date:'28 May',score:5,max:10},{date:'23 May',score:6,max:10}] },
-  { id:7,  name:'Grace Liu',         score:84, trend:[75,77,79,81,83,84], streak:7,  lastActive:'Today',     weakTopics:['time'],                    history:[{date:'30 May',score:8,max:10},{date:'26 May',score:8,max:10}] },
-  { id:8,  name:'Harry Benson',      score:47, trend:[52,50,48,46,45,47], streak:1,  lastActive:'5 days ago',weakTopics:['time','measurement'],      history:[{date:'25 May',score:5,max:10},{date:'20 May',score:4,max:10}] },
-  { id:9,  name:'Isla Mackenzie',    score:79, trend:[72,74,76,77,78,79], streak:6,  lastActive:'Today',     weakTopics:['money'],                   history:[{date:'30 May',score:8,max:10},{date:'27 May',score:7,max:10}] },
-  { id:10, name:'Jasper Ramirez',    score:68, trend:[63,65,66,67,68,68], streak:4,  lastActive:'Yesterday', weakTopics:['fractions','time'],        history:[{date:'29 May',score:7,max:10},{date:'25 May',score:6,max:10}] },
-  { id:11, name:'Keira Nwosu',       score:93, trend:[84,86,88,90,92,93], streak:19, lastActive:'Today',     weakTopics:[],                          history:[{date:'30 May',score:9,max:10},{date:'28 May',score:9,max:10}] },
-  { id:12, name:'Luca Ferreira',     score:72, trend:[65,67,69,70,71,72], streak:5,  lastActive:'Today',     weakTopics:['multiplication'],          history:[{date:'30 May',score:7,max:10},{date:'26 May',score:7,max:10}] },
-  { id:13, name:'Mia Johansson',     score:38, trend:[50,46,43,40,37,38], streak:0,  lastActive:'14 days ago', weakTopics:['time','money','multiplication','fractions'], history:[{date:'16 May',score:4,max:10}] },
-  { id:14, name:'Noah Campbell',     score:81, trend:[73,75,77,79,80,81], streak:8,  lastActive:'Today',     weakTopics:['fractions'],               history:[{date:'30 May',score:8,max:10},{date:'27 May',score:8,max:10}] },
-  { id:15, name:'Olivia Sharma',     score:66, trend:[61,63,64,65,65,66], streak:3,  lastActive:'Yesterday', weakTopics:['time','shapes'],           history:[{date:'29 May',score:7,max:10},{date:'24 May',score:6,max:10}] },
-  { id:16, name:'Patrick O\'Brien',  score:77, trend:[70,71,73,74,76,77], streak:6,  lastActive:'Today',     weakTopics:['money'],                   history:[{date:'30 May',score:8,max:10},{date:'26 May',score:7,max:10}] },
-  { id:17, name:'Quinn Bakker',      score:85, trend:[77,79,80,82,84,85], streak:10, lastActive:'Today',     weakTopics:[],                          history:[{date:'30 May',score:9,max:10},{date:'27 May',score:8,max:10}] },
-  { id:18, name:'Ruby Adebayo',      score:59, trend:[57,58,59,58,60,59], streak:2,  lastActive:'2 days ago',weakTopics:['multiplication','time'],   history:[{date:'28 May',score:6,max:10},{date:'23 May',score:6,max:10}] },
-  { id:19, name:'Samuel Green',      score:74, trend:[67,69,71,72,73,74], streak:5,  lastActive:'Today',     weakTopics:['fractions'],               history:[{date:'30 May',score:7,max:10},{date:'26 May',score:7,max:10}] },
-  { id:20, name:'Talia Okonkwo',     score:89, trend:[80,83,85,86,88,89], streak:12, lastActive:'Today',     weakTopics:[],                          history:[{date:'30 May',score:9,max:10},{date:'28 May',score:8,max:10}] },
-  { id:21, name:'Umar Hussain',      score:61, trend:[59,60,61,60,62,61], streak:3,  lastActive:'Yesterday', weakTopics:['money','measurement'],     history:[{date:'29 May',score:6,max:10},{date:'24 May',score:6,max:10}] },
-  { id:22, name:'Violet Tran',       score:82, trend:[74,76,78,80,81,82], streak:7,  lastActive:'Today',     weakTopics:['time'],                    history:[{date:'30 May',score:8,max:10},{date:'27 May',score:8,max:10}] },
-];
+let STUDENTS = [];
+let BENCH = {};
+let RECENT_ACTIVITY = [];
 
 // Assign harmonious avatar colours; struggling pupils get the terracotta "attention" tone
 STUDENTS.forEach((s, i) => { s.color = s.score < 55 ? '#C2603F' : PALETTE[i % PALETTE.length]; });
@@ -537,18 +523,12 @@ function renderHeat() {
 // ─── RENDER RECENT ACTIVITY ───────────────────────────────────────────────────
 
 function renderActivity() {
-  const recent = [
-    { name:'Keira Nwosu',     time:'10 mins ago', score:9, max:10 },
-    { name:'Emma Thornton',   time:'23 mins ago', score:9, max:10 },
-    { name:'Talia Okonkwo',   time:'1 hr ago',    score:9, max:10 },
-    { name:'Aaliyah Patel',   time:'2 hrs ago',   score:8, max:10 },
-    { name:'Grace Liu',       time:'2 hrs ago',   score:8, max:10 },
-    { name:'Noah Campbell',   time:'3 hrs ago',   score:8, max:10 },
-  ];
   const el = document.getElementById('recent-activity');
-  el.innerHTML = recent.map(r => {
+  if (!el) return;
+  el.innerHTML = (RECENT_ACTIVITY || []).map(r => {
     const stu = STUDENTS.find(s => s.name === r.name);
     const color = stu ? stu.color : '#6354D6';
+    const ratio = r.max ? r.score / r.max : 0;
     return `
     <div class="history-item">
       <div style="display:flex;align-items:center;gap:9px">
@@ -559,7 +539,7 @@ function renderActivity() {
         </div>
       </div>
       <div style="text-align:right">
-        <div class="score-badge ${r.score/r.max>=0.75?'high':r.score/r.max>=0.55?'mid':'low'}">${r.score}/${r.max}</div>
+        <div class="score-badge ${ratio>=0.75?'high':ratio>=0.55?'mid':'low'}">${r.score}/${r.max}</div>
       </div>
     </div>`;
   }).join('');
@@ -708,30 +688,28 @@ function closeModal(e) {
 // ─── RADAR / SPIDER CHART ─────────────────────────────────────────────────────
 
 const THEMES = [
-  { key: 'number',      label: 'Number' },
-  { key: 'times_tables',label: 'Times Tables' },
-  { key: 'fractions',   label: 'Fractions' },
-  { key: 'measurement', label: 'Measurement' },
-  { key: 'shape',       label: 'Shape & Space' },
-  { key: 'data',        label: 'Data & Graphs' },
+  { key: 'number',     label: 'Number' },
+  { key: 'arithmetic', label: 'Arithmetic' },
+  { key: 'fractions',  label: 'Fractions' },
+  { key: 'measure',    label: 'Measure & Shape' },
+  { key: 'data',       label: 'Data' },
+  { key: 'literacy',   label: 'Literacy' },
 ];
 
 const TOPIC_TO_THEME = {
-  place_value:'number', addition:'number', subtraction:'number',
-  multiplication:'times_tables', multiplication_tables:'times_tables',
-  fractions:'fractions', decimals:'fractions',
-  money:'measurement', time:'measurement', measurement:'measurement', measuring_length:'measurement',
-  shapes:'shape', '2d_shapes':'shape', '3d_shapes':'shape', symmetry:'shape',
-  charts:'data', statistics:'data', venn_diagrams:'data',
+  number:'number',
+  arithmetic:'arithmetic', times_tables:'arithmetic',
+  fractions:'fractions', decimals:'fractions', percentages:'fractions', ratio:'fractions', algebra:'fractions',
+  measurement:'measure', geometry:'measure',
+  data:'data',
+  grammar:'literacy', punctuation:'literacy', vocabulary:'literacy', comprehension:'literacy', writing:'literacy',
 };
 
 function buildStudentTopics(student) {
-  return TOPICS.map(t => {
-    const isWeak = student.weakTopics.includes(t.tag);
-    const base = isWeak ? t.classAcc - 18 : t.classAcc + 5;
-    const noise = (parseInt(student.id) * 7 + t.tag.length * 3) % 14 - 7;
-    return { tag: t.tag, studentAcc: Math.min(99, Math.max(10, base + noise)) };
-  });
+  return TOPICS.map(t => ({
+    tag: t.tag,
+    studentAcc: (student.topicAcc && student.topicAcc[t.tag] != null) ? student.topicAcc[t.tag] : t.classAcc,
+  }));
 }
 
 function topicsToThemeScores(topics) {
@@ -752,9 +730,10 @@ function topicsToThemeScores(topics) {
 function studentThemeScores(student) { return topicsToThemeScores(buildStudentTopics(student)); }
 function classAverageThemeScores() { return topicsToThemeScores(TOPICS.map(t => ({ tag: t.tag, studentAcc: t.classAcc }))); }
 function appAverageThemeScores() {
-  const classScores = classAverageThemeScores();
+  const byTheme = {}; THEMES.forEach(t => byTheme[t.key] = []);
+  Object.keys(BENCH).forEach(tag => { const th = TOPIC_TO_THEME[tag]; if (th) byTheme[th].push(BENCH[tag]); });
   const result = {};
-  THEMES.forEach(t => { result[t.key] = Math.max(20, (classScores[t.key] || 50) - 8); });
+  THEMES.forEach(t => { const v = byTheme[t.key]; result[t.key] = v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length) : 50; });
   return result;
 }
 
@@ -862,15 +841,95 @@ function renderPupilRadar(student) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 
-renderAttention();
-renderHeat();
-renderActivity();
-renderTable(STUDENTS);
-renderClassRadar();
-// Redraw radars once the web fonts have loaded so canvas labels use Space Grotesk
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => { renderClassRadar(); });
+function humanizeDate(iso) {
+  if (!iso) return 'Never';
+  const d = new Date(iso), now = new Date();
+  const days = Math.floor((now - d) / 86400000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 14) return days + ' days ago';
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
 }
+
+function applyReport(report) {
+  const CANON = [
+    ['number','Number'],['arithmetic','Arithmetic'],['times_tables','Times Tables'],
+    ['fractions','Fractions'],['decimals','Decimals'],['percentages','Percentages'],
+    ['measurement','Measurement'],['geometry','Geometry'],['data','Data'],
+    ['grammar','Grammar'],['punctuation','Punctuation'],['vocabulary','Vocabulary'],['comprehension','Comprehension'],
+  ];
+  const acc = {}, cnt = {};
+  (report.cohort||[]).forEach(c => (c.topics||[]).forEach(t => {
+    acc[t.topic_tag] = (acc[t.topic_tag]||0) + (t.rolling_accuracy||0);
+    cnt[t.topic_tag] = (cnt[t.topic_tag]||0) + 1;
+  }));
+  TOPICS = CANON.filter(function(p){ return cnt[p[0]]; }).map(function(p){ return { tag: p[0], label: p[1], classAcc: Math.round(acc[p[0]]/cnt[p[0]]) }; });
+
+  STUDENTS = (report.cohort||[]).map((c, i) => {
+    const topicAcc = {}; (c.topics||[]).forEach(t => { topicAcc[t.topic_tag] = t.rolling_accuracy; });
+    const recentAsc = (c.recent||[]).slice().reverse();
+    const trend = recentAsc.map(r => (r.smart_score != null ? r.smart_score : Math.round(((r.score||0)/(r.max||1))*100)));
+    const score = (c.avg_smart_score != null) ? c.avg_smart_score : (trend.length ? trend[trend.length-1] : 0);
+    return {
+      id: c.child_id, name: c.name, score,
+      trend: trend.length >= 2 ? trend.slice(-8) : [score, score],
+      streak: c.streak_days||0, papers: c.papers_completed||0, yearGroup: c.year_group,
+      lastActive: humanizeDate(c.last_active),
+      weakTopics: (c.topics||[]).filter(t => t.needs_review).map(t => t.topic_tag),
+      topicAcc,
+      history: (c.recent||[]).map(r => ({ date: humanizeDate(r.date), score: r.score, max: r.max })),
+      color: score < 55 ? '#C2603F' : PALETTE[i % PALETTE.length],
+    };
+  });
+
+  BENCH = {}; const bAcc={}, bCnt={};
+  (report.benchmark||[]).forEach(b => { bAcc[b.topic_tag]=(bAcc[b.topic_tag]||0)+b.avg_accuracy; bCnt[b.topic_tag]=(bCnt[b.topic_tag]||0)+1; });
+  Object.keys(bAcc).forEach(tag => { BENCH[tag] = bAcc[tag]/bCnt[tag]; });
+
+  const acts = [];
+  (report.cohort||[]).forEach(c => (c.recent||[]).forEach(r => acts.push({ name: c.name, date: r.date, score: r.score, max: r.max })));
+  acts.sort((a,b) => new Date(b.date) - new Date(a.date));
+  RECENT_ACTIVITY = acts.slice(0, 8).map(a => ({ name: a.name, time: humanizeDate(a.date), score: a.score, max: a.max }));
+
+  const school = document.getElementById('school-name');
+  if (school && report.school_label) school.textContent = report.school_label;
+
+  document.getElementById('login-gate').style.display = 'none';
+  renderAttention(); renderHeat(); renderActivity(); renderTable(STUDENTS); renderClassRadar();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderClassRadar);
+}
+
+async function loadReport() {
+  const { data, error } = await sb.functions.invoke('teacher-report', { body: {} });
+  if (error) throw error;
+  if (data && data.error) throw new Error(data.error);
+  applyReport(data);
+}
+
+async function boot() {
+  const gate = document.getElementById('login-gate');
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { gate.style.display = 'flex'; return; }
+  try { await loadReport(); }
+  catch (e) {
+    gate.style.display = 'flex';
+    document.getElementById('login-msg').textContent = String(e.message||e).includes('not a teacher')
+      ? 'This account does not have teacher access.' : 'Could not load data — please sign in again.';
+    await sb.auth.signOut();
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = (document.getElementById('login-email').value || '').trim();
+  const msg = document.getElementById('login-msg');
+  if (!email) { msg.textContent = 'Please enter your email.'; return; }
+  msg.textContent = 'Sending…';
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href.split('#')[0], shouldCreateUser: false } });
+  msg.textContent = error ? ('Error: ' + error.message) : 'Check your email for a sign-in link, then reopen this page.';
+});
+
+sb.auth.onAuthStateChange((_e, session) => { if (session) boot(); });
+boot();
 </script>
 </body>
 </html>
