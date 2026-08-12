@@ -644,7 +644,7 @@ function openModal(id) {
 
     <div class="modal-stats-row">
       <div class="modal-stat">
-        <div class="modal-stat-val">${s.score}</div>
+        <div class="modal-stat-val">${papersCompleted === 0 ? '–' : s.score}</div>
         <div class="modal-stat-label">SmartPaper Score</div>
       </div>
       <div class="modal-stat">
@@ -658,6 +658,7 @@ function openModal(id) {
     </div>
 
     <div class="modal-section-title">Topic mastery breakdown</div>
+    ${studentTopics.length === 0 ? '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px">No topic data yet — this fills in as papers are completed.</div>' : ''}
     ${studentTopics.map(t => {
       const [bClass2, bLabel2] = bucketLabel(t.studentAcc);
       return `
@@ -673,7 +674,8 @@ function openModal(id) {
     }).join('')}
 
     <div class="modal-section-title">Recent paper history</div>
-    ${s.history.map(h => `
+    ${(s.history || []).length === 0 ? '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px">No papers completed yet.</div>' : ''}
+    ${(s.history || []).map(h => `
       <div class="history-item">
         <div class="history-date">${h.date}</div>
         <div>
@@ -683,17 +685,26 @@ function openModal(id) {
       </div>
     `).join('')}
 
-    ${s.weakTopics.length > 0 ? `
-      <div class="modal-section-title">SmartPaper recommendation</div>
+    <div class="modal-section-title">SmartPaper recommendation</div>
+    ${
+      papersCompleted === 0 ? `
+      <div class="reco-card">
+        <strong>${s.name.split(' ')[0]}</strong> hasn't completed any papers yet, so there's nothing to assess. They'll appear here with real insights once they start practising.
+      </div>`
+      : s.weakTopics.length > 0 ? `
       <div class="reco-card reco-warn">
         <strong>${s.name.split(' ')[0]}</strong>'s next paper will automatically include extra practice on
         <strong>${s.weakTopics.map(topicLabel).join(', ')}</strong> - the topics where they need the most support.
-      </div>
-    ` : `
+      </div>`
+      : papersCompleted < 3 ? `
+      <div class="reco-card">
+        Early days - based on just ${papersCompleted} paper${papersCompleted === 1 ? '' : 's'}. Any weak topics will surface here as <strong>${s.name.split(' ')[0]}</strong> completes more.
+      </div>`
+      : `
       <div class="reco-card reco-good">
         ✓ <strong>${s.name.split(' ')[0]}</strong> is performing well across all topics. SmartPaper will continue to vary topics to maintain broad coverage.
-      </div>
-    `}
+      </div>`
+    }
   `;
 
   document.getElementById('modal-content').innerHTML = html;
@@ -853,7 +864,17 @@ function renderClassRadar() {
 function renderPupilRadar(student) {
   document.getElementById('radar-pupil-name').textContent = student.name + "'s";
   document.getElementById('radar-pupil-label').textContent = student.name;
-  document.getElementById('radar-pupil-hint').style.display = 'none';
+  const hint = document.getElementById('radar-pupil-hint');
+  const canvas = document.getElementById('radar-pupil');
+  // No topic data (no papers) → don't draw the class average as if it were the
+  // pupil's own skills; show a plain "no data yet" note instead.
+  const hasData = student.topicAcc && Object.keys(student.topicAcc).length > 0;
+  if (!hasData) {
+    if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    if (hint) { hint.style.display = ''; hint.textContent = student.name + ' hasn’t completed any papers yet — no skills to show.'; }
+    return;
+  }
+  if (hint) hint.style.display = 'none';
   drawRadar('radar-pupil', [
     { scores: classAverageThemeScores(), color: '#6354D6', filled: false },
     { scores: studentThemeScores(student), color: '#18B69E', filled: true },
