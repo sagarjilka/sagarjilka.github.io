@@ -351,8 +351,14 @@
 
   <!-- ATTENTION BANNER -->
   <div class="attention-banner">
-    <h3><span class="attention-dot"></span> Pupils needing attention this week</h3>
-    <div class="attention-pupils" id="attention-pupils"></div>
+    <div id="attention-struggling-group">
+      <h3><span class="attention-dot"></span> Struggling <span style="font-weight:500;color:var(--terra-ink);opacity:0.75">· scoring below 55</span></h3>
+      <div class="attention-pupils" id="attention-struggling"></div>
+    </div>
+    <div id="attention-quiet-group" style="margin-top:18px">
+      <h3><span class="attention-dot"></span> Gone quiet <span style="font-weight:500;color:var(--terra-ink);opacity:0.75">· no practice in 7+ days</span></h3>
+      <div class="attention-pupils" id="attention-quiet"></div>
+    </div>
   </div>
 
   <!-- SPIDER CHART ROW -->
@@ -492,33 +498,35 @@ function sparkHTML(trend) {
 // ─── RENDER ATTENTION BANNER ─────────────────────────────────────────────────
 
 function renderAttention() {
-  const needs = STUDENTS.filter(s => {
-    if ((s.papers||0) < 3) return false;            // not enough data to judge
-    if (s.score < 55) return true;                  // genuinely struggling
-    const m = /(\d+) days ago/.exec(s.lastActive || '');
-    return m && parseInt(m[1]) >= 7;                // was active, now gone quiet
-  });
+  const daysQuiet = (s) => { const m = /(\d+) days ago/.exec(s.lastActive || ''); return m ? parseInt(m[1]) : 0; };
+  const enough = (s) => (s.papers || 0) >= 3;
+  // Struggling takes precedence: a low-scoring pupil is "struggling" even if
+  // also quiet. Gone-quiet is only pupils who are otherwise OK but have stopped.
+  const struggling = STUDENTS.filter(s => enough(s) && s.score < 55);
+  const quiet = STUDENTS.filter(s => enough(s) && s.score >= 55 && daysQuiet(s) >= 7);
+
   const stat = document.getElementById('stat-attention');
-  if (stat) stat.textContent = needs.length;
-  const el = document.getElementById('attention-pupils');
-  if (needs.length === 0) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px;">No pupils flagged - everyone with enough data is on track.</div>';
-    return;
-  }
-  el.innerHTML = needs.map(s => {
-    const reasons = [];
-    if (s.score < 55) reasons.push('Score: ' + s.score);
-    const m = /(\d+) days ago/.exec(s.lastActive || '');
-    if (m && parseInt(m[1]) >= 7) reasons.push('Not active: ' + s.lastActive);
-    return `
+  if (stat) stat.textContent = struggling.length + quiet.length;
+
+  const pill = (s, reason) => `
     <div class="attention-pill" onclick="openModal('${s.id}')">
       <div class="attention-mini-avatar" style="background:${s.color}">${s.name[0]}</div>
       <div>
         <div class="attention-pill-name">${s.name}</div>
-        <div class="attention-pill-reason">${reasons.join(' · ')}</div>
+        <div class="attention-pill-reason">${reason}</div>
       </div>
     </div>`;
-  }).join('');
+  const emptyMsg = (t) => `<div style="color:var(--muted);font-size:0.82rem;padding:2px;">${t}</div>`;
+
+  const sEl = document.getElementById('attention-struggling');
+  sEl.innerHTML = struggling.length
+    ? struggling.map(s => pill(s, 'Score: ' + s.score)).join('')
+    : emptyMsg('No pupils scoring below 55.');
+
+  const qEl = document.getElementById('attention-quiet');
+  qEl.innerHTML = quiet.length
+    ? quiet.map(s => pill(s, 'Last active: ' + s.lastActive)).join('')
+    : emptyMsg('Everyone with enough data has practised recently.');
 }
 
 // ─── RENDER HEAT GRID ─────────────────────────────────────────────────────────
