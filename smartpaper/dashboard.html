@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartPaper — Teacher Dashboard | Solihull Preparatory School</title>
+  <title>SmartPaper - Teacher Dashboard | Solihull Preparatory School</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -287,7 +287,7 @@
   <div style="max-width:400px;width:100%;text-align:center;">
     <div style="font-size:40px;">📄</div>
     <h1 style="font-size:22px;margin:12px 0 6px;color:#1C1B19;">Teacher Dashboard</h1>
-    <p style="color:#56524B;font-size:14px;margin-bottom:20px;">Sign in with your school email — we'll email you a secure sign-in link.</p>
+    <p style="color:#56524B;font-size:14px;margin-bottom:20px;">Sign in with your school email - we'll email you a secure sign-in link.</p>
     <input id="login-email" type="email" placeholder="you@school.com" autocomplete="email"
       style="width:100%;padding:14px;border:1.5px solid #EBE7DF;border-radius:12px;font-size:15px;margin-bottom:12px;box-sizing:border-box;font-family:inherit;">
     <button id="login-btn" style="width:100%;padding:14px;background:#6354D6;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">Send sign-in link</button>
@@ -304,8 +304,8 @@
     <span class="pilot-badge">PILOT</span>
   </div>
   <div class="topbar-right">
-    <span class="topbar-teacher">Ms. Thompson</span>
-    <div class="avatar">MT</div>
+    <span class="topbar-teacher">Mr Jones</span>
+    <div class="avatar">MJ</div>
   </div>
 </div>
 
@@ -316,14 +316,11 @@
   <div class="page-header">
     <div class="page-header-row">
       <div>
-        <h1>Class I2A</h1>
-        <div class="page-header-meta">Year 2 · 22 pupils · Week ending 30 May 2026 · Maths</div>
+        <h1>Class I2</h1>
+        <div class="page-header-meta" id="page-meta">Loading...</div>
       </div>
       <div class="class-selector">
-        <select>
-          <option>Class I2A</option>
-          <option>Class I2B</option>
-        </select>
+        <select><option>I2</option></select>
       </div>
     </div>
   </div>
@@ -332,23 +329,23 @@
   <div class="stat-grid">
     <div class="stat-card primary">
       <div class="stat-card-label">Class Average Score</div>
-      <div class="stat-card-value">71</div>
-      <div class="stat-card-sub"><span class="trend-up">▲ +4 pts</span> vs last week</div>
+      <div class="stat-card-value" id="stat-avg">-</div>
+      <div class="stat-card-sub">across pupils with completed papers</div>
     </div>
     <div class="stat-card green">
-      <div class="stat-card-label">Practised this week</div>
-      <div class="stat-card-value">18</div>
-      <div class="stat-card-sub">of 22 pupils · <strong>82%</strong> participation</div>
+      <div class="stat-card-label">Pupils practising</div>
+      <div class="stat-card-value" id="stat-active">0</div>
+      <div class="stat-card-sub" id="stat-active-sub">have completed at least one paper</div>
     </div>
     <div class="stat-card amber">
       <div class="stat-card-label">Need attention</div>
-      <div class="stat-card-value">4</div>
-      <div class="stat-card-sub">Score &lt; 55 or not active this week</div>
+      <div class="stat-card-value" id="stat-attention">0</div>
+      <div class="stat-card-sub">Score &lt; 55 (with enough data) or gone quiet</div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Questions answered</div>
-      <div class="stat-card-value">1,240</div>
-      <div class="stat-card-sub">avg 56 per active pupil this week</div>
+      <div class="stat-card-label">Papers completed</div>
+      <div class="stat-card-value" id="stat-papers">0</div>
+      <div class="stat-card-sub">across the cohort, all time</div>
     </div>
   </div>
 
@@ -362,16 +359,16 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;" id="spider-row">
 
     <div class="panel-card">
-      <div class="panel-title">Class skills — vs app average</div>
+      <div class="panel-title">Class skills - vs app average</div>
       <p class="panel-sub">
-        <span><span class="legend-dot" style="background:#6354D6"></span>Class I2A</span>
+        <span><span class="legend-dot" style="background:#6354D6"></span>I2</span>
         <span><span class="legend-dot" style="background:#B6B2A9"></span>App average</span>
       </p>
       <canvas id="radar-class" width="320" height="320" style="width:100%;max-width:340px;display:block;margin:0 auto"></canvas>
     </div>
 
     <div class="panel-card">
-      <div class="panel-title"><span id="radar-pupil-name">Select a pupil</span> — skills breakdown</div>
+      <div class="panel-title"><span id="radar-pupil-name">Select a pupil</span> - skills breakdown</div>
       <p class="panel-sub">
         <span><span class="legend-dot" style="background:#18B69E"></span><span id="radar-pupil-label">Pupil</span></span>
         <span><span class="legend-dot" style="background:#6354D6"></span>Class average</span>
@@ -431,7 +428,7 @@
 </div>
 
 <div class="dash-footer">
-  SmartPaper Pilot · <a href="https://sagarjilka.com/smartpaper">sagarjilka.com/smartpaper</a> · Data shown is illustrative for pilot demonstration purposes
+  SmartPaper Pilot · <a href="https://sagarjilka.com/smartpaper">sagarjilka.com/smartpaper</a> · Live pilot data, shared with consent under the School Pilot Programme
 </div>
 
 <script>
@@ -474,10 +471,10 @@ function heatClass(acc) {
 
 // Paper & Aurora semantic bar colours
 function barColor(acc) {
-  if (acc >= 80) return '#0E8E7C'; // teal — mastered
-  if (acc >= 65) return '#6354D6'; // violet — secure
-  if (acc >= 50) return '#B07A1F'; // amber — developing
-  return '#C2603F';                // terracotta — needs practice
+  if (acc >= 80) return '#0E8E7C'; // teal - mastered
+  if (acc >= 65) return '#6354D6'; // violet - secure
+  if (acc >= 50) return '#B07A1F'; // amber - developing
+  return '#C2603F';                // terracotta - needs practice
 }
 
 function sparkHTML(trend) {
@@ -495,17 +492,33 @@ function sparkHTML(trend) {
 // ─── RENDER ATTENTION BANNER ─────────────────────────────────────────────────
 
 function renderAttention() {
-  const needsAttention = STUDENTS.filter(s => s.score < 55 || (s.lastActive.includes('days ago') && parseInt(s.lastActive) >= 5) || s.lastActive.includes('14 days'));
+  const needs = STUDENTS.filter(s => {
+    if ((s.papers||0) < 3) return false;            // not enough data to judge
+    if (s.score < 55) return true;                  // genuinely struggling
+    const m = /(\d+) days ago/.exec(s.lastActive || '');
+    return m && parseInt(m[1]) >= 7;                // was active, now gone quiet
+  });
+  const stat = document.getElementById('stat-attention');
+  if (stat) stat.textContent = needs.length;
   const el = document.getElementById('attention-pupils');
-  el.innerHTML = needsAttention.map(s => `
-    <div class="attention-pill" onclick="openModal(${s.id})">
+  if (needs.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px;">No pupils flagged - everyone with enough data is on track.</div>';
+    return;
+  }
+  el.innerHTML = needs.map(s => {
+    const reasons = [];
+    if (s.score < 55) reasons.push('Score: ' + s.score);
+    const m = /(\d+) days ago/.exec(s.lastActive || '');
+    if (m && parseInt(m[1]) >= 7) reasons.push('Not active: ' + s.lastActive);
+    return `
+    <div class="attention-pill" onclick="openModal('${s.id}')">
       <div class="attention-mini-avatar" style="background:${s.color}">${s.name[0]}</div>
       <div>
         <div class="attention-pill-name">${s.name}</div>
-        <div class="attention-pill-reason">${s.score < 55 ? `Score: ${s.score}` : ''}${s.score < 55 && (s.lastActive.includes('days') || s.lastActive.includes('14')) ? ' · ' : ''}${(s.lastActive.includes('days ago') && parseInt(s.lastActive) >= 5) || s.lastActive.includes('14 days') ? 'Not active: ' + s.lastActive : ''}</div>
+        <div class="attention-pill-reason">${reasons.join(' · ')}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ─── RENDER HEAT GRID ─────────────────────────────────────────────────────────
@@ -550,28 +563,32 @@ function renderActivity() {
 function renderTable(students) {
   const tbody = document.getElementById('student-tbody');
   tbody.innerHTML = students.map(s => `
-    <tr onclick="openModal(${s.id})" id="row-${s.id}">
+    <tr onclick="openModal('${s.id}')" id="row-${s.id}">
       <td>
         <div class="student-name-cell">
           <div class="mini-avatar" style="background:${s.color}">${s.name[0]}</div>
           <div>
             <div class="student-name">${s.name}</div>
-            <div class="student-year">Year 2</div>
+            <div class="student-year">${s.yearGroup === 0 ? 'Reception' : 'Year ' + s.yearGroup}</div>
           </div>
         </div>
       </td>
-      <td><span class="score-badge ${scoreClass(s.score)}">${s.score}</span></td>
+      <td>${(s.papers||0)===0 ? '<span class="score-badge" style="background:#EBE7DF;color:#8A857C">N/A</span>' : '<span class="score-badge '+scoreClass(s.score)+'">'+s.score+'</span>'}</td>
       <td><div class="sparkline">${sparkHTML(s.trend)}</div></td>
       <td>
         ${s.streak > 0
           ? `<span class="streak-chip">🔥 ${s.streak}d</span>`
-          : `<span style="font-size:0.72rem;color:var(--faint)">—</span>`}
+          : `<span style="font-size:0.72rem;color:var(--faint)">-</span>`}
       </td>
       <td>
         <div class="weak-chips">
-          ${s.weakTopics.length === 0
-            ? '<span class="all-good">✓ All good</span>'
-            : s.weakTopics.slice(0,3).map(t => `<span class="weak-chip">${topicLabel(t)}</span>`).join('')}
+          ${(s.papers||0)===0
+            ? '<span style="color:#8A857C;font-size:0.75rem">No papers yet</span>'
+            : s.weakTopics.length > 0
+              ? s.weakTopics.slice(0,3).map(t => `<span class="weak-chip">${topicLabel(t)}</span>`).join('')
+              : ((s.papers||0) < 3
+                  ? '<span style="color:#8A857C;font-size:0.75rem">Building picture…</span>'
+                  : '<span class="all-good">✓ All good</span>')}
         </div>
       </td>
       <td>
@@ -603,21 +620,17 @@ function openModal(id) {
   if (!s) return;
   renderPupilRadar(s);
 
-  const studentTopics = TOPICS.map(t => {
-    let acc;
-    if (s.weakTopics.includes(t.tag)) acc = Math.round(30 + Math.random() * 25);
-    else acc = Math.round(65 + Math.random() * 30);
-    return { ...t, studentAcc: acc };
-  });
+  const studentTopics = TOPICS.filter(t => s.topicAcc && s.topicAcc[t.tag] != null)
+    .map(t => ({ ...t, studentAcc: Math.round(s.topicAcc[t.tag]) }));
 
-  const papersCompleted = s.history.length + Math.floor(Math.random() * 3) + 1;
+  const papersCompleted = s.papers || s.history.length;
 
   const html = `
     <div class="modal-student-header">
       <div class="modal-avatar" style="background:${s.color}">${s.name[0]}</div>
       <div>
         <div class="modal-name">${s.name}</div>
-        <div class="modal-meta">Year 2 · Class I2A · Solihull Preparatory School</div>
+        <div class="modal-meta">Year ${s.yearGroup} · Solihull Preparatory School</div>
       </div>
     </div>
 
@@ -627,7 +640,7 @@ function openModal(id) {
         <div class="modal-stat-label">SmartPaper Score</div>
       </div>
       <div class="modal-stat">
-        <div class="modal-stat-val">${s.streak > 0 ? '🔥 ' + s.streak + 'd' : '—'}</div>
+        <div class="modal-stat-val">${s.streak > 0 ? '🔥 ' + s.streak + 'd' : '-'}</div>
         <div class="modal-stat-label">Current Streak</div>
       </div>
       <div class="modal-stat">
@@ -666,7 +679,7 @@ function openModal(id) {
       <div class="modal-section-title">SmartPaper recommendation</div>
       <div class="reco-card reco-warn">
         <strong>${s.name.split(' ')[0]}</strong>'s next paper will automatically include extra practice on
-        <strong>${s.weakTopics.map(topicLabel).join(', ')}</strong> — the topics where they need the most support.
+        <strong>${s.weakTopics.map(topicLabel).join(', ')}</strong> - the topics where they need the most support.
       </div>
     ` : `
       <div class="reco-card reco-good">
@@ -894,6 +907,15 @@ function applyReport(report) {
   const school = document.getElementById('school-name');
   if (school && report.school_label) school.textContent = report.school_label;
 
+  const withData = STUDENTS.filter(s => (s.papers||0) > 0);
+  const avg = withData.length ? Math.round(withData.reduce((a,s)=>a+s.score,0)/withData.length) : 0;
+  const totalPapers = STUDENTS.reduce((a,s)=>a+(s.papers||0),0);
+  const setT = (id,v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  setT('stat-avg', avg || '-');
+  setT('stat-active', withData.length);
+  setT('stat-active-sub', 'of ' + STUDENTS.length + ' pupils have completed a paper');
+  setT('stat-papers', totalPapers);
+  setT('page-meta', STUDENTS.length + ' pupils · Maths & English · as of ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}));
   document.getElementById('login-gate').style.display = 'none';
   renderAttention(); renderHeat(); renderActivity(); renderTable(STUDENTS); renderClassRadar();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderClassRadar);
@@ -914,7 +936,7 @@ async function boot() {
   catch (e) {
     gate.style.display = 'flex';
     document.getElementById('login-msg').textContent = String(e.message||e).includes('not a teacher')
-      ? 'This account does not have teacher access.' : 'Could not load data — please sign in again.';
+      ? 'This account does not have teacher access.' : 'Could not load data - please sign in again.';
     await sb.auth.signOut();
   }
 }
