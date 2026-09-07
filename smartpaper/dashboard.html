@@ -370,7 +370,7 @@
         <span><span class="legend-dot" style="background:#6354D6"></span>I2</span>
         <span><span class="legend-dot" style="background:#B6B2A9"></span>App average</span>
       </p>
-      <canvas id="radar-class" width="320" height="320" style="width:100%;max-width:340px;display:block;margin:0 auto"></canvas>
+      <canvas id="radar-class" width="400" height="360" style="width:100%;max-width:360px;display:block;margin:0 auto"></canvas>
     </div>
 
     <div class="panel-card">
@@ -379,7 +379,7 @@
         <span><span class="legend-dot" style="background:#18B69E"></span><span id="radar-pupil-label">Pupil</span></span>
         <span><span class="legend-dot" style="background:#6354D6"></span>Class average</span>
       </p>
-      <canvas id="radar-pupil" width="320" height="320" style="width:100%;max-width:340px;display:block;margin:0 auto"></canvas>
+      <canvas id="radar-pupil" width="400" height="360" style="width:100%;max-width:360px;display:block;margin:0 auto"></canvas>
       <p id="radar-pupil-hint" style="font-size:0.75rem;color:var(--faint);text-align:center;margin-top:8px">Click any pupil row below to see their spider chart</p>
     </div>
 
@@ -775,8 +775,8 @@ function drawRadar(canvasId, datasets) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2;
-  const R = Math.min(W, H) * 0.33;
-  const labelR = Math.min(W, H) * 0.44;
+  const R = Math.min(W, H) * 0.31;
+  const labelR = Math.min(W, H) * 0.40;
   const N = THEMES.length;
   const rings = [20, 40, 60, 80, 100];
 
@@ -844,12 +844,17 @@ function drawRadar(canvasId, datasets) {
   // Labels
   THEMES.forEach((theme, i) => {
     const a = angle(i);
-    const lx = cx + Math.cos(a) * labelR;
+    let lx = cx + Math.cos(a) * labelR;
     const ly = cy + Math.sin(a) * labelR;
     ctx.fillStyle = '#56524B';
     ctx.font = '600 11px "Space Grotesk", sans-serif';
     ctx.textAlign = lx < cx - 4 ? 'right' : lx > cx + 4 ? 'left' : 'center';
     ctx.textBaseline = 'middle';
+    // Keep the whole label inside the canvas so no first/last letter is ever clipped
+    const tw = ctx.measureText(theme.label).width, pad = 6;
+    if (ctx.textAlign === 'left') lx = Math.min(lx, W - pad - tw);
+    else if (ctx.textAlign === 'right') lx = Math.max(lx, pad + tw);
+    else lx = Math.min(Math.max(lx, pad + tw / 2), W - pad - tw / 2);
     ctx.fillText(theme.label, lx, ly);
   });
 }
