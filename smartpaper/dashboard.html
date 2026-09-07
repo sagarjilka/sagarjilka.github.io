@@ -391,7 +391,19 @@
     <div class="card">
       <div class="card-header">
         <span class="card-header-title">All pupils</span>
-        <input class="search-input" type="text" placeholder="Search pupil…" id="search-input" />
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select class="search-input" id="year-filter" style="max-width:140px;cursor:pointer">
+            <option value="all">All year groups</option>
+            <option value="0">Reception</option>
+            <option value="1">Year 1</option>
+            <option value="2">Year 2</option>
+            <option value="3">Year 3</option>
+            <option value="4">Year 4</option>
+            <option value="5">Year 5</option>
+            <option value="6">Year 6</option>
+          </select>
+          <input class="search-input" type="text" placeholder="Search pupil…" id="search-input" />
+        </div>
       </div>
       <table id="student-table">
         <thead>
@@ -512,7 +524,7 @@ function renderAttention() {
     <div class="attention-pill" onclick="openModal('${s.id}')">
       <div class="attention-mini-avatar" style="background:${s.color}">${s.name[0]}</div>
       <div>
-        <div class="attention-pill-name">${s.name}</div>
+        <div class="attention-pill-name">${s.displayName || s.name}</div>
         <div class="attention-pill-reason">${reason}</div>
       </div>
     </div>`;
@@ -576,7 +588,7 @@ function renderTable(students) {
         <div class="student-name-cell">
           <div class="mini-avatar" style="background:${s.color}">${s.name[0]}</div>
           <div>
-            <div class="student-name">${s.name}</div>
+            <div class="student-name">${s.displayName || s.name}</div>
             <div class="student-year">${s.yearGroup === 0 ? 'Reception' : 'Year ' + s.yearGroup}</div>
           </div>
         </div>
@@ -609,10 +621,16 @@ function renderTable(students) {
   `).join('');
 }
 
-document.getElementById('search-input').addEventListener('input', function() {
-  const q = this.value.toLowerCase();
-  renderTable(STUDENTS.filter(s => s.name.toLowerCase().includes(q)));
-});
+function applyPupilFilters() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const yf = document.getElementById('year-filter').value;
+  renderTable(STUDENTS.filter(s =>
+    (s.displayName || s.name).toLowerCase().includes(q) &&
+    (yf === 'all' || String(s.yearGroup) === yf)
+  ));
+}
+document.getElementById('search-input').addEventListener('input', applyPupilFilters);
+document.getElementById('year-filter').addEventListener('change', applyPupilFilters);
 
 // ─── MODAL ────────────────────────────────────────────────────────────────────
 
@@ -637,8 +655,8 @@ function openModal(id) {
     <div class="modal-student-header">
       <div class="modal-avatar" style="background:${s.color}">${s.name[0]}</div>
       <div>
-        <div class="modal-name">${s.name}</div>
-        <div class="modal-meta">Year ${s.yearGroup} · Solihull Preparatory School</div>
+        <div class="modal-name">${s.displayName || s.name}</div>
+        <div class="modal-meta">${s.yearGroup === 0 ? 'Reception' : 'Year ' + s.yearGroup} · Solihull Preparatory School</div>
       </div>
     </div>
 
@@ -918,7 +936,7 @@ function applyReport(report) {
     const trend = recentAsc.map(r => (r.smart_score != null ? r.smart_score : Math.round(((r.score||0)/(r.max||1))*100)));
     const score = (c.avg_smart_score != null) ? c.avg_smart_score : (trend.length ? trend[trend.length-1] : 0);
     return {
-      id: c.child_id, name: c.name, score,
+      id: c.child_id, name: c.name, displayName: c.name, family: c.family || '', score,
       trend: trend.length >= 2 ? trend.slice(-8) : [score, score],
       streak: c.streak_days||0, papers: c.papers_completed||0, yearGroup: c.year_group,
       lastActive: humanizeDate(c.last_active),
@@ -927,6 +945,15 @@ function applyReport(report) {
       history: (c.recent||[]).map(r => ({ date: humanizeDate(r.date), score: r.score, max: r.max })),
       color: score < 55 ? '#C2603F' : PALETTE[i % PALETTE.length],
     };
+  });
+
+  // Disambiguate same-named pupils in the same year (e.g. two "Emilie" in Year 3)
+  // by appending the family initial from the edge function ("Emilie P." / "Emilie F.").
+  const nameYearCount = {};
+  STUDENTS.forEach(s => { const k = s.name + '|' + s.yearGroup; nameYearCount[k] = (nameYearCount[k] || 0) + 1; });
+  STUDENTS.forEach(s => {
+    const k = s.name + '|' + s.yearGroup;
+    s.displayName = (nameYearCount[k] > 1 && s.family) ? `${s.name} ${s.family}.` : s.name;
   });
 
   BENCH = {}; const bAcc={}, bCnt={};
