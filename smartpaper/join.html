@@ -68,7 +68,10 @@
     <ol class="steps">
       <li><b>Get the app</b> - tap your device below.</li>
       <li><b>Sign up</b>, then enter your school code when asked:
-        <div class="code"><b>SOLIHULL26</b></div>
+        <div class="code"><b id="codeVal">SOLIHULL26</b>
+          <button id="copyCode" type="button" style="font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;color:#fff;background:#6354D6;border:none;border-radius:8px;padding:6px 12px">Copy</button>
+        </div>
+        <div style="font-size:12.5px;color:#6E6A62;margin-top:2px">Tip: tap <b>Copy</b>, then paste it into the app. You can also add it any time from the home screen banner or Settings.</div>
       </li>
       <li><b>Use your child's real name</b> so their teacher can see how they're getting on.</li>
     </ol>
@@ -83,6 +86,8 @@
     </div>
     <a class="android-alt" href="https://play.google.com/store/apps/details?id=com.smartpaper.app">Already added as a tester? Install on Google Play →</a>
 
+    <a class="android-alt" href="smartpaper://redeem?code=SOLIHULL26" style="display:block;margin-top:6px;font-weight:700;color:#0E8E7C">✨ Already installed the app? Tap here to apply your free Premium →</a>
+
     <div class="note"><b>Android note:</b> the app is invite-only while we test. Tapping the Android button opens an email - just send it and we'll add your Gmail to the tester list (usually the same day), then you can install.</div>
   </div>
 
@@ -90,5 +95,22 @@
     Need a hand? <a href="mailto:sagarjilka@gmail.com">sagarjilka@gmail.com</a>
   </p>
 </div>
+<script>
+  (function () {
+    var btn = document.getElementById('copyCode'), src = document.getElementById('codeVal');
+    if (!btn || !src) return;
+    btn.addEventListener('click', function () {
+      var text = (src.textContent || '').trim();
+      function done() { btn.textContent = 'Copied ✓'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () {
+          try { var r = document.createRange(); r.selectNodeContents(src); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(); } catch (e) {}
+        });
+      } else {
+        try { var r = document.createRange(); r.selectNodeContents(src); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(); } catch (e) {}
+      }
+    });
+  })();
+</script>
 </body>
 </html>
