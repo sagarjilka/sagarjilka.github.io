@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>SmartPaper Sign-ups</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --card:#fff; --ink:#1C1B19; --ink2:#6E6A62; --line:#EFEBE3;
+    --violet:#6354D6; --violetL:#EFEDFB; --teal:#0E8E7C; --tealL:#E6F5F1;
+    --amber:#B07A1F; --amberL:#FBF3E4; --red:#B42318; --redL:#FDECEA; --grey:#9ca3af;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14131A; --card:#1D1C26; --ink:#F2F0EA; --ink2:#A39FB0; --line:#2C2A38;
+      --violetL:#2A2650; --tealL:#12302B; --amberL:#33290F; --redL:#3A1814; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+  .wrap{max-width:1500px;margin:0 auto;padding:18px 16px 60px}
+  h1{font-size:20px;font-weight:800}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .sub{color:var(--ink2);font-size:12.5px}
+  button,select,input{font:inherit;color:inherit}
+  .btn{background:var(--violet);color:#fff;border:0;border-radius:9px;padding:8px 14px;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .gate{max-width:420px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .gate input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);margin:12px 0}
+  .err{color:var(--red);font-size:13px;margin-top:8px}
+  .warn{background:var(--amberL);color:var(--amber);border-radius:10px;padding:9px 12px;font-size:13px;margin-bottom:12px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+  .tile b{display:block;font-size:22px;line-height:1.1}
+  .tile span{color:var(--ink2);font-size:12px}
+  .tile.bad b{color:var(--red)}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .bar input[type=search]{flex:1;min-width:180px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+  .bar select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+  .bar label{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px}
+  .tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;min-width:1100px}
+  th{position:sticky;top:0;background:var(--card);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;
+     color:var(--ink2);padding:10px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+  th.nosort{cursor:default}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr.row{cursor:pointer}
+  tr.row:hover td{background:var(--violetL)}
+  tr.detail td{background:var(--bg);padding:12px 14px}
+  .pill{display:inline-block;border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:700;margin:1px 3px 1px 0;white-space:nowrap}
+  .p-pilot{background:var(--violetL);color:var(--violet)}
+  .p-ok{background:var(--tealL);color:var(--teal)}
+  .p-warn{background:var(--amberL);color:var(--amber)}
+  .p-bad{background:var(--redL);color:var(--red)}
+  .p-grey{background:var(--line);color:var(--ink2)}
+  .mut{color:var(--ink2)}
+  .small{font-size:12px}
+  .kid{display:inline-block;background:var(--violetL);color:var(--violet);border-radius:8px;padding:1px 8px;margin:1px 4px 1px 0;font-weight:600;white-space:nowrap}
+  .kid.linked{background:var(--line);color:var(--ink2)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .grid h4{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink2);margin-bottom:5px}
+  .foot{color:var(--ink2);font-size:12px;margin-top:14px;line-height:1.7}
+  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Key gate -->
+  <div id="gate" class="gate" hidden>
+    <h1>SmartPaper sign-ups</h1>
+    <p class="sub" style="margin-top:6px">Private. Paste your admin key once - it is kept only in this browser.</p>
+    <input id="keyInput" type="password" placeholder="Admin key" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button class="btn" id="keyGo" style="width:100%">Open dashboard</button>
+    <div class="err" id="gateErr"></div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="app" hidden>
+    <div class="top">
+      <div>
+        <h1>SmartPaper sign-ups</h1>
+        <div class="sub" id="stamp"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" id="csv">Download CSV</button>
+        <button class="btn" id="refresh">Refresh</button>
+        <button class="btn ghost" id="signout">Forget key</button>
+      </div>
+    </div>
+
+    <div id="phWarn" class="warn" hidden></div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="bar">
+      <input type="search" id="q" placeholder="Search email, child or school...">
+      <select id="seg">
+        <option value="all">All users</option>
+        <option value="new7">Signed up in last 7 days</option>
+        <option value="new1">Signed up in last 24 hours</option>
+        <option value="never">Never practised</option>
+        <option value="active7">Practised in last 7 days</option>
+        <option value="nochild">No child added</option>
+        <option value="unconf">Email not confirmed (stuck)</option>
+        <option value="noonb">Onboarding not finished</option>
+        <option value="pilot">School pilot only</option>
+      </select>
+      <label><input type="checkbox" id="hideInternal" checked> Hide my test accounts</label>
+      <span class="sub" id="count"></span>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="foot">
+      <b>How to read this.</b> One row per account. Click a row for per-child detail and onboarding steps.
+      Times are shown in your local time. <b>Papers</b> = completed practice papers (the 5-question onboarding warm-up is
+      counted separately and excluded). <b>Questions</b> = questions the child actually answered, with the % correct; a paper saved
+      part-way counts only what was answered. <b>Started, not saved</b> = papers opened but exited without saving.
+      <b>First seen</b> is the earliest PostHog event for that person (a good proxy for download time; the app's own
+      "install" event is shown in the detail row when it differs, because builds that gained install tracking later can record an
+      install date of the update rather than the real download). Linked (shared) children appear on each parent's row; the totals
+      at the top count every child once. Apple "hide my email" addresses end in privaterelay.appleid.com.
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ENDPOINT = 'https://nzeladoubwjtcgnddmim.supabase.co/functions/v1/admin-report';
+  var LS_KEY = 'sp_admin_key';
+  var state = { users: [], ph: null, sort: { col: 'signed_up_at', dir: -1 }, open: {}, generated: null };
+
+  var $ = function (id) { return document.getElementById(id); };
+  function lsGet() { try { return localStorage.getItem(LS_KEY) || ''; } catch (e) { return ''; } }
+  function lsSet(v) { try { v ? localStorage.setItem(LS_KEY, v) : localStorage.removeItem(LS_KEY); } catch (e) {} }
+
+  // ---- escaping: every DB-sourced string (emails, child names, schools) goes through esc() ----
+  var ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ESC[c]; }); }
+
+  // ---- formatting ----
+  function ts(v) { var t = v ? Date.parse(v) : NaN; return isNaN(t) ? null : t; }
+  function abs(v) { var t = ts(v); return t == null ? '' : new Date(t).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  function ago(v) {
+    var t = ts(v); if (t == null) return '';
+    var s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 90) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + 'm ago';
+    if (s < 86400) return Math.round(s / 3600) + 'h ago';
+    var d = Math.round(s / 86400);
+    return d + 'd ago';
+  }
+  function when(v) { return ts(v) == null ? '<span class="mut">-</span>' : '<span title="' + esc(abs(v)) + '">' + esc(ago(v)) + '</span><div class="small mut">' + esc(abs(v)) + '</div>'; }
+  function yr(y) { return y === 0 ? 'Reception' : 'Y' + y; }
+  function pct(a, b) { return b > 0 ? Math.round(100 * a / b) + '%' : '-'; }
+  function pill(text, cls, title) { return '<span class="pill ' + cls + '"' + (title ? ' title="' + esc(title) + '"' : '') + '>' + esc(text) + '</span>'; }
+
+  // ---- derived per-user fields (computed once, used by filter, sort, render, csv) ----
+  var ONB_STEPS = [
+    ['onboarding_create_profile', 'Profile'], ['onboarding_goal_chosen', 'Goal'], ['onboarding_routine_chosen', 'Routine'],
+    ['onboarding_diagnostic_started', 'Warm-up'], ['onboarding_insight', 'Insight'],
+  ];
+  function derive(u) {
+    var kids = u.kids || [];
+    u._practice = u.papers > 0;
+    u._signupMs = ts(u.signed_up_at) || 0;
+    u._lastPaperMs = ts(u.last_paper_at) || 0;
+    u._lastActiveMs = Math.max(ts(u.last_active_at) || 0, ts(u.last_sign_in_at) || 0, u._lastPaperMs);
+    u._firstSeenMs = u.ph ? (ts(u.ph.first_seen) || 0) : 0;
+    u._acc = u.answered > 0 ? u.correct / u.answered : -1;
+    u._years = kids.map(function (k) { return k.year; });
+    u._search = ((u.email || '') + ' ' + (u.school || '') + ' ' + (u.display_name || '') + ' ' + kids.map(function (k) { return k.name; }).join(' ')).toLowerCase();
+    u._status = !u.n_kids ? 'No child yet' : (u.papers === 0 ? 'Never practised' : (u.papers_7d > 0 ? 'Active' : 'Lapsed'));
+    return u;
+  }
+
+  function matchSeg(u, seg) {
+    var now = Date.now();
+    switch (seg) {
+      case 'new7': return now - u._signupMs < 7 * 864e5;
+      case 'new1': return now - u._signupMs < 864e5;
+      case 'never': return u.n_kids > 0 && u.papers === 0;
+      case 'active7': return u.papers_7d > 0;
+      case 'nochild': return u.n_kids === 0;
+      case 'unconf': return !u.email_confirmed;
+      case 'noonb': return !u.onboarding_completed;
+      case 'pilot': return !!u.school;
+      default: return true;
+    }
+  }
+  function visible() {
+    var q = $('q').value.trim().toLowerCase(), seg = $('seg').value, hide = $('hideInternal').checked;
+    return state.users.filter(function (u) {
+      if (hide && u.internal) return false;
+      if (q && u._search.indexOf(q) === -1) return false;
+      return matchSeg(u, seg);
+    });
+  }
+
+  // ---- columns ----
+  var COLS = [
+    { id: 'signed_up_at', label: 'Signed up', val: function (u) { return u._signupMs; }, cell: function (u) { return when(u.signed_up_at); } },
+    { id: 'email', label: 'Parent', val: function (u) { return (u.email || '').toLowerCase(); }, cell: function (u) {
+        var h = '<div><b>' + esc(u.email || '(no email)') + '</b></div>';
+        if (u.display_name) h += '<div class="small mut">' + esc(u.display_name) + '</div>';
+        h += '<div>' + pill(u.provider || '?', 'p-grey');
+        if (u.school) h += pill(u.school, 'p-pilot', 'School pilot cohort');
+        if (u.tier && u.tier !== 'free') h += pill(u.tier, 'p-ok');
+        if (!u.email_confirmed) h += pill('email not confirmed', 'p-bad', 'Signed up but never confirmed their email - cannot log in');
+        if (!u.has_profile) h += pill('no profile', 'p-warn', 'Auth account exists but the app never created a profile (never opened the app after sign-up)');
+        if (u.email_opt_out) h += pill('unsubscribed', 'p-grey');
+        if (u.internal) h += pill('you', 'p-grey');
+        return h + '</div>';
+      } },
+    { id: 'kids', label: 'Children', val: function (u) { return u.n_kids; }, cell: function (u) {
+        if (!u.kids.length) return '<span class="mut">none yet</span>';
+        return u.kids.map(function (k) { return '<span class="kid' + (k.role === 'owner' ? '' : ' linked') + '" title="' + (k.role === 'owner' ? '' : 'Linked (shared) child') + '">' + esc(k.name) + ' · ' + esc(yr(k.year)) + (k.role === 'owner' ? '' : ' (linked)') + '</span>'; }).join('');
+      } },
+    { id: 'onb', label: 'Onboarding', val: function (u) { return u.onboarding_completed ? 1 : 0; }, cell: function (u) {
+        var h = u.onboarding_completed ? pill('done', 'p-ok') : pill('not finished', 'p-warn');
+        var goals = {}, slots = {};
+        u.kids.forEach(function (k) { if (k.goal) goals[k.goal] = 1; if (k.reminder_slot) slots[k.reminder_slot] = 1; });
+        var g = Object.keys(goals).join(', '), s = Object.keys(slots).join(', ');
+        if (g) h += '<div class="small mut">goal: ' + esc(g.replace(/_/g, ' ')) + '</div>';
+        if (s) h += '<div class="small mut">reminder: ' + esc(s.replace(/_/g, ' ')) + '</div>';
+        return h;
+      } },
+    { id: 'first_seen', label: 'First seen (PostHog)', val: function (u) { return u._firstSeenMs; }, cell: function (u) {
+        if (!u.ph) return state.ph && state.ph.ok ? '<span class="mut small">not in PostHog</span>' : '<span class="mut">-</span>';
+        return when(u.ph.first_seen) + '<div class="small mut">' + esc((u.ph.os || '') + (u.ph.app_version ? ' v' + u.ph.app_version : '')) + '</div>';
+      } },
+    { id: 'papers', label: 'Papers', val: function (u) { return u.papers; }, cell: function (u) {
+        var h = '<div class="num"><b>' + u.papers + '</b>' + (u.papers_7d ? ' <span class="small mut">(' + u.papers_7d + ' this wk)</span>' : '') + '</div>';
+        if (u.papers) h += '<div class="small mut num">M' + u.maths + ' · E' + u.english + ' · C' + u.comprehension + '</div>';
+        if (u.unsaved_starts) h += '<div class="small mut" title="Papers opened but exited without saving">' + u.unsaved_starts + ' started, not saved</div>';
+        return h;
+      } },
+    { id: 'answered', label: 'Questions', val: function (u) { return u.answered; }, cell: function (u) {
+        if (!u.answered) return '<span class="mut">0</span>';
+        return '<div class="num"><b>' + u.answered + '</b></div><div class="small mut num">' + pct(u.correct, u.answered) + ' correct</div>';
+      } },
+    { id: 'last', label: 'Last activity', val: function (u) { return u._lastActiveMs; }, cell: function (u) {
+        return u._lastActiveMs ? when(new Date(u._lastActiveMs).toISOString()) + (u._lastPaperMs ? '<div class="small mut">last paper ' + esc(ago(u.last_paper_at)) + '</div>' : '') : '<span class="mut">-</span>';
+      } },
+    { id: 'status', label: 'Status', val: function (u) { return u._status; }, cell: function (u) {
+        var cls = { 'Active': 'p-ok', 'Lapsed': 'p-warn', 'Never practised': 'p-bad', 'No child yet': 'p-grey' }[u._status];
+        return pill(u._status, cls);
+      } },
+  ];
+
+  function renderHead() {
+    $('thead').innerHTML = COLS.map(function (c) {
+      var arrow = state.sort.col === c.id ? (state.sort.dir > 0 ? ' ▲' : ' ▼') : '';
+      return '<th data-col="' + c.id + '">' + esc(c.label) + arrow + '</th>';
+    }).join('');
+  }
+
+  function detailHtml(u) {
+    var h = '<div class="grid">';
+    h += '<div><h4>Children</h4>';
+    if (!u.kids.length) h += '<div class="mut">No child added.</div>';
+    u.kids.forEach(function (k) {
+      h += '<div style="margin-bottom:8px"><b>' + esc(k.name) + '</b> · ' + esc(yr(k.year)) + (k.role === 'owner' ? '' : ' <span class="mut">(linked)</span>') +
+        '<div class="small mut">added ' + esc(abs(k.created_at)) + (k.goal ? ' · goal: ' + esc(k.goal.replace(/_/g, ' ')) : '') + (k.reminder_slot ? ' · reminder: ' + esc(k.reminder_slot.replace(/_/g, ' ')) : '') + '</div>' +
+        '<div class="small">' + k.papers + ' papers (M' + k.maths + ' E' + k.english + ' C' + k.comprehension + '), ' + k.answered + ' questions, ' + pct(k.correct, k.answered) + ' correct' +
+        (k.avg_smart != null ? ', avg SmartPaper score ' + k.avg_smart : '') + (k.streak ? ', ' + k.streak + '-day streak' : '') + '</div>' +
+        '<div class="small mut">warm-up done: ' + (k.warmups ? 'yes' : 'no') + (k.first_paper_at ? ' · first paper ' + esc(abs(k.first_paper_at)) : '') + (k.last_paper_at ? ' · last ' + esc(abs(k.last_paper_at)) : '') + '</div></div>';
+    });
+    h += '</div>';
+
+    h += '<div><h4>Account</h4><div class="small">' +
+      'Signed up ' + esc(abs(u.signed_up_at)) + ' via ' + esc(u.provider || '?') + '<br>' +
+      'Email confirmed: ' + (u.email_confirmed ? 'yes' : '<b>no</b>') + '<br>' +
+      'Last sign-in: ' + esc(abs(u.last_sign_in_at) || '-') + '<br>' +
+      'Last app activity: ' + esc(abs(u.last_active_at) || '-') + '<br>' +
+      'Onboarding finished: ' + (u.onboarding_completed ? 'yes' : 'no') + '<br>' +
+      'Plan: ' + esc(u.tier || 'free') + (u.tier_expires_at ? ' until ' + esc(abs(u.tier_expires_at)) : '') + '<br>' +
+      (u.school ? 'School pilot: ' + esc(u.school) + (u.pilot_consent_at ? ' (consented ' + esc(abs(u.pilot_consent_at)) + ')' : '') + '<br>' : '') +
+      'Weekly email: ' + (u.email_opt_out ? 'unsubscribed' : 'subscribed') + '</div></div>';
+
+    h += '<div><h4>PostHog behaviour</h4>';
+    if (!u.ph) {
+      h += '<div class="mut small">' + (state.ph && state.ph.ok ? 'No PostHog events found for this email in the last 180 days.' : 'PostHog not connected.') + '</div>';
+    } else {
+      var p = u.ph, seen = {};
+      (p.onboarding_screens || []).forEach(function (s) { seen[s] = 1; });
+      var steps = ONB_STEPS.map(function (s) { return (seen[s[0]] ? '✓ ' : '· ') + s[1]; }).join('  ');
+      var rem = seen['onboarding_reminders_enabled'] ? 'reminders on' : seen['onboarding_reminders_skipped'] ? 'reminders skipped' : seen['onboarding_reminders_unavailable'] ? 'reminders unavailable' : '';
+      h += '<div class="small">First seen ' + esc(abs(p.first_seen)) + ' · last seen ' + esc(abs(p.last_seen)) + '<br>' +
+        (p.installed_at ? 'App install event: ' + esc(abs(p.installed_at)) + '<br>' : '') +
+        'Platform: ' + esc(p.os || '?') + (p.app_version ? ' · JS v' + esc(p.app_version) : '') + (p.signup_method ? ' · signed up with ' + esc(p.signup_method) : '') + '<br>' +
+        'App opens: ' + esc(p.opens || 0) + '<br>' +
+        'Papers: ' + esc(p.papers_started || 0) + ' started, ' + esc(p.papers_completed || 0) + ' completed, ' + esc(p.papers_exited || 0) + ' exited<br>' +
+        'Onboarding: ' + esc(steps) + (rem ? ' · ' + esc(rem) : '') + (p.onboarding_completed_events ? ' · finished' : '') + '</div>';
+    }
+    h += '</div></div>';
+    return h;
+  }
+
+  function render() {
+    var rows = visible();
+    var c = COLS.filter(function (x) { return x.id === state.sort.col; })[0] || COLS[0];
+    rows.sort(function (a, b) {
+      var x = c.val(a), y = c.val(b);
+      if (x < y) return -1 * state.sort.dir; if (x > y) return 1 * state.sort.dir; return 0;
+    });
+    $('count').textContent = rows.length + ' of ' + state.users.length + ' accounts';
+    $('tbody').innerHTML = rows.map(function (u) {
+      var tr = '<tr class="row" data-id="' + esc(u.user_id) + '">' + COLS.map(function (x) { return '<td>' + x.cell(u) + '</td>'; }).join('') + '</tr>';
+      if (state.open[u.user_id]) tr += '<tr class="detail"><td colspan="' + COLS.length + '">' + detailHtml(u) + '</td></tr>';
+      return tr;
+    }).join('') || '<tr><td colspan="' + COLS.length + '" class="mut" style="padding:24px;text-align:center">Nothing matches.</td></tr>';
+    renderHead();
+    renderTiles();
+  }
+
+  function renderTiles() {
+    var hide = $('hideInternal').checked;
+    var us = state.users.filter(function (u) { return !(hide && u.internal); });
+    var now = Date.now(), t = [];
+    function add(n, label, bad) { t.push('<div class="tile' + (bad ? ' bad' : '') + '"><b>' + n + '</b><span>' + esc(label) + '</span></div>'); }
+    var kids = 0, papers = 0, answered = 0, correct = 0;
+    us.forEach(function (u) {
+      u.kids.forEach(function (k) { if (k.role === 'owner') { kids++; papers += k.papers; answered += k.answered; correct += k.correct; } });
+    });
+    add(us.length, 'accounts');
+    add(us.filter(function (u) { return now - u._signupMs < 864e5; }).length, 'new in 24h');
+    add(us.filter(function (u) { return now - u._signupMs < 7 * 864e5; }).length, 'new in 7 days');
+    add(kids, 'children');
+    add(us.filter(function (u) { return u.n_kids > 0 && u.papers === 0; }).length, 'never practised');
+    add(us.filter(function (u) { return u.papers_7d > 0; }).length, 'practised this week');
+    add(papers, 'practice papers');
+    add(answered.toLocaleString('en-GB'), 'questions answered' + (answered ? ' (' + pct(correct, answered) + ' correct)' : ''));
+    add(us.filter(function (u) { return !u.email_confirmed; }).length, 'email not confirmed', true);
+    add(us.filter(function (u) { return u.n_kids === 0; }).length, 'no child added');
+    if (state.ph && state.ph.ok && state.ph.installs_30d != null) {
+      add(state.ph.installs_30d, 'installs (30d, PostHog)');
+      add(state.ph.never_identified_30d, 'installs who never signed in', true);
+    }
+    $('tiles').innerHTML = t.join('');
+  }
+
+  // ---- data ----
+  function load() {
+    var key = lsGet();
+    if (!key) { show('gate'); return; }
+    $('refresh').disabled = true; $('refresh').textContent = 'Loading...';
+    fetch(ENDPOINT, { method: 'POST', headers: { 'x-admin-key': key, 'Content-Type': 'application/json' }, body: '{}' })
+      .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+      .then(function (res) {
+        if (res.status === 401) { lsSet(''); $('gateErr').textContent = 'That key was not accepted.'; show('gate'); return; }
+        if (!res.body || !res.body.ok) throw new Error((res.body && res.body.error) || ('HTTP ' + res.status));
+        state.users = res.body.users.map(derive);
+        state.ph = res.body.posthog;
+        state.generated = res.body.generated_at;
+        $('stamp').textContent = 'Data as of ' + abs(state.generated) + ' (' + ago(state.generated) + ')';
+        var w = $('phWarn');
+        if (state.ph && !state.ph.ok) { w.hidden = false; w.textContent = 'PostHog data unavailable: ' + (state.ph.error || 'unknown error') + '. Showing Supabase data only.'; }
+        else w.hidden = true;
+        show('app'); render();
+      })
+      .catch(function (e) { show('app'); $('phWarn').hidden = false; $('phWarn').textContent = 'Could not load: ' + e.message; })
+      .then(function () { $('refresh').disabled = false; $('refresh').textContent = 'Refresh'; });
+  }
+  function show(which) { $('gate').hidden = which !== 'gate'; $('app').hidden = which !== 'app'; }
+
+  function csvCell(v) { var s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function exportCsv() {
+    var head = ['signed_up_at', 'email', 'provider', 'email_confirmed', 'school', 'onboarding_completed', 'children', 'years', 'papers', 'maths', 'english', 'comprehension', 'papers_7d', 'questions_answered', 'questions_correct', 'started_not_saved', 'last_paper_at', 'last_active', 'posthog_first_seen', 'status'];
+    var lines = [head.join(',')];
+    visible().forEach(function (u) {
+      lines.push([u.signed_up_at, u.email, u.provider, u.email_confirmed, u.school, u.onboarding_completed,
+        u.kids.map(function (k) { return k.name; }).join('; '), u.kids.map(function (k) { return yr(k.year); }).join('; '),
+        u.papers, u.maths, u.english, u.comprehension, u.papers_7d, u.answered, u.correct, u.unsaved_starts, u.last_paper_at,
+        u._lastActiveMs ? new Date(u._lastActiveMs).toISOString() : '', u.ph ? u.ph.first_seen : '', u._status].map(csvCell).join(','));
+    });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
+    a.download = 'smartpaper-signups-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+  }
+
+  // ---- events ----
+  $('keyGo').addEventListener('click', function () { var v = $('keyInput').value.trim(); if (!v) return; $('gateErr').textContent = ''; lsSet(v); $('keyInput').value = ''; load(); });
+  $('keyInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('keyGo').click(); });
+  $('refresh').addEventListener('click', load);
+  $('signout').addEventListener('click', function () { lsSet(''); state.users = []; show('gate'); });
+  $('csv').addEventListener('click', exportCsv);
+  ['q', 'seg', 'hideInternal'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('thead').addEventListener('click', function (e) {
+    var th = e.target.closest('th'); if (!th) return;
+    var col = th.getAttribute('data-col');
+    state.sort = { col: col, dir: state.sort.col === col ? -state.sort.dir : -1 };
+    render();
+  });
+  $('tbody').addEventListener('click', function (e) {
+    var tr = e.target.closest('tr.row'); if (!tr) return;
+    var id = tr.getAttribute('data-id'); state.open[id] = !state.open[id]; render();
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
