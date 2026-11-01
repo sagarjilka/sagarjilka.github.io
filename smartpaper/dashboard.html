@@ -182,6 +182,17 @@
     .paper { display: grid; grid-template-columns: 88px 1fr 60px; gap: 10px; align-items: center; padding: 5px 0; font-size: 0.85rem; }
     .paper .track { height: 8px; }
 
+    /* skills radars */
+    .radars { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .radar-box { min-width: 0; }
+    .radar-title { font-family: var(--display); font-weight: 600; font-size: 1rem; min-height: 34px; display: flex; align-items: center; }
+    .radar-title select { font: inherit; font-weight: 600; border: 1px solid var(--line); border-radius: 9px; background: #fff; padding: 6px 10px; max-width: 100%; color: var(--ink); }
+    .radar-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.8rem; color: var(--muted); margin: 2px 0 6px; }
+    .radar-legend i { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--c); margin-right: 6px; vertical-align: 3px; border-radius: 2px; }
+    .radar-legend i.dash { border-top-style: dashed; }
+    canvas.radar { width: 100%; max-width: 400px; aspect-ratio: 400 / 340; display: block; margin: 0 auto; }
+    .radar-note { font-size: 0.78rem; color: var(--faint); text-align: center; margin-top: 4px; }
+
     #login-gate { position: fixed; inset: 0; background: var(--paper); display: none; z-index: 999; align-items: center; justify-content: center; padding: 24px; }
     #login-gate .box { max-width: 400px; width: 100%; text-align: center; }
     #login-gate h1 { font-family: var(--display); font-size: 1.5rem; margin: 12px 0 6px; }
@@ -191,7 +202,7 @@
     #login-msg { font-size: 0.85rem; color: var(--muted); margin-top: 14px; min-height: 18px; }
 
     @media (max-width: 900px) {
-      .tiles { grid-template-columns: 1fr 1fr; } .need { grid-template-columns: 1fr; } .cols { grid-template-columns: 1fr; }
+      .tiles { grid-template-columns: 1fr 1fr; } .need { grid-template-columns: 1fr; } .cols { grid-template-columns: 1fr; } .radars { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .topbar { padding: 8px 14px; height: auto; min-height: 56px; flex-wrap: wrap; } .topbar-right { flex-wrap: wrap; gap: 8px; } .teacher-name, .pilot-badge, .avatar { display: none; } .school-badge { max-width: 170px; } .btn { padding: 6px 10px; } .page { padding: 18px 14px 60px; }
@@ -267,6 +278,23 @@
       <p class="sub" id="weekly-sub">Practice papers completed</p>
       <div class="wk" id="weekly"></div>
       <div class="wk-note" id="weekly-note"></div>
+    </div>
+  </section>
+
+  <section class="card" id="skills-card">
+    <h2>Skills at a glance</h2>
+    <p class="sub">Topics are grouped into six skill areas. A bigger shape means stronger. Areas with no data are left out, never drawn as zero.</p>
+    <div class="radars">
+      <div class="radar-box">
+        <div class="radar-title" id="radar-class-title"></div>
+        <div class="radar-legend" style="--c:#6354D6"><span><i></i><span id="radar-class-label"></span></span><span style="--c:#B6B2A9"><i class="dash"></i>SmartPaper average, same year group</span></div>
+        <canvas class="radar" id="radar-class"></canvas>
+      </div>
+      <div class="radar-box">
+        <div class="radar-title"><select id="pupil-pick" aria-label="Choose a pupil"></select></div>
+        <div class="radar-legend" style="--c:#18B69E"><span><i></i><span id="radar-pupil-label">Pupil</span></span><span style="--c:#6354D6"><i class="dash"></i><span id="radar-pupil-vs">Year average</span></span></div>
+        <canvas class="radar" id="radar-pupil"></canvas>
+      </div>
     </div>
   </section>
 
@@ -347,6 +375,16 @@ const CANON = [
   ['grammar','Grammar'],['punctuation','Punctuation'],['vocabulary','Vocabulary'],['comprehension','Comprehension'],['writing','Writing'],
 ];
 const TOPIC_LABEL = Object.fromEntries(CANON);
+const THEMES = [
+  { key: 'number', label: 'Number' }, { key: 'arithmetic', label: 'Arithmetic' }, { key: 'fractions', label: 'Fractions' },
+  { key: 'measure', label: 'Measure & Shape' }, { key: 'data', label: 'Data' }, { key: 'literacy', label: 'Literacy' },
+];
+const TOPIC_TO_THEME = {
+  number: 'number', arithmetic: 'arithmetic', times_tables: 'arithmetic',
+  fractions: 'fractions', decimals: 'fractions', percentages: 'fractions', ratio: 'fractions', algebra: 'fractions',
+  measurement: 'measure', geometry: 'measure', data: 'data',
+  grammar: 'literacy', punctuation: 'literacy', vocabulary: 'literacy', comprehension: 'literacy', writing: 'literacy',
+};
 const MATHS = new Set(['number','arithmetic','times_tables','fractions','decimals','percentages','algebra','ratio','measurement','geometry','data']);
 
 // Statuses in display order (also the sort priority order for the pupil list).
@@ -363,7 +401,7 @@ const SORT_PRIORITY = { support: 0, quiet: 1, new: 2, early: 3, track: 4, flying
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let REPORT = null, STUDENTS = [], BENCH_BY_YEAR = {};
-let SCOPE = 'all', FILTER = 'all', SORT = { col: 'status', dir: 1 };
+let SCOPE = null, FILTER = 'all', SORT = { col: 'status', dir: 1 };
 let SELECTED = null, HIDE = false, SHOW_ALL_TOPICS = false;
 const EXPANDED = {};
 try { HIDE = localStorage.getItem('sp_hide_names') === '1'; } catch (_) {}
@@ -509,9 +547,9 @@ const scopeLabel = () => (SCOPE === 'all' ? 'Whole school' : yearName(parseInt(S
 
 // ─── RENDER: header, summary, tiles ──────────────────────────────────────────
 function renderScopeBar() {
-  const years = [...new Set(STUDENTS.map(s => s.yearGroup))].sort((a, b) => a - b);
+  const years = [...new Set(STUDENTS.map(s => s.yearGroup))].sort((a, b) => b - a);
   const chip = (key, label, n) => `<button class="chip ${SCOPE === key ? 'active' : ''}" data-scope="${key}" role="tab" aria-selected="${SCOPE === key}">${esc(label)}<span class="n">${n}</span></button>`;
-  setH('scope-bar', chip('all', 'Whole school', STUDENTS.length) + years.map(y => chip(String(y), yearName(y), STUDENTS.filter(s => s.yearGroup === y).length)).join(''));
+  setH('scope-bar', years.map(y => chip(String(y), yearName(y), STUDENTS.filter(s => s.yearGroup === y).length)).join('') + chip('all', 'Whole school', STUDENTS.length));
 }
 
 function renderHeader() {
@@ -748,6 +786,9 @@ function openDrawer(id) {
       <div class="d-tile"><b>${s.lastMs == null ? '–' : esc(humanizeMs(s.lastMs))}</b><span>Last practised</span></div>
     </div>
     ${s.trend ? `<div style="margin-top:12px;font-size:.88rem">Recent trend: ${trendHTML(s.trend)}</div>` : ''}
+    ${themeCount(themeScores(accOf(s.topics))) >= 3 ? `<div class="d-h">Skills vs ${esc(yearName(s.yearGroup))} average</div>
+    <div class="radar-legend" style="--c:#18B69E"><span><i></i>${esc(nm(s))}</span><span style="--c:#6354D6"><i class="dash"></i>${esc(yearName(s.yearGroup))} average</span></div>
+    <canvas class="radar" id="d-radar"></canvas>` : ''}
     <div class="d-h">Topics, weakest first</div>
     ${topics.length ? topics.slice(0, 8).map(tRow).join('') + `<div class="key"><span><i></i>Tick = average for ${esc(yearName(s.yearGroup))} on SmartPaper</span></div>` : `<div class="none" style="border:0;padding-left:0">No topic data yet. A topic appears once ${esc(first(s))} has answered ${MIN_TOPIC_Q}+ questions in it.</div>`}
     <div class="d-h">Practice each week</div>
@@ -756,12 +797,106 @@ function openDrawer(id) {
     ${s.history.length ? s.history.slice(0, 6).map(h => { const p = h.max ? Math.round((h.score / h.max) * 100) : 0; return `<div class="paper"><span>${esc(h.ms ? new Date(h.ms).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '')}</span><div class="track"><div class="fill" style="width:${p}%;background:${accColor(p)}"></div></div><b style="text-align:right">${h.score}/${h.max}</b></div>`; }).join('') : '<div class="none" style="border:0;padding-left:0">No practice papers yet.</div>'}
   `;
   setH('drawer-content', html);
+  const dr = document.getElementById('d-radar');
+  if (dr) drawRadar(dr, [{ scores: yearAverage(s.yearGroup), color: '#6354D6', filled: false }, { scores: themeScores(accOf(s.topics)), color: '#18B69E', filled: true }]);
+  renderPupilRadar();
   document.getElementById('overlay').classList.add('open');
   document.getElementById('drawer').scrollTop = 0;
 }
 function closeDrawer(e) {
   if (e && e.target && e.target.id !== 'overlay') return;
   document.getElementById('overlay').classList.remove('open');
+}
+
+// ─── RADARS ──────────────────────────────────────────────────────────────────
+function themeScores(accByTopic) {
+  const by = {}; THEMES.forEach(t => (by[t.key] = []));
+  Object.keys(accByTopic).forEach(tag => { const th = TOPIC_TO_THEME[tag]; if (th && typeof accByTopic[tag] === 'number') by[th].push(accByTopic[tag]); });
+  const res = {}; THEMES.forEach(t => (res[t.key] = by[t.key].length ? Math.round(mean(by[t.key])) : null));
+  return res;
+}
+const accOf = topics => Object.fromEntries(Object.keys(topics).map(t => [t, topics[t].acc]));
+const themeCount = sc => Object.values(sc).filter(v => v != null).length;
+// The year-group average = every pupil in the school in that year (the pupil is part of it).
+const yearAverage = y => themeScores(accOf(classTopics(STUDENTS.filter(x => x.yearGroup === y))));
+
+function drawPlaceholder(canvas, text) {
+  const W = 400, H = 340, dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#9A958B'; ctx.font = '500 14px "Space Grotesk", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  text.split('\n').forEach((line, i, a) => ctx.fillText(line, W / 2, H / 2 + (i - (a.length - 1) / 2) * 22));
+}
+function drawRadar(canvas, datasets) {
+  const W = 400, H = 340, dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cx = W / 2, cy = H / 2 + 4, R = Math.min(W, H) * 0.31, labelR = Math.min(W, H) * 0.405, N = THEMES.length;
+  ctx.clearRect(0, 0, W, H); ctx.lineJoin = 'round'; ctx.setLineDash([]);
+  const angle = i => (i / N) * 2 * Math.PI - Math.PI / 2;
+  const pt = (i, p) => { const a = angle(i), r = (p / 100) * R; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+  [20, 40, 60, 80, 100].forEach(p => {
+    ctx.beginPath(); THEMES.forEach((_, i) => { const [x, y] = pt(i, p); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.closePath(); ctx.strokeStyle = '#E9E5DC'; ctx.lineWidth = 1; ctx.stroke();
+  });
+  THEMES.forEach((_, i) => { const [x, y] = pt(i, 100); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.strokeStyle = '#E9E5DC'; ctx.stroke(); });
+  // A theme with no data is SKIPPED (never drawn as 0 or a made-up 50).
+  const pointsOf = d => THEMES.map((t, i) => (d.scores[t.key] == null ? null : pt(i, d.scores[t.key])));
+  function path(pts) {
+    const v = pts.filter(Boolean);
+    if (!v.length) return false;
+    ctx.beginPath(); v.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    if (v.length > 2) ctx.closePath();
+    return true;
+  }
+  datasets.filter(d => d.filled).forEach(d => {
+    const pts = pointsOf(d);
+    if (pts.filter(Boolean).length > 2 && path(pts)) {
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, d.color + '55'); g.addColorStop(1, d.color + '18');
+      ctx.fillStyle = g; ctx.fill();
+    }
+  });
+  datasets.forEach(d => {
+    const pts = pointsOf(d);
+    if (path(pts)) { ctx.strokeStyle = d.color; ctx.lineWidth = d.filled ? 2.5 : 2; if (!d.filled) ctx.setLineDash([5, 4]); ctx.stroke(); }
+    ctx.setLineDash([]);
+    if (d.filled) pts.filter(Boolean).forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 3.8, 0, 2 * Math.PI); ctx.fillStyle = d.color; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); });
+  });
+  THEMES.forEach((theme, i) => {
+    const a = angle(i); let lx = cx + Math.cos(a) * labelR; const ly = cy + Math.sin(a) * labelR;
+    const noData = datasets.every(d => d.scores[theme.key] == null);
+    ctx.fillStyle = noData ? '#B5B0A6' : '#5F5B53'; ctx.font = '600 12px "Space Grotesk", sans-serif';
+    ctx.textAlign = lx < cx - 4 ? 'right' : lx > cx + 4 ? 'left' : 'center'; ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(theme.label).width, pad = 4;
+    if (ctx.textAlign === 'left') lx = Math.min(lx, W - pad - tw); else if (ctx.textAlign === 'right') lx = Math.max(lx, pad + tw); else lx = Math.min(Math.max(lx, pad + tw / 2), W - pad - tw / 2);
+    ctx.fillText(theme.label, lx, ly);
+    if (noData) { ctx.font = '500 10px "Space Grotesk", sans-serif'; ctx.fillText('no data', lx, ly + 13); }
+  });
+}
+
+function renderClassRadar() {
+  const list = scoped(), ct = classTopics(list);
+  setT('radar-class-title', scopeLabel() + ' skills');
+  setT('radar-class-label', scopeLabel());
+  const cls = themeScores(accOf(ct)), bench = themeScores(benchmarkFor(list));
+  const c = document.getElementById('radar-class');
+  if (themeCount(cls) < 3) { drawPlaceholder(c, 'Not enough practice data yet\nto draw a skills chart'); return; }
+  drawRadar(c, [{ scores: bench, color: '#B6B2A9', filled: false }, { scores: cls, color: '#6354D6', filled: true }]);
+}
+// Right-hand chart: ONE pupil against THEIR OWN year group's average (not the whole school).
+function renderPupilRadar() {
+  const s = STUDENTS.find(x => x.id === SELECTED && inScope(x));
+  const c = document.getElementById('radar-pupil');
+  const sel = document.getElementById('pupil-pick');
+  const choices = scoped().slice().sort((a, b) => b.yearGroup - a.yearGroup || a.displayName.localeCompare(b.displayName));
+  sel.innerHTML = '<option value="">Choose a pupil…</option>' + choices.map(x => `<option value="${esc(x.id)}">${esc(nm(x))} (${esc(yearShort(x.yearGroup))})</option>`).join('');
+  sel.value = s ? s.id : '';
+  if (!s) { SELECTED = null; setT('radar-pupil-label', 'Pupil'); setT('radar-pupil-vs', 'Year average'); drawPlaceholder(c, 'Choose a pupil above\nto compare them with their year group'); return; }
+  setT('radar-pupil-label', nm(s));
+  setT('radar-pupil-vs', yearName(s.yearGroup) + ' average');
+  const mine = themeScores(accOf(s.topics));
+  if (themeCount(mine) < 3) { drawPlaceholder(c, 'Not enough answers yet\nto draw ' + nm(s) + '’s skills'); return; }
+  drawRadar(c, [{ scores: yearAverage(s.yearGroup), color: '#6354D6', filled: false }, { scores: mine, color: '#18B69E', filled: true }]);
 }
 
 // ─── EXPORT ──────────────────────────────────────────────────────────────────
@@ -781,7 +916,7 @@ function exportCsv() {
 // ─── WIRING ──────────────────────────────────────────────────────────────────
 function renderAll() {
   renderScopeBar(); renderHeader(); renderSummary(); renderTiles(); renderStatus(); renderNeed();
-  renderTopics(); renderWeekly(); renderYears(); renderTable();
+  renderTopics(); renderWeekly(); renderClassRadar(); renderPupilRadar(); renderYears(); renderTable();
 }
 function setScope(key) { SCOPE = key; FILTER = 'all'; renderAll(); }
 function setFilter(key) { FILTER = FILTER === key ? 'all' : key; renderTable(); document.getElementById('pupils-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
@@ -803,6 +938,7 @@ document.addEventListener('click', e => {
   if (th) { SORT = { col: th.dataset.sort, dir: SORT.col === th.dataset.sort ? -SORT.dir : (th.dataset.sort === 'name' || th.dataset.sort === 'status' ? 1 : -1) }; renderTable(); }
 });
 document.getElementById('search-input').addEventListener('input', renderTable);
+document.getElementById('pupil-pick').addEventListener('change', e => { SELECTED = e.target.value || null; renderPupilRadar(); });
 document.getElementById('btn-export').addEventListener('click', exportCsv);
 document.getElementById('btn-refresh').addEventListener('click', () => loadReport().catch(showError));
 document.getElementById('btn-signout').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
@@ -817,7 +953,9 @@ function applyReport(report) {
   REPORT = report;
   STUDENTS = buildStudents(report);
   BENCH_BY_YEAR = buildBenchmark(report);
-  if (SCOPE !== 'all' && !STUDENTS.some(s => String(s.yearGroup) === SCOPE)) SCOPE = 'all';
+  // Open on Year 6 (or the oldest year with pupils); a year with no pupils falls back to the same default.
+  const yrs = [...new Set(STUDENTS.map(s => s.yearGroup))];
+  if (SCOPE == null || (SCOPE !== 'all' && !yrs.includes(parseInt(SCOPE, 10)))) SCOPE = yrs.includes(6) ? '6' : yrs.length ? String(Math.max(...yrs)) : 'all';
   setT('school-name', report.school_label || 'School');
   document.title = 'SmartPaper - Teacher Dashboard | ' + (report.school_label || 'School');
   const tn = report.teacher_name || (report.teacher_email || '').split('@')[0] || 'Teacher';
@@ -825,6 +963,7 @@ function applyReport(report) {
   document.getElementById('login-gate').style.display = 'none';
   applyNamesButton();
   renderAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { renderClassRadar(); renderPupilRadar(); });
 }
 
 async function loadReport() {
