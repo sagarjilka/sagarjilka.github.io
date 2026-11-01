@@ -885,13 +885,19 @@ function renderClassRadar() {
 }
 // Right-hand chart: ONE pupil against THEIR OWN year group's average (not the whole school).
 function renderPupilRadar() {
+  // Never open on a blank chart: default to the pupil with a full-enough picture who most needs a look.
+  if (!STUDENTS.some(x => x.id === SELECTED && inScope(x))) {
+    const d = scoped().filter(x => themeCount(themeScores(accOf(x.topics))) >= 3)
+      .sort((a, b) => SORT_PRIORITY[a.status] - SORT_PRIORITY[b.status] || b.papers - a.papers)[0];
+    SELECTED = d ? d.id : null;
+  }
   const s = STUDENTS.find(x => x.id === SELECTED && inScope(x));
   const c = document.getElementById('radar-pupil');
   const sel = document.getElementById('pupil-pick');
   const choices = scoped().slice().sort((a, b) => b.yearGroup - a.yearGroup || a.displayName.localeCompare(b.displayName));
-  sel.innerHTML = '<option value="">Choose a pupil…</option>' + choices.map(x => `<option value="${esc(x.id)}">${esc(nm(x))} (${esc(yearShort(x.yearGroup))})</option>`).join('');
+  sel.innerHTML = choices.map(x => `<option value="${esc(x.id)}">${esc(nm(x))} (${esc(yearShort(x.yearGroup))})</option>`).join('');
   sel.value = s ? s.id : '';
-  if (!s) { SELECTED = null; setT('radar-pupil-label', 'Pupil'); setT('radar-pupil-vs', 'Year average'); drawPlaceholder(c, 'Choose a pupil above\nto compare them with their year group'); return; }
+  if (!s) { setT('radar-pupil-label', 'Pupil'); setT('radar-pupil-vs', 'Year average'); drawPlaceholder(c, 'No pupil has enough answers yet\nto draw a skills chart'); return; }
   setT('radar-pupil-label', nm(s));
   setT('radar-pupil-vs', yearName(s.yearGroup) + ' average');
   const mine = themeScores(accOf(s.topics));
