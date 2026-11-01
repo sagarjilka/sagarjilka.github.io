@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartPaper - Teacher Dashboard | Solihull Preparatory School</title>
+  <title>SmartPaper - Teacher Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -278,11 +278,63 @@
     .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
     .tag-maths { background: var(--violet-soft); color: var(--violet); }
     .tag-english { background: var(--terra-soft); color: var(--terra-ink); }
+  
+    /* ── v2: scope bar, year table, weekly bars, misc ── */
+    .page-header { margin-bottom: 22px; }
+    .scope-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .chip { font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--muted); background: var(--card);
+      border: 1px solid var(--line2); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all .15s; }
+    .chip:hover { border-color: var(--violet); color: var(--violet); }
+    .chip.active { background: var(--violet); border-color: var(--violet); color: #fff; box-shadow: 0 8px 18px -10px rgba(99,84,214,.8); }
+    .chip-n { opacity: .65; font-weight: 500; margin-left: 3px; }
+    .btn-ghost { font-family: inherit; font-size: 0.78rem; font-weight: 600; color: var(--muted); background: var(--card);
+      border: 1px solid var(--line2); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+    .btn-ghost:hover { color: var(--violet); border-color: var(--violet); }
+    .stat-grid { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 440px) { .stat-grid { grid-template-columns: 1fr; } }
+    .stat-card-value { font-size: 2rem; }
+    .mut { color: var(--faint); }
+    .att-sub { font-weight: 500; color: var(--terra-ink); opacity: .75; }
+    .att-empty { color: var(--muted); font-size: 0.82rem; padding: 2px; }
+    .attention-dot.quiet { background: var(--amber); box-shadow: 0 0 8px rgba(176,122,31,.6); }
+    .attention-dot.new { background: #B5B0A6; box-shadow: none; }
+    .pill-year { font-weight: 500; color: var(--faint); font-size: .68rem; margin-left: 4px; }
+    .spider-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 800px) { .spider-row { grid-template-columns: 1fr; } }
+    .radar-hint { font-size: 0.75rem; color: var(--faint); text-align: center; margin-top: 8px; min-height: 1em; }
+    .year-table td, .year-table th { padding: 10px 14px; }
+    .year-table tbody tr { cursor: pointer; }
+    .year-table tbody tr.year-total { cursor: default; background: #FCFBF8; border-top: 2px solid var(--line2); }
+    .year-table tbody tr.year-total:hover { background: #FCFBF8; }
+    th[data-sort] { cursor: pointer; user-select: none; }
+    th[data-sort]:hover { color: var(--violet); }
+    th.sorted::after { content: ' ' attr(data-dir); color: var(--violet); }
+    .score-badge.na { background: #EBE7DF; color: #8A857C; }
+    .heat-cell-n { font-size: .6rem; color: var(--faint); margin-top: 2px; }
+    .weekly-bars { display: flex; align-items: flex-end; gap: 6px; height: 140px; }
+    .wbar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; min-width: 0; }
+    .wbar-val { font-size: .68rem; font-weight: 700; color: var(--muted); height: 16px; }
+    .wbar-track { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+    .wbar { width: 100%; background: #C9C2EE; border-radius: 5px 5px 2px 2px; }
+    .wbar.now { background: var(--grad); }
+    .wbar-label { font-size: .6rem; color: var(--faint); margin-top: 5px; height: 14px; white-space: nowrap; }
+    details.about { margin: 26px 0 0; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; font-size: .8rem; color: var(--muted); }
+    details.about summary { cursor: pointer; font-weight: 700; color: var(--ink); }
+    details.about ul { margin: 12px 0 2px 18px; line-height: 1.7; }
+    .topbar-right .btn-ghost { padding: 6px 10px; }
+    @media (max-width: 700px) { .topbar { padding: 0 14px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 6px; padding-top: 8px; padding-bottom: 8px; } .topbar-teacher { display: none; } .page { padding: 20px 14px 50px; } }
+    @media print {
+      .topbar-right, .scope-bar, #btn-export, .search-input, details.about { display: none !important; }
+      .topbar { position: static; } body::before { display: none; }
+      .card, .panel-card, .stat-card { box-shadow: none !important; break-inside: avoid; }
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
 <div id="login-gate" style="position:fixed;inset:0;background:#FDFBF7;display:none;z-index:9999;align-items:center;justify-content:center;padding:24px;font-family:'Space Grotesk',system-ui,sans-serif;">
   <div style="max-width:400px;width:100%;text-align:center;">
     <div style="font-size:40px;">📄</div>
@@ -295,152 +347,178 @@
   </div>
 </div>
 
-
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-left">
     <span class="logo"><span class="logo-mark"></span>SmartPaper</span>
-    <span class="school-badge">Solihull Preparatory School</span>
+    <span class="school-badge" id="school-name">School</span>
     <span class="pilot-badge">PILOT</span>
   </div>
   <div class="topbar-right">
-    <span class="topbar-teacher">Mr Jones</span>
-    <div class="avatar">MJ</div>
+    <button class="btn-ghost" id="btn-refresh" title="Reload the latest data">↻ Refresh</button>
+    <button class="btn-ghost" id="btn-signout">Sign out</button>
+    <span class="topbar-teacher" id="teacher-name"></span>
+    <div class="avatar" id="teacher-avatar">T</div>
   </div>
 </div>
 
-<!-- PAGE -->
 <div class="page">
 
-  <!-- HEADER -->
+  <!-- HEADER + SCOPE -->
   <div class="page-header">
     <div class="page-header-row">
       <div>
-        <h1>Class I2</h1>
-        <div class="page-header-meta" id="page-meta">Loading...</div>
+        <h1 id="scope-title">Loading…</h1>
+        <div class="page-header-meta" id="page-meta"></div>
       </div>
-      <div class="class-selector">
-        <select><option>I2</option></select>
-      </div>
+      <button class="btn-ghost" id="btn-export">⬇ Export CSV</button>
     </div>
+    <div class="scope-bar" id="scope-bar" role="tablist" aria-label="Choose whole school or a year group"></div>
   </div>
 
   <!-- STAT CARDS -->
   <div class="stat-grid">
     <div class="stat-card primary">
-      <div class="stat-card-label">Class Average Score</div>
+      <div class="stat-card-label">Average score</div>
       <div class="stat-card-value" id="stat-avg">-</div>
-      <div class="stat-card-sub">across pupils with completed papers</div>
+      <div class="stat-card-sub" id="stat-avg-sub">across pupils with practice papers</div>
     </div>
     <div class="stat-card green">
       <div class="stat-card-label">Pupils practising</div>
       <div class="stat-card-value" id="stat-active">0</div>
-      <div class="stat-card-sub" id="stat-active-sub">have completed at least one paper</div>
+      <div class="stat-card-sub" id="stat-active-sub"></div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-card-label">Active this week</div>
+      <div class="stat-card-value" id="stat-week">0</div>
+      <div class="stat-card-sub" id="stat-week-sub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Practice papers</div>
+      <div class="stat-card-value" id="stat-papers">0</div>
+      <div class="stat-card-sub" id="stat-papers-sub"></div>
     </div>
     <div class="stat-card amber">
       <div class="stat-card-label">Need attention</div>
       <div class="stat-card-value" id="stat-attention">0</div>
-      <div class="stat-card-sub">Score &lt; 55 (with enough data) or gone quiet</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Papers completed</div>
-      <div class="stat-card-value" id="stat-papers">0</div>
-      <div class="stat-card-sub">across the cohort, all time</div>
+      <div class="stat-card-sub">Score under 55, or gone quiet (3+ papers)</div>
     </div>
   </div>
 
-  <!-- ATTENTION BANNER -->
-  <div class="attention-banner">
+  <!-- ATTENTION -->
+  <div class="attention-banner" id="attention-banner">
     <div id="attention-struggling-group">
-      <h3><span class="attention-dot"></span> Struggling <span style="font-weight:500;color:var(--terra-ink);opacity:0.75">· scoring below 55</span></h3>
+      <h3><span class="attention-dot"></span> Struggling <span class="att-sub">· scoring below 55 after 3+ papers</span></h3>
       <div class="attention-pupils" id="attention-struggling"></div>
     </div>
     <div id="attention-quiet-group" style="margin-top:18px">
-      <h3><span class="attention-dot"></span> Gone quiet <span style="font-weight:500;color:var(--terra-ink);opacity:0.75">· no practice in 7+ days</span></h3>
+      <h3><span class="attention-dot quiet"></span> Gone quiet <span class="att-sub">· no practice in 7+ days</span></h3>
       <div class="attention-pupils" id="attention-quiet"></div>
+    </div>
+    <div id="attention-new-group" style="margin-top:18px">
+      <h3><span class="attention-dot new"></span> Not started yet <span class="att-sub">· signed up, no practice paper</span></h3>
+      <div class="attention-pupils" id="attention-new"></div>
+    </div>
+  </div>
+
+  <!-- YEAR GROUP OVERVIEW (whole school only) -->
+  <div class="panel-card" id="year-panel" style="margin-bottom:28px">
+    <div class="panel-title">By year group</div>
+    <p class="panel-sub">Click a year group to drill into it.</p>
+    <div style="overflow-x:auto">
+      <table class="year-table">
+        <thead><tr>
+          <th>Year group</th><th>Pupils</th><th>Practising</th><th>Avg score</th><th>Practice papers</th><th>Active this week</th><th>Class focus area</th>
+        </tr></thead>
+        <tbody id="year-tbody"></tbody>
+      </table>
     </div>
   </div>
 
   <!-- SPIDER CHART ROW -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;" id="spider-row">
-
+  <div class="spider-row" id="spider-row">
     <div class="panel-card">
-      <div class="panel-title">Class skills - vs app average</div>
+      <div class="panel-title" id="radar-class-title">Skills - vs app average</div>
       <p class="panel-sub">
-        <span><span class="legend-dot" style="background:#6354D6"></span>I2</span>
-        <span><span class="legend-dot" style="background:#B6B2A9"></span>App average</span>
+        <span><span class="legend-dot" style="background:#6354D6"></span><span id="radar-class-label">Class</span></span>
+        <span><span class="legend-dot" style="background:#B6B2A9"></span><span id="radar-bench-label">App average</span></span>
       </p>
       <canvas id="radar-class" width="400" height="360" style="width:100%;max-width:360px;display:block;margin:0 auto"></canvas>
+      <p id="radar-class-hint" class="radar-hint"></p>
     </div>
-
     <div class="panel-card">
       <div class="panel-title"><span id="radar-pupil-name">Select a pupil</span> - skills breakdown</div>
       <p class="panel-sub">
         <span><span class="legend-dot" style="background:#18B69E"></span><span id="radar-pupil-label">Pupil</span></span>
-        <span><span class="legend-dot" style="background:#6354D6"></span>Class average</span>
+        <span><span class="legend-dot" style="background:#6354D6"></span><span id="radar-pupil-vs">Class average</span></span>
       </p>
       <canvas id="radar-pupil" width="400" height="360" style="width:100%;max-width:360px;display:block;margin:0 auto"></canvas>
-      <p id="radar-pupil-hint" style="font-size:0.75rem;color:var(--faint);text-align:center;margin-top:8px">Click any pupil row below to see their spider chart</p>
+      <p id="radar-pupil-hint" class="radar-hint">Click any pupil below to see their spider chart</p>
     </div>
-
   </div>
 
   <!-- TWO COL -->
   <div class="two-col">
-
     <div class="card">
       <div class="card-header">
-        <span class="card-header-title">All pupils</span>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <select class="search-input" id="year-filter" style="max-width:140px;cursor:pointer">
-            <option value="all">All year groups</option>
-            <option value="0">Reception</option>
-            <option value="1">Year 1</option>
-            <option value="2">Year 2</option>
-            <option value="3">Year 3</option>
-            <option value="4">Year 4</option>
-            <option value="5">Year 5</option>
-            <option value="6">Year 6</option>
-          </select>
-          <input class="search-input" type="text" placeholder="Search pupil…" id="search-input" />
-        </div>
+        <span class="card-header-title" id="table-title">All pupils</span>
+        <input class="search-input" type="text" placeholder="Search pupil…" id="search-input" />
       </div>
-      <table id="student-table">
-        <thead>
-          <tr>
-            <th>Pupil</th>
-            <th>Score</th>
-            <th>Trend (6 wks)</th>
-            <th>Streak</th>
-            <th>Weak topics</th>
-            <th>Last active</th>
-          </tr>
-        </thead>
-        <tbody id="student-tbody"></tbody>
-      </table>
+      <div style="overflow-x:auto">
+        <table id="student-table">
+          <thead>
+            <tr>
+              <th data-sort="name">Pupil</th>
+              <th data-sort="score">Score</th>
+              <th>Recent papers</th>
+              <th data-sort="papers">Papers</th>
+              <th data-sort="streak">Streak</th>
+              <th>Weak topics</th>
+              <th data-sort="last">Last active</th>
+            </tr>
+          </thead>
+          <tbody id="student-tbody"></tbody>
+        </table>
+      </div>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:16px;">
-
       <div class="panel-card">
-        <div class="panel-title">Class topic accuracy</div>
+        <div class="panel-title">Practice per week</div>
+        <p class="panel-sub" id="weekly-sub">Practice papers completed</p>
+        <div class="weekly-bars" id="weekly-bars"></div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-title">Topic accuracy</div>
+        <p class="panel-sub" id="heat-sub">Average recent accuracy per topic</p>
         <div class="heat-grid" id="heat-grid"></div>
       </div>
-
       <div class="panel-card">
         <div class="panel-title">Recent activity</div>
         <div id="recent-activity"></div>
       </div>
-
     </div>
   </div>
+
+  <details class="about">
+    <summary>How these numbers are worked out</summary>
+    <ul>
+      <li><b>Practice papers</b> are papers a pupil has completed. The short warm-up quiz at sign-up is not counted.</li>
+      <li><b>Score</b> is SmartPaper's overall accuracy figure, the same one parents see in the app. It starts cautiously (a single paper can't push it very high or very low) and settles to the pupil's true accuracy as they complete more papers. It is only shown once a pupil has completed a practice paper.</li>
+      <li><b>Topic accuracy</b> is a pupil's recent accuracy in that topic, and only counts a topic once they have answered at least 3 questions in it. Class figures need at least 2 pupils with data.</li>
+      <li><b>App average</b> is the anonymised average of all SmartPaper children in the same year group, so a Year 3 class is compared with Year 3, not with everyone.</li>
+      <li><b>Streak</b> only shows while it is still running (weekends don't break it).</li>
+      <li><b>Struggling</b> = score below 55 after at least 3 practice papers. <b>Gone quiet</b> = otherwise fine, but no practice for 7+ days.</li>
+      <li>Only families who joined the school pilot (and agreed to share) appear here.</li>
+    </ul>
+  </details>
 
 </div><!-- /page -->
 
 <!-- STUDENT MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
-    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')" aria-label="Close">✕</button>
     <div id="modal-content"></div>
   </div>
 </div>
@@ -450,293 +528,28 @@
 </div>
 
 <script>
-// ─── DATA ────────────────────────────────────────────────────────────────────
-
-// Harmonious Paper & Aurora avatar palette (violets, teals, slate-blue, sage, plum)
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
 const SB_URL = 'https://nzeladoubwjtcgnddmim.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56ZWxhZG91YndqdGNnbmRkbWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNjU4MDEsImV4cCI6MjA4OTk0MTgwMX0.HZzClE2pt2h8maQIOOfst5T5QWSs8P74qjETauuID-c';
 const sb = window.supabase.createClient(SB_URL, SB_ANON, { auth: { detectSessionInUrl: true, persistSession: true } });
 const PALETTE = ['#6354D6','#7A6BF0','#4F7CC9','#18B69E','#2A9D8F','#0E8E7C','#7A8C5A','#9C6BB0','#C08A3C'];
 
-let TOPICS = [];
+// Thresholds - the "About" panel on the page describes exactly these.
+const STRUGGLE_BELOW = 55;   // score under this (with enough papers) = struggling
+const ENOUGH_PAPERS = 3;     // papers before we judge anyone
+const QUIET_DAYS = 7;        // no practice for this many days = gone quiet
+const MIN_TOPIC_Q = 3;       // answered questions before a topic counts
+const MIN_CLASS_N = 2;       // pupils with data before a class topic figure is shown
 
-let STUDENTS = [];
-let BENCH = {};
-let RECENT_ACTIVITY = [];
-
-// Assign harmonious avatar colours; struggling pupils get the terracotta "attention" tone
-STUDENTS.forEach((s, i) => { s.color = s.score < 55 ? '#C2603F' : PALETTE[i % PALETTE.length]; });
-
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-
-function scoreClass(s) {
-  if (s >= 75) return 'high';
-  if (s >= 55) return 'mid';
-  return 'low';
-}
-
-function topicLabel(tag) {
-  const t = TOPICS.find(t => t.tag === tag);
-  return t ? t.label : tag;
-}
-
-function heatClass(acc) {
-  if (acc >= 80) return 'mastered';
-  if (acc >= 65) return 'secure';
-  if (acc >= 50) return 'developing';
-  return 'struggling';
-}
-
-// Paper & Aurora semantic bar colours
-function barColor(acc) {
-  if (acc >= 80) return '#0E8E7C'; // teal - mastered
-  if (acc >= 65) return '#6354D6'; // violet - secure
-  if (acc >= 50) return '#B07A1F'; // amber - developing
-  return '#C2603F';                // terracotta - needs practice
-}
-
-function sparkHTML(trend) {
-  const maxV = Math.max(...trend);
-  const minV = Math.min(...trend);
-  const range = maxV - minV || 1;
-  const up = trend[trend.length-1] >= trend[trend.length-2];
-  return trend.map((v, i) => {
-    const h = Math.round(((v - minV) / range) * 18 + 5);
-    const cls = i === trend.length-1 ? (up ? 'up' : 'down') : '';
-    return `<div class="spark-bar ${cls}" style="height:${h}px"></div>`;
-  }).join('');
-}
-
-// ─── RENDER ATTENTION BANNER ─────────────────────────────────────────────────
-
-function renderAttention() {
-  const daysQuiet = (s) => { const m = /(\d+) days ago/.exec(s.lastActive || ''); return m ? parseInt(m[1]) : 0; };
-  const enough = (s) => (s.papers || 0) >= 3;
-  // Struggling takes precedence: a low-scoring pupil is "struggling" even if
-  // also quiet. Gone-quiet is only pupils who are otherwise OK but have stopped.
-  const struggling = STUDENTS.filter(s => enough(s) && s.score < 55);
-  const quiet = STUDENTS.filter(s => enough(s) && s.score >= 55 && daysQuiet(s) >= 7);
-
-  const stat = document.getElementById('stat-attention');
-  if (stat) stat.textContent = struggling.length + quiet.length;
-
-  const pill = (s, reason) => `
-    <div class="attention-pill" onclick="openModal('${s.id}')">
-      <div class="attention-mini-avatar" style="background:${s.color}">${s.name[0]}</div>
-      <div>
-        <div class="attention-pill-name">${s.displayName || s.name}</div>
-        <div class="attention-pill-reason">${reason}</div>
-      </div>
-    </div>`;
-  const emptyMsg = (t) => `<div style="color:var(--muted);font-size:0.82rem;padding:2px;">${t}</div>`;
-
-  const sEl = document.getElementById('attention-struggling');
-  sEl.innerHTML = struggling.length
-    ? struggling.map(s => pill(s, 'Score: ' + s.score)).join('')
-    : emptyMsg('No pupils scoring below 55.');
-
-  const qEl = document.getElementById('attention-quiet');
-  qEl.innerHTML = quiet.length
-    ? quiet.map(s => pill(s, 'Last active: ' + s.lastActive)).join('')
-    : emptyMsg('Everyone with enough data has practised recently.');
-}
-
-// ─── RENDER HEAT GRID ─────────────────────────────────────────────────────────
-
-function renderHeat() {
-  const el = document.getElementById('heat-grid');
-  el.innerHTML = TOPICS.map(t => `
-    <div class="heat-cell ${heatClass(t.classAcc)}">
-      <div class="heat-cell-topic">${t.label}</div>
-      <div class="heat-cell-pct">${t.classAcc}%</div>
-    </div>
-  `).join('');
-}
-
-// ─── RENDER RECENT ACTIVITY ───────────────────────────────────────────────────
-
-function renderActivity() {
-  const el = document.getElementById('recent-activity');
-  if (!el) return;
-  el.innerHTML = (RECENT_ACTIVITY || []).map(r => {
-    const stu = STUDENTS.find(s => s.name === r.name);
-    const color = stu ? stu.color : '#6354D6';
-    const ratio = r.max ? r.score / r.max : 0;
-    return `
-    <div class="history-item">
-      <div style="display:flex;align-items:center;gap:9px">
-        <div class="mini-avatar" style="background:${color};width:26px;height:26px;border-radius:8px;font-size:0.68rem">${r.name[0]}</div>
-        <div>
-          <div style="font-size:0.78rem;font-weight:700;color:var(--ink)">${r.name}</div>
-          <div style="font-size:0.68rem;color:var(--faint)">${r.time}</div>
-        </div>
-      </div>
-      <div style="text-align:right">
-        <div class="score-badge ${ratio>=0.75?'high':ratio>=0.55?'mid':'low'}">${r.score}/${r.max}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ─── RENDER TABLE ─────────────────────────────────────────────────────────────
-
-function renderTable(students) {
-  const tbody = document.getElementById('student-tbody');
-  tbody.innerHTML = students.map(s => `
-    <tr onclick="openModal('${s.id}')" id="row-${s.id}">
-      <td>
-        <div class="student-name-cell">
-          <div class="mini-avatar" style="background:${s.color}">${s.name[0]}</div>
-          <div>
-            <div class="student-name">${s.displayName || s.name}</div>
-            <div class="student-year">${s.yearGroup === 0 ? 'Reception' : 'Year ' + s.yearGroup}</div>
-          </div>
-        </div>
-      </td>
-      <td>${(s.papers||0)===0 ? '<span class="score-badge" style="background:#EBE7DF;color:#8A857C">N/A</span>' : '<span class="score-badge '+scoreClass(s.score)+'">'+s.score+'</span>'}</td>
-      <td><div class="sparkline">${sparkHTML(s.trend)}</div></td>
-      <td>
-        ${s.streak > 0
-          ? `<span class="streak-chip">🔥 ${s.streak}d</span>`
-          : `<span style="font-size:0.72rem;color:var(--faint)">-</span>`}
-      </td>
-      <td>
-        <div class="weak-chips">
-          ${(s.papers||0)===0
-            ? '<span style="color:#8A857C;font-size:0.75rem">No papers yet</span>'
-            : s.weakTopics.length > 0
-              ? s.weakTopics.slice(0,3).map(t => `<span class="weak-chip">${topicLabel(t)}</span>`).join('')
-              : ((s.papers||0) < 3
-                  ? '<span style="color:#8A857C;font-size:0.75rem">Building picture…</span>'
-                  : '<span class="all-good">✓ All good</span>')}
-        </div>
-      </td>
-      <td>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="status-dot ${s.lastActive==='Today'?'active':s.lastActive==='Yesterday'?'inactive':'new'}"></span>
-          <span style="font-size:0.75rem;color:var(--muted)">${s.lastActive}</span>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function applyPupilFilters() {
-  const q = (document.getElementById('search-input').value || '').toLowerCase();
-  const yf = document.getElementById('year-filter').value;
-  renderTable(STUDENTS.filter(s =>
-    (s.displayName || s.name).toLowerCase().includes(q) &&
-    (yf === 'all' || String(s.yearGroup) === yf)
-  ));
-}
-document.getElementById('search-input').addEventListener('input', applyPupilFilters);
-document.getElementById('year-filter').addEventListener('change', applyPupilFilters);
-
-// ─── MODAL ────────────────────────────────────────────────────────────────────
-
-function bucketLabel(acc) {
-  if (acc >= 80) return ['mastered', 'Mastered'];
-  if (acc >= 65) return ['secure', 'Secure'];
-  if (acc >= 50) return ['developing', 'Developing'];
-  return ['new', 'Needs practice'];
-}
-
-function openModal(id) {
-  const s = STUDENTS.find(x => x.id === id);
-  if (!s) return;
-  renderPupilRadar(s);
-
-  const studentTopics = TOPICS.filter(t => s.topicAcc && s.topicAcc[t.tag] != null)
-    .map(t => ({ ...t, studentAcc: Math.round(s.topicAcc[t.tag]) }));
-
-  const papersCompleted = s.papers || s.history.length;
-
-  const html = `
-    <div class="modal-student-header">
-      <div class="modal-avatar" style="background:${s.color}">${s.name[0]}</div>
-      <div>
-        <div class="modal-name">${s.displayName || s.name}</div>
-        <div class="modal-meta">${s.yearGroup === 0 ? 'Reception' : 'Year ' + s.yearGroup} · Solihull Preparatory School</div>
-      </div>
-    </div>
-
-    <div class="modal-stats-row">
-      <div class="modal-stat">
-        <div class="modal-stat-val">${papersCompleted === 0 ? '–' : s.score}</div>
-        <div class="modal-stat-label">SmartPaper Score</div>
-      </div>
-      <div class="modal-stat">
-        <div class="modal-stat-val">${s.streak > 0 ? '🔥 ' + s.streak + 'd' : '-'}</div>
-        <div class="modal-stat-label">Current Streak</div>
-      </div>
-      <div class="modal-stat">
-        <div class="modal-stat-val">${papersCompleted}</div>
-        <div class="modal-stat-label">Papers done</div>
-      </div>
-    </div>
-
-    <div class="modal-section-title">Topic mastery breakdown</div>
-    ${studentTopics.length === 0 ? '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px">No topic data yet — this fills in as papers are completed.</div>' : ''}
-    ${studentTopics.map(t => {
-      const [bClass2, bLabel2] = bucketLabel(t.studentAcc);
-      return `
-        <div class="modal-topic-row">
-          <div class="modal-topic-label">${t.label}</div>
-          <div class="modal-topic-track">
-            <div class="modal-topic-fill" style="width:${t.studentAcc}%;background:${barColor(t.studentAcc)}"></div>
-          </div>
-          <div class="modal-topic-pct" style="color:${barColor(t.studentAcc)}">${t.studentAcc}%</div>
-          <span class="modal-topic-bucket bucket-${bClass2}">${bLabel2}</span>
-        </div>
-      `;
-    }).join('')}
-
-    <div class="modal-section-title">Recent paper history</div>
-    ${(s.history || []).length === 0 ? '<div style="color:var(--muted);font-size:0.85rem;padding:4px 2px">No papers completed yet.</div>' : ''}
-    ${(s.history || []).map(h => `
-      <div class="history-item">
-        <div class="history-date">${h.date}</div>
-        <div>
-          <span class="history-qs">${h.max} questions · </span>
-          <span class="history-score" style="color:${barColor((h.score/h.max)*100)}">${h.score}/${h.max} (${Math.round(h.score/h.max*100)}%)</span>
-        </div>
-      </div>
-    `).join('')}
-
-    <div class="modal-section-title">SmartPaper recommendation</div>
-    ${
-      papersCompleted === 0 ? `
-      <div class="reco-card">
-        <strong>${s.name.split(' ')[0]}</strong> hasn't completed any papers yet, so there's nothing to assess. They'll appear here with real insights once they start practising.
-      </div>`
-      : s.weakTopics.length > 0 ? `
-      <div class="reco-card reco-warn">
-        <strong>${s.name.split(' ')[0]}</strong>'s next paper will automatically include extra practice on
-        <strong>${s.weakTopics.map(topicLabel).join(', ')}</strong> - the topics where they need the most support.
-      </div>`
-      : papersCompleted < 3 ? `
-      <div class="reco-card">
-        Early days - based on just ${papersCompleted} paper${papersCompleted === 1 ? '' : 's'}. Any weak topics will surface here as <strong>${s.name.split(' ')[0]}</strong> completes more.
-      </div>`
-      : `
-      <div class="reco-card reco-good">
-        ✓ <strong>${s.name.split(' ')[0]}</strong> is performing well across all topics. SmartPaper will continue to vary topics to maintain broad coverage.
-      </div>`
-    }
-  `;
-
-  document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-}
-
-// ─── RADAR / SPIDER CHART ─────────────────────────────────────────────────────
-
+const CANON = [
+  ['number','Number'],['arithmetic','Arithmetic'],['times_tables','Times Tables'],
+  ['fractions','Fractions'],['decimals','Decimals'],['percentages','Percentages'],
+  ['algebra','Patterns & Algebra'],['ratio','Ratio'],
+  ['measurement','Measurement'],['geometry','Geometry'],['data','Data'],
+  ['grammar','Grammar'],['punctuation','Punctuation'],['vocabulary','Vocabulary'],
+  ['comprehension','Comprehension'],['writing','Writing'],
+];
+const TOPIC_LABEL = Object.fromEntries(CANON);
 const THEMES = [
   { key: 'number',     label: 'Number' },
   { key: 'arithmetic', label: 'Arithmetic' },
@@ -745,7 +558,6 @@ const THEMES = [
   { key: 'data',       label: 'Data' },
   { key: 'literacy',   label: 'Literacy' },
 ];
-
 const TOPIC_TO_THEME = {
   number:'number',
   arithmetic:'arithmetic', times_tables:'arithmetic',
@@ -755,253 +567,537 @@ const TOPIC_TO_THEME = {
   grammar:'literacy', punctuation:'literacy', vocabulary:'literacy', comprehension:'literacy', writing:'literacy',
 };
 
-function buildStudentTopics(student) {
-  return TOPICS.map(t => ({
-    tag: t.tag,
-    studentAcc: (student.topicAcc && student.topicAcc[t.tag] != null) ? student.topicAcc[t.tag] : t.classAcc,
-  }));
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let REPORT = null;
+let STUDENTS = [];
+let BENCH_BY_YEAR = {};     // { year: { topic: avg } }
+let SCOPE = 'all';          // 'all' | year number as string
+let SORT = { col: 'name', dir: 1 };
+let SELECTED = null;
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+const yearName = y => (y === 0 ? 'Reception' : 'Year ' + y);
+const topicLabel = t => TOPIC_LABEL[t] || t;
+const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+const pct = (n, d) => (d ? Math.round((n / d) * 100) : 0);
+
+function scoreClass(s) { return s >= 75 ? 'high' : s >= 55 ? 'mid' : 'low'; }
+function heatClass(acc) { return acc >= 80 ? 'mastered' : acc >= 65 ? 'secure' : acc >= 50 ? 'developing' : 'struggling'; }
+function barColor(acc) { return acc >= 80 ? '#0E8E7C' : acc >= 65 ? '#6354D6' : acc >= 50 ? '#B07A1F' : '#C2603F'; }
+function bucketLabel(acc) {
+  if (acc >= 80) return ['mastered', 'Mastered'];
+  if (acc >= 65) return ['secure', 'Secure'];
+  if (acc >= 50) return ['developing', 'Developing'];
+  return ['new', 'Needs practice'];
 }
 
-function topicsToThemeScores(topics) {
-  const byTheme = {};
-  THEMES.forEach(t => { byTheme[t.key] = []; });
-  topics.forEach(t => {
-    const themeKey = TOPIC_TO_THEME[t.tag];
-    if (themeKey) byTheme[themeKey].push(t.studentAcc ?? t.classAcc);
+// Calendar days between a timestamp and today (local midnight to midnight), not 24h blocks.
+function daysSince(ms) {
+  if (ms == null) return null;
+  const a = new Date(ms); a.setHours(0, 0, 0, 0);
+  const b = new Date(); b.setHours(0, 0, 0, 0);
+  return Math.round((b - a) / 86400000);
+}
+function humanizeMs(ms) {
+  const d = daysSince(ms);
+  if (d == null) return 'Never';
+  if (d <= 0) return 'Today';
+  if (d === 1) return 'Yesterday';
+  if (d < 14) return d + ' days ago';
+  return new Date(ms).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+const toMs = iso => (iso ? new Date(iso).getTime() : null);
+
+// ─── DATA → STUDENTS ─────────────────────────────────────────────────────────
+function buildStudents(report) {
+  const list = (report.cohort || []).map(c => {
+    const topics = {};
+    (c.topics || []).forEach(t => {
+      // Only canonical tags with a real number AND enough answered questions to mean something.
+      if (TOPIC_LABEL[t.topic_tag] && typeof t.rolling_accuracy === 'number' && (t.attempts || 0) >= MIN_TOPIC_Q) {
+        topics[t.topic_tag] = { acc: Math.round(t.rolling_accuracy), n: t.attempts, weak: !!t.needs_review };
+      }
+    });
+    const recentAsc = (c.recent || []).slice().reverse();
+    const trend = recentAsc.map(r => (r.smart_score != null ? r.smart_score : (r.max ? Math.round((r.score / r.max) * 100) : null))).filter(v => v != null);
+    return {
+      id: c.child_id, name: c.name || 'Pupil', family: c.family || '', yearGroup: c.year_group,
+      score: c.score, papers: c.papers || 0, warmupDone: !!c.warmup_done,
+      streak: c.streak_days || 0,
+      lastMs: toMs(c.last_active), firstMs: toMs(c.first_active),
+      weekly: c.weekly || [], trend: trend.slice(-8),
+      topics,
+      weakTopics: Object.keys(topics).filter(t => topics[t].weak),
+      history: (c.recent || []).map(r => ({ ms: toMs(r.date), score: r.score, max: r.max })),
+    };
   });
-  const result = {};
-  THEMES.forEach(t => {
-    const vals = byTheme[t.key];
-    result[t.key] = vals.length > 0 ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 50;
+  // Same-named pupils in the same year get the family initial ("Emilie P." / "Emilie F.").
+  const count = {};
+  list.forEach(s => { const k = s.name + '|' + s.yearGroup; count[k] = (count[k] || 0) + 1; });
+  list.forEach((s, i) => {
+    s.displayName = (count[s.name + '|' + s.yearGroup] > 1 && s.family) ? `${s.name} ${s.family}.` : s.name;
+    s.color = (s.score != null && s.score < STRUGGLE_BELOW) ? '#C2603F' : PALETTE[i % PALETTE.length];
   });
-  return result;
+  return list;
 }
 
-function studentThemeScores(student) { return topicsToThemeScores(buildStudentTopics(student)); }
-function classAverageThemeScores() { return topicsToThemeScores(TOPICS.map(t => ({ tag: t.tag, studentAcc: t.classAcc }))); }
-function appAverageThemeScores() {
-  const byTheme = {}; THEMES.forEach(t => byTheme[t.key] = []);
-  Object.keys(BENCH).forEach(tag => { const th = TOPIC_TO_THEME[tag]; if (th) byTheme[th].push(BENCH[tag]); });
-  const result = {};
-  THEMES.forEach(t => { const v = byTheme[t.key]; result[t.key] = v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length) : 50; });
-  return result;
+function buildBenchmark(report) {
+  const out = {};
+  (report.benchmark || []).forEach(b => {
+    if (typeof b.avg_accuracy !== 'number') return;
+    (out[b.year_group] = out[b.year_group] || {})[b.topic_tag] = b.avg_accuracy;
+  });
+  return out;
 }
 
+// ─── SCOPE / AGGREGATES (pure, no DOM) ───────────────────────────────────────
+const inScope = s => SCOPE === 'all' || String(s.yearGroup) === SCOPE;
+const scoped = () => STUDENTS.filter(inScope);
+
+function isQuiet(s) { const d = daysSince(s.lastMs); return d != null && d >= QUIET_DAYS; }
+function groupsFor(list) {
+  const enough = s => s.papers >= ENOUGH_PAPERS && s.score != null;
+  return {
+    struggling: list.filter(s => enough(s) && s.score < STRUGGLE_BELOW),
+    quiet: list.filter(s => enough(s) && s.score >= STRUGGLE_BELOW && isQuiet(s)),
+    notStarted: list.filter(s => s.papers === 0),
+  };
+}
+function statsFor(list) {
+  const practising = list.filter(s => s.papers > 0);
+  const scored = practising.filter(s => s.score != null);
+  const activeWeek = practising.filter(s => { const d = daysSince(s.lastMs); return d != null && d < QUIET_DAYS; });
+  const g = groupsFor(list);
+  const weeklySum = [0,0,0,0,0,0,0,0];
+  list.forEach(s => (s.weekly || []).forEach((v, i) => { weeklySum[i] += v || 0; }));
+  return {
+    pupils: list.length, practising: practising.length, activeWeek: activeWeek.length,
+    avg: scored.length ? Math.round(mean(scored.map(s => s.score))) : null,
+    papers: list.reduce((a, s) => a + s.papers, 0),
+    papersThisWeek: weeklySum[7], weeklySum,
+    attention: g.struggling.length + g.quiet.length,
+  };
+}
+// Class topic accuracy: mean of pupils' own topic accuracy, only pupils with enough answers.
+function classTopics(list) {
+  const out = {};
+  CANON.forEach(([tag]) => {
+    const vals = list.filter(s => s.topics[tag]).map(s => s.topics[tag].acc);
+    if (vals.length >= MIN_CLASS_N) out[tag] = { acc: Math.round(mean(vals)), n: vals.length };
+  });
+  return out;
+}
+// Benchmark for this scope: the pupils' OWN year benchmark, weighted by how many pupils (with data)
+// sit in each year - so a Year 3 view uses Year 3, and whole school blends fairly.
+function benchmarkFor(list) {
+  const out = {};
+  CANON.forEach(([tag]) => {
+    let w = 0, sum = 0;
+    list.forEach(s => {
+      if (!s.topics[tag]) return;
+      const b = (BENCH_BY_YEAR[s.yearGroup] || {})[tag];
+      if (typeof b === 'number') { w++; sum += b; }
+    });
+    if (w) out[tag] = sum / w;
+  });
+  return out;
+}
+// Theme score = mean of the topics in that theme that HAVE data; null when none (never invented).
+function themeScores(accByTopic) {
+  const by = {}; THEMES.forEach(t => (by[t.key] = []));
+  Object.keys(accByTopic).forEach(tag => { const th = TOPIC_TO_THEME[tag]; if (th && typeof accByTopic[tag] === 'number') by[th].push(accByTopic[tag]); });
+  const res = {}; THEMES.forEach(t => (res[t.key] = by[t.key].length ? Math.round(mean(by[t.key])) : null));
+  return res;
+}
+const accMap = (topics) => Object.fromEntries(Object.keys(topics).map(t => [t, topics[t].acc]));
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function setT(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+function setH(id, v) { const e = document.getElementById(id); if (e) e.innerHTML = v; }
+
+function scopeLabel() { return SCOPE === 'all' ? 'Whole school' : yearName(parseInt(SCOPE, 10)); }
+
+function renderScopeBar() {
+  const years = [...new Set(STUDENTS.map(s => s.yearGroup))].sort((a, b) => a - b);
+  const chip = (key, label, n) => `<button class="chip ${SCOPE === key ? 'active' : ''}" data-scope="${key}" role="tab" aria-selected="${SCOPE === key}">${esc(label)} <span class="chip-n">${n}</span></button>`;
+  setH('scope-bar', chip('all', 'Whole school', STUDENTS.length) + years.map(y => chip(String(y), yearName(y), STUDENTS.filter(s => s.yearGroup === y).length)).join(''));
+}
+
+function renderHeader() {
+  const list = scoped();
+  setT('scope-title', scopeLabel());
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  let meta = list.length + ' pupil' + (list.length === 1 ? '' : 's');
+  if (SCOPE === 'all' && REPORT.families_tagged != null) meta += ' · ' + REPORT.families_tagged + ' famil' + (REPORT.families_tagged === 1 ? 'y' : 'ies') + ' in the pilot';
+  meta += ' · Maths, English & Comprehension · as of ' + today;
+  setT('page-meta', meta);
+}
+
+function renderStats() {
+  const st = statsFor(scoped());
+  setT('stat-avg', st.avg == null ? '-' : st.avg);
+  setT('stat-avg-sub', st.practising ? 'across ' + st.practising + ' practising pupil' + (st.practising === 1 ? '' : 's') : 'no practice papers yet');
+  setT('stat-active', st.practising);
+  setT('stat-active-sub', 'of ' + st.pupils + ' (' + pct(st.practising, st.pupils) + '%) have completed a practice paper');
+  setT('stat-week', st.activeWeek);
+  setT('stat-week-sub', 'practised in the last 7 days (' + pct(st.activeWeek, st.pupils) + '% of pupils)');
+  setT('stat-papers', st.papers);
+  setT('stat-papers-sub', st.papersThisWeek + ' completed so far this week');
+  setT('stat-attention', st.attention);
+}
+
+function renderAttention() {
+  const g = groupsFor(scoped());
+  const pill = (s, reason) => `
+    <div class="attention-pill" onclick="openModal('${esc(s.id)}')">
+      <div class="attention-mini-avatar" style="background:${s.color}">${esc(s.name[0] || '?')}</div>
+      <div>
+        <div class="attention-pill-name">${esc(s.displayName)}${SCOPE === 'all' ? ' <span class="pill-year">' + esc(yearName(s.yearGroup)) + '</span>' : ''}</div>
+        <div class="attention-pill-reason">${esc(reason)}</div>
+      </div>
+    </div>`;
+  const empty = t => `<div class="att-empty">${esc(t)}</div>`;
+  setH('attention-struggling', g.struggling.length
+    ? g.struggling.sort((a, b) => a.score - b.score).map(s => pill(s, 'Score ' + s.score)).join('') : empty('No pupils scoring below ' + STRUGGLE_BELOW + '.'));
+  setH('attention-quiet', g.quiet.length
+    ? g.quiet.sort((a, b) => a.lastMs - b.lastMs).map(s => pill(s, 'Last active ' + humanizeMs(s.lastMs))).join('') : empty('Everyone with enough data has practised recently.'));
+  const MAX = 14, ns = g.notStarted;
+  setH('attention-new', ns.length
+    ? ns.slice(0, MAX).map(s => pill(s, s.warmupDone ? 'Warm-up done' : 'Not started')).join('') + (ns.length > MAX ? `<div class="att-empty">+ ${ns.length - MAX} more</div>` : '')
+    : empty('Every pupil has started practising.'));
+}
+
+function renderYearTable() {
+  const panel = document.getElementById('year-panel');
+  panel.style.display = SCOPE === 'all' ? '' : 'none';
+  if (SCOPE !== 'all') return;
+  const years = [...new Set(STUDENTS.map(s => s.yearGroup))].sort((a, b) => a - b);
+  const rows = years.map(y => {
+    const list = STUDENTS.filter(s => s.yearGroup === y), st = statsFor(list), ct = classTopics(list);
+    const weakest = Object.keys(ct).sort((a, b) => ct[a].acc - ct[b].acc)[0];
+    return `<tr data-scope="${y}">
+      <td><b>${esc(yearName(y))}</b></td>
+      <td>${st.pupils}</td>
+      <td>${st.practising} <span class="mut">(${pct(st.practising, st.pupils)}%)</span></td>
+      <td>${st.avg == null ? '<span class="mut">-</span>' : `<span class="score-badge ${scoreClass(st.avg)}">${st.avg}</span>`}</td>
+      <td>${st.papers}</td>
+      <td>${st.activeWeek}</td>
+      <td>${weakest ? `<span class="weak-chip">${esc(topicLabel(weakest))} ${ct[weakest].acc}%</span>` : '<span class="mut">Not enough data</span>'}</td>
+    </tr>`;
+  });
+  const all = statsFor(STUDENTS);
+  rows.push(`<tr class="year-total">
+      <td><b>Whole school</b></td><td>${all.pupils}</td><td>${all.practising} <span class="mut">(${pct(all.practising, all.pupils)}%)</span></td>
+      <td>${all.avg == null ? '-' : `<span class="score-badge ${scoreClass(all.avg)}">${all.avg}</span>`}</td><td>${all.papers}</td><td>${all.activeWeek}</td><td></td></tr>`);
+  setH('year-tbody', rows.join(''));
+}
+
+function renderWeekly() {
+  const st = statsFor(scoped());
+  const starts = REPORT.week_starts || [];
+  const max = Math.max(1, ...st.weeklySum);
+  setH('weekly-bars', st.weeklySum.map((v, i) => {
+    const label = starts[i] ? new Date(starts[i] + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
+    const last = i === st.weeklySum.length - 1;
+    return `<div class="wbar-col" title="${esc(v + ' papers, week of ' + label)}">
+      <div class="wbar-val">${v}</div>
+      <div class="wbar-track"><div class="wbar ${last ? 'now' : ''}" style="height:${Math.max(v ? 6 : 2, Math.round((v / max) * 100))}%"></div></div>
+      <div class="wbar-label">${last ? 'This wk' : esc(label)}</div>
+    </div>`;
+  }).join(''));
+  setT('weekly-sub', 'Practice papers completed per week · ' + scopeLabel());
+}
+
+function renderHeat() {
+  const ct = classTopics(scoped());
+  const tags = CANON.map(c => c[0]).filter(t => ct[t]);
+  setT('heat-sub', 'Average recent accuracy per topic · ' + scopeLabel() + ' · n = pupils with enough answers');
+  setH('heat-grid', tags.length
+    ? tags.map(t => `<div class="heat-cell ${heatClass(ct[t].acc)}"><div class="heat-cell-topic">${esc(topicLabel(t))}</div><div class="heat-cell-pct">${ct[t].acc}%</div><div class="heat-cell-n">n = ${ct[t].n}</div></div>`).join('')
+    : '<div class="att-empty" style="grid-column:1/-1">Not enough practice data yet - topics appear once at least ' + MIN_CLASS_N + ' pupils have answered ' + MIN_TOPIC_Q + '+ questions in them.</div>');
+}
+
+function renderActivity() {
+  const acts = [];
+  scoped().forEach(s => s.history.forEach(h => { if (h.ms) acts.push({ s, h }); }));
+  acts.sort((a, b) => b.h.ms - a.h.ms);
+  setH('recent-activity', acts.slice(0, 8).map(({ s, h }) => {
+    const ratio = h.max ? h.score / h.max : 0;
+    return `<div class="history-item">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="mini-avatar" style="background:${s.color};width:26px;height:26px;border-radius:8px;font-size:0.68rem">${esc(s.name[0] || '?')}</div>
+        <div><div style="font-size:0.78rem;font-weight:700;color:var(--ink)">${esc(s.displayName)}</div>
+        <div style="font-size:0.68rem;color:var(--faint)">${esc(humanizeMs(h.ms))}</div></div>
+      </div>
+      <div class="score-badge ${ratio >= 0.75 ? 'high' : ratio >= 0.55 ? 'mid' : 'low'}">${h.score}/${h.max}</div>
+    </div>`;
+  }).join('') || '<div class="att-empty">No practice papers completed yet.</div>');
+}
+
+function sparkHTML(trend) {
+  if (!trend || trend.length < 2) return '<span class="mut" style="font-size:0.72rem">-</span>';
+  const maxV = Math.max(...trend), minV = Math.min(...trend), range = maxV - minV || 1;
+  const up = trend[trend.length - 1] >= trend[trend.length - 2];
+  return '<div class="sparkline">' + trend.map((v, i) => {
+    const h = Math.round(((v - minV) / range) * 18 + 5);
+    const cls = i === trend.length - 1 ? (up ? 'up' : 'down') : '';
+    return `<div class="spark-bar ${cls}" style="height:${h}px" title="${v}"></div>`;
+  }).join('') + '</div>';
+}
+
+function sortedList(list) {
+  const dir = SORT.dir;
+  const key = {
+    name: s => s.displayName.toLowerCase(),
+    score: s => (s.score == null ? -1 : s.score),
+    papers: s => s.papers,
+    streak: s => s.streak,
+    last: s => (s.lastMs == null ? -1 : s.lastMs),
+  }[SORT.col];
+  return list.slice().sort((a, b) => {
+    const x = key(a), y = key(b);
+    if (x < y) return -1 * dir; if (x > y) return 1 * dir;
+    return a.yearGroup - b.yearGroup || a.displayName.localeCompare(b.displayName);
+  });
+}
+
+function renderTable() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const list = sortedList(scoped().filter(s => s.displayName.toLowerCase().includes(q)));
+  setT('table-title', (SCOPE === 'all' ? 'All pupils' : yearName(parseInt(SCOPE, 10)) + ' pupils') + ' (' + list.length + ')');
+  document.querySelectorAll('#student-table th[data-sort]').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.sort === SORT.col);
+    th.dataset.dir = th.dataset.sort === SORT.col ? (SORT.dir === 1 ? '▲' : '▼') : '';
+  });
+  setH('student-tbody', list.map(s => `
+    <tr onclick="openModal('${esc(s.id)}')" class="${SELECTED === s.id ? 'selected' : ''}">
+      <td><div class="student-name-cell">
+        <div class="mini-avatar" style="background:${s.color}">${esc(s.name[0] || '?')}</div>
+        <div><div class="student-name">${esc(s.displayName)}</div><div class="student-year">${esc(yearName(s.yearGroup))}</div></div>
+      </div></td>
+      <td>${s.papers === 0 || s.score == null ? '<span class="score-badge na">N/A</span>' : `<span class="score-badge ${scoreClass(s.score)}">${s.score}</span>`}</td>
+      <td>${sparkHTML(s.trend)}</td>
+      <td>${s.papers}</td>
+      <td>${s.streak > 0 ? `<span class="streak-chip">🔥 ${s.streak}d</span>` : '<span class="mut" style="font-size:0.72rem">-</span>'}</td>
+      <td><div class="weak-chips">${
+        s.papers === 0 ? `<span class="mut" style="font-size:0.75rem">${s.warmupDone ? 'Warm-up only' : 'No papers yet'}</span>`
+        : s.weakTopics.length ? s.weakTopics.slice(0, 3).map(t => `<span class="weak-chip">${esc(topicLabel(t))}</span>`).join('')
+        : s.papers < ENOUGH_PAPERS ? '<span class="mut" style="font-size:0.75rem">Building picture…</span>' : '<span class="all-good">✓ All good</span>'}</div></td>
+      <td><div style="display:flex;align-items:center;gap:6px">
+        <span class="status-dot ${s.lastMs == null ? 'new' : daysSince(s.lastMs) <= 1 ? 'active' : daysSince(s.lastMs) < QUIET_DAYS ? 'inactive' : 'new'}"></span>
+        <span style="font-size:0.75rem;color:var(--muted)">${esc(s.lastMs == null ? 'Never' : humanizeMs(s.lastMs))}</span></div></td>
+    </tr>`).join('') || '<tr><td colspan="7" class="att-empty" style="padding:22px;text-align:center">No pupils match.</td></tr>');
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function openModal(id) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s) return;
+  SELECTED = id; renderTable(); renderPupilRadar(s);
+  const first = esc(s.name.split(' ')[0]);
+  const topics = CANON.filter(([t]) => s.topics[t]).map(([t, l]) => ({ tag: t, label: l, ...s.topics[t] }));
+  const html = `
+    <div class="modal-student-header">
+      <div class="modal-avatar" style="background:${s.color}">${esc(s.name[0] || '?')}</div>
+      <div><div class="modal-name">${esc(s.displayName)}</div>
+      <div class="modal-meta">${esc(yearName(s.yearGroup))} · ${esc(REPORT.school_label || 'School')}</div></div>
+    </div>
+    <div class="modal-stats-row">
+      <div class="modal-stat"><div class="modal-stat-val">${s.score == null ? '–' : s.score}</div><div class="modal-stat-label">SmartPaper Score</div></div>
+      <div class="modal-stat"><div class="modal-stat-val">${s.streak > 0 ? '🔥 ' + s.streak + 'd' : '-'}</div><div class="modal-stat-label">Current streak</div></div>
+      <div class="modal-stat"><div class="modal-stat-val">${s.papers}</div><div class="modal-stat-label">Practice papers</div></div>
+    </div>
+    <div class="modal-section-title">Topic mastery breakdown</div>
+    ${topics.length === 0 ? '<div class="att-empty" style="padding:4px 2px">No topic data yet - a topic appears once ' + first + ' has answered ' + MIN_TOPIC_Q + '+ questions in it.</div>' : ''}
+    ${topics.map(t => { const [bc, bl] = bucketLabel(t.acc); return `
+      <div class="modal-topic-row">
+        <div class="modal-topic-label">${esc(t.label)}</div>
+        <div class="modal-topic-track"><div class="modal-topic-fill" style="width:${t.acc}%;background:${barColor(t.acc)}"></div></div>
+        <div class="modal-topic-pct" style="color:${barColor(t.acc)}">${t.acc}%</div>
+        <span class="modal-topic-bucket bucket-${bc}">${bl}</span>
+      </div>`; }).join('')}
+    <div class="modal-section-title">Recent practice papers</div>
+    ${s.history.length === 0 ? '<div class="att-empty" style="padding:4px 2px">No practice papers completed yet.</div>' : ''}
+    ${s.history.map(h => `
+      <div class="history-item">
+        <div class="history-date">${esc(h.ms ? new Date(h.ms).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '')}</div>
+        <div><span class="history-score" style="color:${barColor(h.max ? (h.score / h.max) * 100 : 0)}">${h.score}/${h.max} marks (${h.max ? Math.round((h.score / h.max) * 100) : 0}%)</span></div>
+      </div>`).join('')}
+    <div class="modal-section-title">SmartPaper recommendation</div>
+    ${s.papers === 0 ? `<div class="reco-card"><strong>${first}</strong> hasn't completed a practice paper yet${s.warmupDone ? ' (they did the short warm-up quiz)' : ''}, so there's nothing to assess. Insights appear here once they start practising.</div>`
+      : s.weakTopics.length ? `<div class="reco-card reco-warn"><strong>${first}</strong>'s next paper will automatically include extra practice on <strong>${s.weakTopics.map(t => esc(topicLabel(t))).join(', ')}</strong> - the topics where they need the most support.</div>`
+      : s.papers < ENOUGH_PAPERS ? `<div class="reco-card">Early days - based on just ${s.papers} paper${s.papers === 1 ? '' : 's'}. Weak topics will surface here as <strong>${first}</strong> completes more.</div>`
+      : `<div class="reco-card reco-good">✓ <strong>${first}</strong> has no topics flagged for extra support. SmartPaper keeps varying topics to maintain broad coverage.</div>`}
+  `;
+  setH('modal-content', html);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) document.getElementById('modal-overlay').classList.remove('open'); }
+
+// ─── RADAR ───────────────────────────────────────────────────────────────────
 function drawRadar(canvasId, datasets) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const cx = W / 2, cy = H / 2;
-  const R = Math.min(W, H) * 0.31;
-  const labelR = Math.min(W, H) * 0.40;
-  const N = THEMES.length;
-  const rings = [20, 40, 60, 80, 100];
+  const W = canvas.width, H = canvas.height, cx = W / 2, cy = H / 2;
+  const R = Math.min(W, H) * 0.31, labelR = Math.min(W, H) * 0.40, N = THEMES.length;
+  ctx.clearRect(0, 0, W, H); ctx.lineJoin = 'round'; ctx.setLineDash([]);
+  const angle = i => (i / N) * 2 * Math.PI - Math.PI / 2;
+  const pt = (i, p) => { const a = angle(i), r = (p / 100) * R; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+  [20, 40, 60, 80, 100].forEach(p => {
+    ctx.beginPath(); THEMES.forEach((_, i) => { const [x, y] = pt(i, p); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.closePath(); ctx.strokeStyle = '#EBE7DF'; ctx.lineWidth = 1; ctx.stroke();
+  });
+  THEMES.forEach((_, i) => { const [x, y] = pt(i, 100); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.strokeStyle = '#EBE7DF'; ctx.stroke(); });
 
-  ctx.clearRect(0, 0, W, H);
-  ctx.lineJoin = 'round';
-
-  function angle(i) { return (i / N) * 2 * Math.PI - Math.PI / 2; }
-  function pt(i, pct) {
-    const a = angle(i), r = (pct / 100) * R;
-    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  // A theme with no data is SKIPPED (never drawn as 0 or a made-up 50).
+  const pointsOf = d => THEMES.map((t, i) => (d.scores[t.key] == null ? null : pt(i, d.scores[t.key])));
+  function path(pts) {
+    const v = pts.filter(Boolean);
+    if (!v.length) return false;
+    ctx.beginPath(); v.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    if (v.length > 2) ctx.closePath();
+    return true;
   }
-
-  // Rings
-  rings.forEach(pct => {
-    ctx.beginPath();
-    THEMES.forEach((_, i) => { const [x, y] = pt(i, pct); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
-    ctx.closePath();
-    ctx.strokeStyle = '#EBE7DF';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  });
-
-  // Axes
-  THEMES.forEach((_, i) => {
-    const [x, y] = pt(i, 100);
-    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y);
-    ctx.strokeStyle = '#EBE7DF'; ctx.lineWidth = 1; ctx.stroke();
-  });
-
-  // Filled areas (gradient)
   datasets.filter(d => d.filled).forEach(d => {
-    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
-    grad.addColorStop(0, d.color + '55');
-    grad.addColorStop(1, d.color + '18');
-    ctx.beginPath();
-    THEMES.forEach((t, i) => { const [x, y] = pt(i, d.scores[t.key] || 0); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-  });
-
-  // Strokes + dots (filled datasets glow)
-  datasets.forEach(d => {
-    ctx.save();
-    if (d.filled) { ctx.shadowColor = d.color; ctx.shadowBlur = 10; }
-    ctx.beginPath();
-    THEMES.forEach((t, i) => { const [x, y] = pt(i, d.scores[t.key] || 0); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
-    ctx.closePath();
-    ctx.strokeStyle = d.color;
-    ctx.lineWidth = d.filled ? 2.5 : 1.8;
-    if (!d.filled) ctx.setLineDash([4, 4]);
-    ctx.stroke();
-    ctx.restore();
-    ctx.setLineDash([]);
-    if (d.filled) {
-      THEMES.forEach((t, i) => {
-        const [x, y] = pt(i, d.scores[t.key] || 0);
-        ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 2 * Math.PI);
-        ctx.fillStyle = d.color; ctx.fill();
-        ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke();
-      });
+    const pts = pointsOf(d);
+    if (pts.filter(Boolean).length > 2 && path(pts)) {
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, d.color + '55'); g.addColorStop(1, d.color + '18');
+      ctx.fillStyle = g; ctx.fill();
     }
   });
-
-  // Labels
+  datasets.forEach(d => {
+    const pts = pointsOf(d);
+    ctx.save();
+    if (d.filled) { ctx.shadowColor = d.color; ctx.shadowBlur = 10; }
+    if (path(pts)) { ctx.strokeStyle = d.color; ctx.lineWidth = d.filled ? 2.5 : 1.8; if (!d.filled) ctx.setLineDash([4, 4]); ctx.stroke(); }
+    ctx.restore(); ctx.setLineDash([]);
+    if (d.filled) pts.filter(Boolean).forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 2 * Math.PI); ctx.fillStyle = d.color; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); });
+  });
   THEMES.forEach((theme, i) => {
-    const a = angle(i);
-    let lx = cx + Math.cos(a) * labelR;
-    const ly = cy + Math.sin(a) * labelR;
-    ctx.fillStyle = '#56524B';
-    ctx.font = '600 11px "Space Grotesk", sans-serif';
-    ctx.textAlign = lx < cx - 4 ? 'right' : lx > cx + 4 ? 'left' : 'center';
-    ctx.textBaseline = 'middle';
-    // Keep the whole label inside the canvas so no first/last letter is ever clipped
-    const tw = ctx.measureText(theme.label).width, pad = 6;
-    if (ctx.textAlign === 'left') lx = Math.min(lx, W - pad - tw);
-    else if (ctx.textAlign === 'right') lx = Math.max(lx, pad + tw);
-    else lx = Math.min(Math.max(lx, pad + tw / 2), W - pad - tw / 2);
-    ctx.fillText(theme.label, lx, ly);
+    const a = angle(i); let lx = cx + Math.cos(a) * labelR; const ly = cy + Math.sin(a) * labelR;
+    const noData = datasets.every(d => d.scores[theme.key] == null);
+    ctx.fillStyle = noData ? '#B5B0A6' : '#56524B'; ctx.font = '600 11px "Space Grotesk", sans-serif';
+    ctx.textAlign = lx < cx - 4 ? 'right' : lx > cx + 4 ? 'left' : 'center'; ctx.textBaseline = 'middle';
+    const text = theme.label, tw = ctx.measureText(text).width, pad = 6;
+    if (ctx.textAlign === 'left') lx = Math.min(lx, W - pad - tw); else if (ctx.textAlign === 'right') lx = Math.max(lx, pad + tw); else lx = Math.min(Math.max(lx, pad + tw / 2), W - pad - tw / 2);
+    ctx.fillText(text, lx, ly);
+    if (noData) { ctx.font = '500 9px "Space Grotesk", sans-serif'; ctx.fillText('no data', lx, ly + 12); }
   });
 }
 
 function renderClassRadar() {
-  drawRadar('radar-class', [
-    { scores: appAverageThemeScores(), color: '#B6B2A9', filled: false },
-    { scores: classAverageThemeScores(), color: '#6354D6', filled: true },
-  ]);
+  const list = scoped(), ct = classTopics(list);
+  setT('radar-class-title', scopeLabel() + ' skills - vs app average');
+  setT('radar-class-label', scopeLabel());
+  setT('radar-bench-label', SCOPE === 'all' ? 'App average (same year groups)' : 'App average, ' + scopeLabel());
+  const cls = themeScores(accMap(Object.fromEntries(Object.keys(ct).map(t => [t, { acc: ct[t].acc }]))));
+  const bench = themeScores(benchmarkFor(list));
+  const any = Object.values(cls).some(v => v != null);
+  setT('radar-class-hint', any ? '' : 'Not enough practice data yet to draw a skills chart.');
+  drawRadar('radar-class', [{ scores: bench, color: '#B6B2A9', filled: false }, { scores: cls, color: '#6354D6', filled: true }]);
 }
-
-function renderPupilRadar(student) {
-  document.getElementById('radar-pupil-name').textContent = student.name + "'s";
-  document.getElementById('radar-pupil-label').textContent = student.name;
-  const hint = document.getElementById('radar-pupil-hint');
-  const canvas = document.getElementById('radar-pupil');
-  // No topic data (no papers) → don't draw the class average as if it were the
-  // pupil's own skills; show a plain "no data yet" note instead.
-  const hasData = student.topicAcc && Object.keys(student.topicAcc).length > 0;
-  if (!hasData) {
-    if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
-    if (hint) { hint.style.display = ''; hint.textContent = student.name + ' hasn’t completed any papers yet — no skills to show.'; }
-    return;
+function renderPupilRadar(s) {
+  setT('radar-pupil-name', s.name + "'s"); setT('radar-pupil-label', s.name);
+  setT('radar-pupil-vs', scopeLabel() + ' average');
+  const hint = document.getElementById('radar-pupil-hint'), canvas = document.getElementById('radar-pupil');
+  if (!Object.keys(s.topics).length) {
+    drawPlaceholder('radar-pupil', 'Not enough answers yet\nto draw ' + s.name + '’s skills');
+    hint.style.display = 'none'; return;
   }
-  if (hint) hint.style.display = 'none';
+  hint.style.display = 'none';
+  const ct = classTopics(scoped());
   drawRadar('radar-pupil', [
-    { scores: classAverageThemeScores(), color: '#6354D6', filled: false },
-    { scores: studentThemeScores(student), color: '#18B69E', filled: true },
+    { scores: themeScores(Object.fromEntries(Object.keys(ct).map(t => [t, ct[t].acc]))), color: '#6354D6', filled: false },
+    { scores: themeScores(accMap(s.topics)), color: '#18B69E', filled: true },
   ]);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-
-function humanizeDate(iso) {
-  if (!iso) return 'Never';
-  const d = new Date(iso), now = new Date();
-  const days = Math.floor((now - d) / 86400000);
-  if (days <= 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 14) return days + ' days ago';
-  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+function drawPlaceholder(canvasId, text) {
+  const c = document.getElementById(canvasId), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.fillStyle = '#B5B0A6'; ctx.font = '500 13px "Space Grotesk", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  text.split('\n').forEach((line, i, a) => ctx.fillText(line, c.width / 2, c.height / 2 + (i - (a.length - 1) / 2) * 20));
 }
+
+// ─── EXPORT ──────────────────────────────────────────────────────────────────
+function exportCsv() {
+  const cell = v => { const t = String(v == null ? '' : v); return /^[=+\-@]/.test(t) ? "'" + t : t; };
+  const q = v => '"' + cell(v).replace(/"/g, '""') + '"';
+  const head = ['Pupil', 'Year group', 'Score', 'Practice papers', 'Streak (days)', 'Last practised', 'Weak topics'];
+  const rows = sortedList(scoped()).map(s => [s.displayName, yearName(s.yearGroup), s.score == null ? '' : s.score, s.papers, s.streak,
+    s.lastMs ? new Date(s.lastMs).toISOString().slice(0, 10) : '', s.weakTopics.map(topicLabel).join('; ')]);
+  const csv = [head, ...rows].map(r => r.map(q).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+  a.download = 'smartpaper-' + (SCOPE === 'all' ? 'whole-school' : 'year-' + SCOPE) + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ─── WIRING ──────────────────────────────────────────────────────────────────
+function renderAll() {
+  renderScopeBar(); renderHeader(); renderStats(); renderAttention(); renderYearTable();
+  renderWeekly(); renderHeat(); renderActivity(); renderTable(); renderClassRadar();
+  const sel = STUDENTS.find(s => s.id === SELECTED);
+  if (sel && inScope(sel)) renderPupilRadar(sel);
+  else {
+    SELECTED = null; setT('radar-pupil-name', 'Select a pupil'); setT('radar-pupil-label', 'Pupil');
+    drawPlaceholder('radar-pupil', 'Pick a pupil from the list\nto see their skills here');
+    const h = document.getElementById('radar-pupil-hint'); h.style.display = 'none';
+  }
+}
+function setScope(key) { SCOPE = key; renderAll(); }
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-scope]');
+  if (el) { setScope(el.dataset.scope); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  const th = e.target.closest('#student-table th[data-sort]');
+  if (th) { SORT = { col: th.dataset.sort, dir: SORT.col === th.dataset.sort ? -SORT.dir : (th.dataset.sort === 'name' ? 1 : -1) }; renderTable(); }
+});
+document.getElementById('search-input').addEventListener('input', renderTable);
+document.getElementById('btn-export').addEventListener('click', exportCsv);
+document.getElementById('btn-refresh').addEventListener('click', () => loadReport().catch(showError));
+document.getElementById('btn-signout').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('modal-overlay').classList.remove('open'); });
 
 function applyReport(report) {
-  const CANON = [
-    ['number','Number'],['arithmetic','Arithmetic'],['times_tables','Times Tables'],
-    ['fractions','Fractions'],['decimals','Decimals'],['percentages','Percentages'],
-    ['measurement','Measurement'],['geometry','Geometry'],['data','Data'],
-    ['grammar','Grammar'],['punctuation','Punctuation'],['vocabulary','Vocabulary'],['comprehension','Comprehension'],
-  ];
-  const acc = {}, cnt = {};
-  (report.cohort||[]).forEach(c => (c.topics||[]).forEach(t => {
-    acc[t.topic_tag] = (acc[t.topic_tag]||0) + (t.rolling_accuracy||0);
-    cnt[t.topic_tag] = (cnt[t.topic_tag]||0) + 1;
-  }));
-  TOPICS = CANON.filter(function(p){ return cnt[p[0]]; }).map(function(p){ return { tag: p[0], label: p[1], classAcc: Math.round(acc[p[0]]/cnt[p[0]]) }; });
-
-  STUDENTS = (report.cohort||[]).map((c, i) => {
-    const topicAcc = {}; (c.topics||[]).forEach(t => { topicAcc[t.topic_tag] = t.rolling_accuracy; });
-    const recentAsc = (c.recent||[]).slice().reverse();
-    const trend = recentAsc.map(r => (r.smart_score != null ? r.smart_score : Math.round(((r.score||0)/(r.max||1))*100)));
-    const score = (c.avg_smart_score != null) ? c.avg_smart_score : (trend.length ? trend[trend.length-1] : 0);
-    return {
-      id: c.child_id, name: c.name, displayName: c.name, family: c.family || '', score,
-      trend: trend.length >= 2 ? trend.slice(-8) : [score, score],
-      streak: c.streak_days||0, papers: c.papers_completed||0, yearGroup: c.year_group,
-      lastActive: humanizeDate(c.last_active),
-      weakTopics: (c.topics||[]).filter(t => t.needs_review).map(t => t.topic_tag),
-      topicAcc,
-      history: (c.recent||[]).map(r => ({ date: humanizeDate(r.date), score: r.score, max: r.max })),
-      color: score < 55 ? '#C2603F' : PALETTE[i % PALETTE.length],
-    };
-  });
-
-  // Disambiguate same-named pupils in the same year (e.g. two "Emilie" in Year 3)
-  // by appending the family initial from the edge function ("Emilie P." / "Emilie F.").
-  const nameYearCount = {};
-  STUDENTS.forEach(s => { const k = s.name + '|' + s.yearGroup; nameYearCount[k] = (nameYearCount[k] || 0) + 1; });
-  STUDENTS.forEach(s => {
-    const k = s.name + '|' + s.yearGroup;
-    s.displayName = (nameYearCount[k] > 1 && s.family) ? `${s.name} ${s.family}.` : s.name;
-  });
-
-  BENCH = {}; const bAcc={}, bCnt={};
-  (report.benchmark||[]).forEach(b => { bAcc[b.topic_tag]=(bAcc[b.topic_tag]||0)+b.avg_accuracy; bCnt[b.topic_tag]=(bCnt[b.topic_tag]||0)+1; });
-  Object.keys(bAcc).forEach(tag => { BENCH[tag] = bAcc[tag]/bCnt[tag]; });
-
-  const acts = [];
-  (report.cohort||[]).forEach(c => (c.recent||[]).forEach(r => acts.push({ name: c.name, date: r.date, score: r.score, max: r.max })));
-  acts.sort((a,b) => new Date(b.date) - new Date(a.date));
-  RECENT_ACTIVITY = acts.slice(0, 8).map(a => ({ name: a.name, time: humanizeDate(a.date), score: a.score, max: a.max }));
-
-  const school = document.getElementById('school-name');
-  if (school && report.school_label) school.textContent = report.school_label;
-
-  const withData = STUDENTS.filter(s => (s.papers||0) > 0);
-  const avg = withData.length ? Math.round(withData.reduce((a,s)=>a+s.score,0)/withData.length) : 0;
-  const totalPapers = STUDENTS.reduce((a,s)=>a+(s.papers||0),0);
-  const setT = (id,v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  setT('stat-avg', avg || '-');
-  setT('stat-active', withData.length);
-  setT('stat-active-sub', 'of ' + STUDENTS.length + ' pupils have completed a paper');
-  setT('stat-papers', totalPapers);
-  setT('page-meta', STUDENTS.length + ' pupils · Maths & English · as of ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}));
+  REPORT = report;
+  STUDENTS = buildStudents(report);
+  BENCH_BY_YEAR = buildBenchmark(report);
+  if (SCOPE !== 'all' && !STUDENTS.some(s => String(s.yearGroup) === SCOPE)) SCOPE = 'all';
+  setT('school-name', report.school_label || 'School');
+  document.title = 'SmartPaper - Teacher Dashboard | ' + (report.school_label || 'School');
+  const tn = report.teacher_name || (report.teacher_email || '').split('@')[0] || 'Teacher';
+  setT('teacher-name', tn); setT('teacher-avatar', (tn.match(/[A-Za-z]/) || ['T'])[0].toUpperCase());
   document.getElementById('login-gate').style.display = 'none';
-  renderAttention(); renderHeat(); renderActivity(); renderTable(STUDENTS); renderClassRadar();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderClassRadar);
+  renderAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { renderClassRadar(); const s = STUDENTS.find(x => x.id === SELECTED); if (s) renderPupilRadar(s); });
 }
 
 async function loadReport() {
   const { data, error } = await sb.functions.invoke('teacher-report', { body: {} });
-  if (error) throw error;
+  if (error) {
+    let msg = ''; try { msg = (await error.context.json()).error || ''; } catch (_) {}
+    throw new Error(msg || error.message || 'Could not load data');
+  }
   if (data && data.error) throw new Error(data.error);
   applyReport(data);
 }
-
-async function boot() {
+async function showError(e) {
   const gate = document.getElementById('login-gate');
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { gate.style.display = 'flex'; return; }
-  try { await loadReport(); }
-  catch (e) {
-    gate.style.display = 'flex';
-    document.getElementById('login-msg').textContent = String(e.message||e).includes('not a teacher')
-      ? 'This account does not have teacher access.' : 'Could not load data - please sign in again.';
-    await sb.auth.signOut();
-  }
+  const m = String((e && e.message) || e);
+  gate.style.display = 'flex';
+  document.getElementById('login-msg').textContent = /not authorised/i.test(m) ? 'This account does not have teacher access.' : /not signed in/i.test(m) ? 'Please sign in again.' : 'Could not load data - please try again.';
+  if (/not authorised|not signed in/i.test(m)) await sb.auth.signOut();
 }
-
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { document.getElementById('login-gate').style.display = 'flex'; return; }
+  try { await loadReport(); } catch (e) { await showError(e); }
+}
 document.getElementById('login-btn').addEventListener('click', async () => {
   const email = (document.getElementById('login-email').value || '').trim();
   const msg = document.getElementById('login-msg');
@@ -1010,8 +1106,7 @@ document.getElementById('login-btn').addEventListener('click', async () => {
   const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href.split('#')[0], shouldCreateUser: false } });
   msg.textContent = error ? ('Error: ' + error.message) : 'Check your email for a sign-in link, then reopen this page.';
 });
-
-sb.auth.onAuthStateChange((_e, session) => { if (session) boot(); });
+sb.auth.onAuthStateChange((_e, session) => { if (session && !REPORT) boot(); });
 boot();
 </script>
 </body>
