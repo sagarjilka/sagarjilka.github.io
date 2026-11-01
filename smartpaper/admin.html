@@ -120,7 +120,7 @@
       <b>How to read this.</b> One row per account. Click a row for per-child detail and onboarding steps.
       Times are shown in your local time. <b>Papers</b> = completed practice papers (the 5-question onboarding warm-up is
       counted separately and excluded). <b>Questions</b> = questions the child actually answered, with the % correct; a paper saved
-      part-way counts only what was answered. <b>Started, not saved</b> = papers opened but exited without saving.
+      part-way counts only what was answered. <b>Spelling slips</b> = answers marked correct only because a typo or misspelt unit was forgiven (recorded from 31 Oct 2026 onwards; never affects the mark). <b>Started, not saved</b> = papers opened but exited without saving.
       <b>First seen</b> is the earliest PostHog event for that person (a good proxy for download time; the app's own
       "install" event is shown in the detail row when it differs, because builds that gained install tracking later can record an
       install date of the update rather than the real download). Linked (shared) children appear on each parent's row; the totals
@@ -245,6 +245,10 @@
         if (!u.answered) return '<span class="mut">0</span>';
         return '<div class="num"><b>' + u.answered + '</b></div><div class="small mut num">' + pct(u.correct, u.answered) + ' correct</div>';
       } },
+    { id: 'near', label: 'Spelling slips', val: function (u) { return u.near_misses || 0; }, cell: function (u) {
+        if (!u.near_misses) return '<span class="mut">0</span>';
+        return '<div class="num"><b>' + u.near_misses + '</b></div><div class="small mut num">' + pct(u.near_misses, u.answered) + ' of answers</div>';
+      } },
     { id: 'last', label: 'Last activity', val: function (u) { return u._lastActiveMs; }, cell: function (u) {
         return u._lastActiveMs ? when(new Date(u._lastActiveMs).toISOString()) + (u._lastPaperMs ? '<div class="small mut">last paper ' + esc(ago(u.last_paper_at)) + '</div>' : '') : '<span class="mut">-</span>';
       } },
@@ -269,6 +273,7 @@
       h += '<div style="margin-bottom:8px"><b>' + esc(k.name) + '</b> · ' + esc(yr(k.year)) + (k.role === 'owner' ? '' : ' <span class="mut">(linked)</span>') +
         '<div class="small mut">added ' + esc(abs(k.created_at)) + (k.goal ? ' · goal: ' + esc(k.goal.replace(/_/g, ' ')) : '') + (k.reminder_slot ? ' · reminder: ' + esc(k.reminder_slot.replace(/_/g, ' ')) : '') + '</div>' +
         '<div class="small">' + k.papers + ' papers (M' + k.maths + ' E' + k.english + ' C' + k.comprehension + '), ' + k.answered + ' questions, ' + pct(k.correct, k.answered) + ' correct' +
+        (k.near_misses ? ', ' + k.near_misses + ' spelling slip' + (k.near_misses === 1 ? '' : 's') : '') +
         (k.avg_smart != null ? ', avg SmartPaper score ' + k.avg_smart : '') + (k.streak ? ', ' + k.streak + '-day streak' : '') + '</div>' +
         '<div class="small mut">warm-up done: ' + (k.warmups ? 'yes' : 'no') + (k.first_paper_at ? ' · first paper ' + esc(abs(k.first_paper_at)) : '') + (k.last_paper_at ? ' · last ' + esc(abs(k.last_paper_at)) : '') + '</div></div>';
     });
@@ -325,9 +330,9 @@
     var us = state.users.filter(function (u) { return !(hide && u.internal); });
     var now = Date.now(), t = [];
     function add(n, label, bad) { t.push('<div class="tile' + (bad ? ' bad' : '') + '"><b>' + n + '</b><span>' + esc(label) + '</span></div>'); }
-    var kids = 0, papers = 0, answered = 0, correct = 0;
+    var kids = 0, papers = 0, answered = 0, correct = 0, nearMiss = 0;
     us.forEach(function (u) {
-      u.kids.forEach(function (k) { if (k.role === 'owner') { kids++; papers += k.papers; answered += k.answered; correct += k.correct; } });
+      u.kids.forEach(function (k) { if (k.role === 'owner') { kids++; papers += k.papers; answered += k.answered; correct += k.correct; nearMiss += (k.near_misses || 0); } });
     });
     add(us.length, 'accounts');
     add(us.filter(function (u) { return now - u._signupMs < 864e5; }).length, 'new in 24h');
@@ -337,6 +342,7 @@
     add(us.filter(function (u) { return u.papers_7d > 0; }).length, 'practised this week');
     add(papers, 'practice papers');
     add(answered.toLocaleString('en-GB'), 'questions answered' + (answered ? ' (' + pct(correct, answered) + ' correct)' : ''));
+    add(nearMiss.toLocaleString('en-GB'), 'spelling slips forgiven' + (answered ? ' (' + pct(nearMiss, answered) + ' of answers)' : ''));
     add(us.filter(function (u) { return !u.email_confirmed; }).length, 'email not confirmed', true);
     add(us.filter(function (u) { return u.n_kids === 0; }).length, 'no child added');
     if (state.ph && state.ph.ok && state.ph.installs_30d != null) {
@@ -372,12 +378,12 @@
 
   function csvCell(v) { var s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
   function exportCsv() {
-    var head = ['signed_up_at', 'email', 'provider', 'email_confirmed', 'school', 'onboarding_completed', 'children', 'years', 'papers', 'maths', 'english', 'comprehension', 'papers_7d', 'questions_answered', 'questions_correct', 'started_not_saved', 'last_paper_at', 'last_active', 'posthog_first_seen', 'status'];
+    var head = ['signed_up_at', 'email', 'provider', 'email_confirmed', 'school', 'onboarding_completed', 'children', 'years', 'papers', 'maths', 'english', 'comprehension', 'papers_7d', 'questions_answered', 'questions_correct', 'spelling_slips', 'started_not_saved', 'last_paper_at', 'last_active', 'posthog_first_seen', 'status'];
     var lines = [head.join(',')];
     visible().forEach(function (u) {
       lines.push([u.signed_up_at, u.email, u.provider, u.email_confirmed, u.school, u.onboarding_completed,
         u.kids.map(function (k) { return k.name; }).join('; '), u.kids.map(function (k) { return yr(k.year); }).join('; '),
-        u.papers, u.maths, u.english, u.comprehension, u.papers_7d, u.answered, u.correct, u.unsaved_starts, u.last_paper_at,
+        u.papers, u.maths, u.english, u.comprehension, u.papers_7d, u.answered, u.correct, u.near_misses || 0, u.unsaved_starts, u.last_paper_at,
         u._lastActiveMs ? new Date(u._lastActiveMs).toISOString() : '', u.ph ? u.ph.first_seen : '', u._status].map(csvCell).join(','));
     });
     var a = document.createElement('a');
