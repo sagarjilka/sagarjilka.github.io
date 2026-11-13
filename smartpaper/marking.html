@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>SmartPaper Marking Check</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --card:#fff; --ink:#1C1B19; --ink2:#6E6A62; --line:#EFEBE3;
+    --violet:#6354D6; --violetL:#EFEDFB; --teal:#0E8E7C; --tealL:#E6F5F1;
+    --amber:#B07A1F; --amberL:#FBF3E4; --red:#B42318; --redL:#FDECEA;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14131A; --card:#1D1C26; --ink:#F2F0EA; --ink2:#A39FB0; --line:#2C2A38;
+      --violetL:#2A2650; --tealL:#12302B; --amberL:#33290F; --redL:#3A1814; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px}
+  h1{font-size:21px;font-weight:800}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .sub{color:var(--ink2);font-size:13px}
+  button,input{font:inherit;color:inherit}
+  .btn{background:var(--violet);color:#fff;border:0;border-radius:9px;padding:9px 15px;font-weight:700;cursor:pointer}
+  .btn.teal{background:var(--teal)}
+  .btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .gate{max-width:420px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .gate input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);margin:12px 0}
+  .err{color:var(--red);font-size:13px;margin-top:8px}
+  .note{background:var(--violetL);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:14px}
+  .ok{background:var(--tealL);color:var(--teal);border-radius:12px;padding:12px 14px;margin:14px 0;font-weight:600}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+  .bar .grow{flex:1}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px}
+  .card input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--violet);flex:none}
+  .meta{color:var(--ink2);font-size:12.5px;margin-bottom:4px}
+  .q{margin-bottom:8px}
+  .ans{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:14px}
+  .ans b{color:var(--ink2);font-weight:600}
+  .ans span{font-weight:700;word-break:break-word}
+  .empty{text-align:center;color:var(--ink2);padding:40px 10px}
+  details summary{cursor:pointer;color:var(--ink2);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+(function(){
+  var ENDPOINT = 'https://nzeladoubwjtcgnddmim.supabase.co/functions/v1/marking-review';
+  var LS_KEY = 'sp_admin_key'; // shared with admin.html
+  var app = document.getElementById('app');
+  var items = [], lastSweep = null, message = '';
+
+  function lsGet(){ try { return localStorage.getItem(LS_KEY) || ''; } catch(e){ return ''; } }
+  function lsSet(v){ try { v ? localStorage.setItem(LS_KEY, v) : localStorage.removeItem(LS_KEY); } catch(e){} }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function day(iso){ if(!iso) return ''; var d = new Date(iso); return d.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}) + ', ' + d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}); }
+  function yearName(y){ return y === 0 ? 'Reception' : (y == null ? '' : 'Year ' + y); }
+  function keyText(it){
+    // multiple choice: show the option text, not the letter
+    if (it.options && Array.isArray(it.options)) {
+      var t = function(id){ var o = it.options.filter(function(o){ return o.id === id; })[0]; return o ? o.text + ' (' + id + ')' : id; };
+      return { key: it.key.split(',').map(t).join(', '), given: it.given.split(',').map(t).join(', ') };
+    }
+    return { key: it.key.split('||').join('  or  '), given: it.given };
+  }
+
+  function call(body){
+    return fetch(ENDPOINT, { method:'POST', headers:{ 'x-admin-key': lsGet(), 'Content-Type':'application/json' }, body: JSON.stringify(body) })
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(r.status === 401 ? 'That key was not accepted.' : (j.error || 'Something went wrong.')); return j; }); });
+  }
+
+  function gate(err){
+    app.innerHTML = '<div class="gate"><h1>Marking check</h1><p class="sub">Enter the admin key (the same one as the sign-ups dashboard).</p>'
+      + '<input id="k" type="password" autocomplete="off" placeholder="Admin key"><button class="btn" id="go">Open</button>'
+      + (err ? '<div class="err">' + esc(err) + '</div>' : '') + '</div>';
+    document.getElementById('go').onclick = function(){ lsSet(document.getElementById('k').value.trim()); load(); };
+  }
+
+  function load(){
+    if (!lsGet()) return gate();
+    app.innerHTML = '<p class="sub">Loading…</p>';
+    call({ action:'list' }).then(function(d){ items = d.items || []; lastSweep = d.lastSweep; render(); })
+      .catch(function(e){ if (/not accepted/.test(e.message)) lsSet(''); gate(e.message); });
+  }
+
+  function render(){
+    var h = '<div class="top"><h1>Marking check</h1><button class="btn ghost" id="out">Sign out</button></div>';
+    h += '<p class="sub">Each week, every answer marked wrong is checked again with today\'s marking rules. '
+      + 'These answers are accepted by today\'s rules, usually because the child\'s phone was still on an older version of the app. '
+      + 'Nothing changes until you approve. Approving gives the mark and updates the paper\'s score and topic progress; XP and coins are not changed.</p>';
+    if (lastSweep) h += '<p class="sub" style="margin-top:6px">Last check: ' + esc(day(lastSweep.ran_at)) + ', ' + esc(lastSweep.checked) + ' answers looked at, ' + esc(lastSweep.found) + ' found.</p>';
+    if (message) h += '<div class="ok">' + esc(message) + '</div>';
+    if (!items.length) {
+      h += '<div class="empty">Nothing waiting for review.</div>';
+    } else {
+      h += '<div class="bar"><label class="sub"><input type="checkbox" id="all" checked> Select all</label><span class="grow"></span>'
+        + '<button class="btn ghost" id="rej">Not right: leave as wrong</button><button class="btn teal" id="app2">Approve selected</button></div>';
+      items.forEach(function(it, i){
+        var k = keyText(it);
+        h += '<div class="card"><input type="checkbox" class="pick" data-i="' + i + '" checked><div style="flex:1;min-width:0">'
+          + '<div class="meta">' + esc(it.child) + ' · ' + esc(yearName(it.year)) + ' ' + esc(it.subject) + ' · answered ' + esc(day(it.answeredAt)) + '</div>'
+          + '<div class="q">' + esc(it.body) + (it.passageTitle ? ' <span class="sub">(passage: ' + esc(it.passageTitle) + ')</span>' : '') + '</div>'
+          + '<div class="ans"><b>Our answer</b><span>' + esc(k.key) + '</span><b>Child\'s answer</b><span>' + esc(k.given) + '</span></div>'
+          + '</div></div>';
+      });
+    }
+    h += '<div class="bar"><span class="grow"></span><button class="btn ghost" id="run">Run the check now</button></div>';
+    app.innerHTML = h;
+
+    document.getElementById('out').onclick = function(){ lsSet(''); gate(); };
+    document.getElementById('run').onclick = function(){
+      this.disabled = true; this.textContent = 'Checking…';
+      call({ action:'sweep' }).then(function(r){ message = 'Check finished: ' + r.checked + ' new answers looked at, ' + r.found + ' found.'; load(); })
+        .catch(function(e){ message = e.message; render(); });
+    };
+    if (!items.length) return;
+    var all = document.getElementById('all');
+    all.onchange = function(){ Array.prototype.forEach.call(document.querySelectorAll('.pick'), function(c){ c.checked = all.checked; }); };
+    function picked(){ return Array.prototype.filter.call(document.querySelectorAll('.pick'), function(c){ return c.checked; }).map(function(c){ return items[+c.dataset.i].id; }); }
+    document.getElementById('app2').onclick = function(){
+      var ids = picked(); if (!ids.length) return;
+      if (!confirm('Give the mark for ' + ids.length + (ids.length === 1 ? ' answer?' : ' answers?'))) return;
+      this.disabled = true;
+      call({ action:'decide', approve: ids }).then(function(r){ message = (r.applied || 0) + (r.applied === 1 ? ' answer' : ' answers') + ' re-marked.'; load(); })
+        .catch(function(e){ message = e.message; render(); });
+    };
+    document.getElementById('rej').onclick = function(){
+      var ids = picked(); if (!ids.length) return;
+      if (!confirm('Leave ' + ids.length + (ids.length === 1 ? ' answer' : ' answers') + ' marked wrong? They will not be shown again.')) return;
+      this.disabled = true;
+      call({ action:'decide', reject: ids }).then(function(r){ message = (r.rejected || 0) + ' left as wrong.'; load(); })
+        .catch(function(e){ message = e.message; render(); });
+    };
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
