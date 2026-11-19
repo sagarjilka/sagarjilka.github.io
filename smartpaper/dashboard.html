@@ -65,7 +65,7 @@
     .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; }
     .card h2 { font-family: var(--display); font-size: 1.15rem; font-weight: 600; letter-spacing: -0.2px; }
     .card .sub { color: var(--muted); font-size: 0.84rem; margin: 2px 0 14px; }
-    section { margin-top: 22px; }
+    section { margin-top: 22px; scroll-margin-top: 76px; }
 
     /* tiles */
     .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -193,6 +193,29 @@
     canvas.radar { width: 100%; max-width: 400px; aspect-ratio: 400 / 340; display: block; margin: 0 auto; }
     .radar-note { font-size: 0.78rem; color: var(--faint); text-align: center; margin-top: 4px; }
 
+    /* national curriculum */
+    .nc-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .nc-head { font-size: 0.9rem; color: var(--ink); margin: 4px 0 6px; }
+    .nc-head b { font-weight: 700; }
+    .ncdom { font-size: 0.74rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--faint); margin: 18px 0 2px; }
+    .ncrow { display: grid; grid-template-columns: 1fr 96px 132px; gap: 12px; align-items: center; padding: 9px 6px; border-top: 1px solid var(--line); cursor: pointer; border-radius: 6px; }
+    .ncrow:hover, .ncrow:focus { background: #FAF9FE; outline: 0; }
+    .ncrow.static { cursor: default; } .ncrow.static:hover { background: none; }
+    .ncrow .t { font-size: 0.88rem; line-height: 1.38; }
+    .ncrow .code { font-size: 0.7rem; color: var(--faint); margin-left: 6px; white-space: nowrap; }
+    .ncrow .pp { font-size: 0.8rem; color: var(--muted); }
+    .ncrow .st { text-align: right; }
+    .ncstate { font-size: 0.78rem; color: var(--faint); }
+    .ncweak { display: inline-block; margin-left: 6px; font-size: 0.7rem; font-weight: 700; color: var(--terra); }
+    .ncwho { margin: 0 0 8px 10px; padding: 2px 0 4px 12px; border-left: 3px solid var(--violet-soft); }
+    .ncwho .person { padding: 7px 4px; }
+    .ncwho .none { border-top: 0; padding: 6px 2px; }
+    .nc-yr { display: inline-block; font-size: 0.7rem; font-weight: 700; color: var(--violet); background: var(--violet-soft); border-radius: 6px; padding: 1px 6px; margin-right: 6px; white-space: nowrap; }
+    .ncp { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.38; }
+    .ncp b { white-space: nowrap; }
+    details.nc-other { margin-top: 16px; }
+    details.nc-other summary { cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--violet); }
+
     #login-gate { position: fixed; inset: 0; background: var(--paper); display: none; z-index: 999; align-items: center; justify-content: center; padding: 24px; }
     #login-gate .box { max-width: 400px; width: 100%; text-align: center; }
     #login-gate h1 { font-family: var(--display); font-size: 1.5rem; margin: 12px 0 6px; }
@@ -208,6 +231,7 @@
       .topbar { padding: 8px 14px; height: auto; min-height: 56px; flex-wrap: wrap; } .topbar-right { flex-wrap: wrap; gap: 8px; } .teacher-name, .pilot-badge, .avatar { display: none; } .school-badge { max-width: 170px; } .btn { padding: 6px 10px; } .page { padding: 18px 14px 60px; }
       .head h1 { font-size: 1.55rem; } .tile-value { font-size: 2rem; } .search { width: 100%; }
       .topic { grid-template-columns: 112px 1fr 42px; }
+      .ncrow { grid-template-columns: 1fr 104px; } .ncrow .pp { display: none; }
     }
     @media print {
       .topbar-right, .scope, .tools, details.about, .x, .more, .linkbtn { display: none !important; }
@@ -281,6 +305,16 @@
     </div>
   </section>
 
+  <section class="card" id="nc-card">
+    <h2 id="nc-title">National curriculum</h2>
+    <p class="sub" id="nc-sub"></p>
+    <div class="nc-tools">
+      <div class="filters" id="nc-subjects"></div>
+      <div class="filters" id="nc-filters"></div>
+    </div>
+    <div id="nc-body"></div>
+  </section>
+
   <section class="card" id="skills-card">
     <h2>Skills at a glance</h2>
     <p class="sub">Topics are grouped into six skill areas. A bigger shape means stronger. Areas with no data are left out, never drawn as zero.</p>
@@ -338,6 +372,7 @@
       <li><b>The six groups</b>, in this order of priority: <b>Needs support</b> = score under 55 after at least 3 papers. <b>Gone quiet</b> = has practised, but nothing for 7+ days. <b>Not started</b> = no practice paper yet. <b>Getting started</b> = fewer than 3 papers, too early to judge. <b>Doing brilliantly</b> = score 75+ and practising within the last 7 days. <b>On track</b> = everyone else.</li>
       <li><b>Practised this week</b> = finished a practice paper in the last 7 days.</li>
       <li><b>Topic accuracy</b> is each pupil's recent accuracy, only counted once they have answered at least 3 questions in that topic. A class figure needs at least 2 pupils. The tick is the average of all SmartPaper children in the same year group.</li>
+      <li><b>National curriculum statements</b> use the statutory wording of the GOV.UK programmes of study (Reception uses the Early Years goals, Year 7 the key stage 3 programme). Every SmartPaper question is linked to the statement for the year its content is taught, so a class also sees revision of earlier years and stretch from later years. A pupil's figure for a statement is their most recent 10 answers on it, and counts once they have answered 3 or more. A class figure is the average of those pupils and needs at least 2 of them. Under 60% is a weak spot; 80% or more is secure.</li>
       <li><b>Trend</b> compares a pupil's latest 3 papers with the 3 before. It only shows a direction once they have 4+ papers, and ignores changes under 5 points.</li>
       <li>Only families who joined the school pilot, and agreed to share, appear here. Families who joined later may simply not have started yet.</li>
     </ul>
@@ -367,6 +402,12 @@ const QUIET_DAYS = 7;        // no practice for this many days = gone quiet
 const MIN_TOPIC_Q = 3;       // answered questions before a topic counts
 const MIN_CLASS_N = 2;       // pupils with data before a class topic figure is shown
 const LIST_PREVIEW = 5;      // people shown per "who needs you" card before "show all"
+// National curriculum (statement figures come from teacher_cohort / nc_progress_rows, migration 0083):
+// a pupil's figure = their most recent 10 answers on the statement; it counts once they have MIN_TOPIC_Q+
+// answers; a class figure needs MIN_CLASS_N such pupils (the same rules as the topic figures).
+const NC_WEAK_BELOW = 60;    // under this = weak spot (class) / to practise (pupil)
+const NC_SECURE_FROM = 80;   // at or above = secure
+const NC_OTHER_PREVIEW = 8;  // statements from other years shown before "show all"
 
 const CANON = [
   ['number','Number'],['arithmetic','Arithmetic'],['times_tables','Times tables'],
@@ -403,6 +444,7 @@ const SORT_PRIORITY = { support: 0, quiet: 1, new: 2, early: 3, track: 4, flying
 let REPORT = null, STUDENTS = [], BENCH_BY_YEAR = {};
 let SCOPE = null, FILTER = 'all', SORT = { col: 'status', dir: 1 };
 let SELECTED = null, HIDE = false, SHOW_ALL_TOPICS = false;
+let NC = {}, NC_SUBJECT = 'maths', NC_FILTER = 'all', NC_OPEN = null, NC_SHOW_OTHER = false, NC_OTHER_OPEN = false;
 const EXPANDED = {};
 try { HIDE = localStorage.getItem('sp_hide_names') === '1'; } catch (_) {}
 
@@ -466,6 +508,12 @@ function buildStudents(report) {
         topics[t.topic_tag] = { acc: Math.round(t.rolling_accuracy), n: t.attempts, weak: !!t.needs_review };
       }
     });
+    // Curriculum statements this pupil has answered: [code, recent_n, recent_correct, answers_total].
+    const nc = {};
+    (c.nc || []).forEach(r => {
+      const [code, n, k, t] = r;
+      if (NC[code] && n > 0) nc[code] = { n, k, t, acc: Math.round((k / n) * 100) };
+    });
     const recentAsc = (c.recent || []).slice().reverse();
     const scoresAsc = recentAsc.map(r => (r.smart_score != null ? r.smart_score : (r.max ? Math.round((r.score / r.max) * 100) : null))).filter(v => v != null);
     const weekly = c.weekly || [];
@@ -473,7 +521,7 @@ function buildStudents(report) {
       id: c.child_id, name: c.name || 'Pupil', family: c.family || '', yearGroup: c.year_group,
       score: c.score, papers: c.papers || 0, warmupDone: !!c.warmup_done, streak: c.streak_days || 0,
       lastMs: toMs(c.last_active), firstMs: toMs(c.first_active),
-      weekly, thisWeek: weekly[7] || 0, trend: trendOf(scoresAsc), topics,
+      weekly, thisWeek: weekly[7] || 0, trend: trendOf(scoresAsc), topics, nc,
       history: (c.recent || []).map(r => ({ ms: toMs(r.date), score: r.score, max: r.max })),
     };
     s.status = statusOf(s);
@@ -574,6 +622,10 @@ function renderSummary() {
   h += sup ? `<b>${plural(sup, 'pupil')}</b> would benefit from a check-in. ` : 'Nobody is currently struggling. ';
   const ct = classTopics(list), weakest = Object.keys(ct).sort((a, b) => ct[a].acc - ct[b].acc)[0];
   if (weakest) h += `The group's weakest topic is <b>${esc(topicLabel(weakest))}</b> (${ct[weakest].acc}%).`;
+  if (SCOPE !== 'all') {
+    const w = weakestNc(list, parseInt(SCOPE, 10));
+    if (w) h += ` Weakest ${esc(yearName(parseInt(SCOPE, 10)))} curriculum statement: <b>${esc(w.st.text)}</b> (${w.acc}%).`;
+  }
   el.innerHTML = h;
 }
 
@@ -583,7 +635,7 @@ function renderTiles() {
   setH('tiles',
     tile('Practised this week', `${st.active}<small> / ${st.pupils}</small>`, `${pct(st.active, st.pupils)}% of pupils`) +
     tile('Papers completed', st.papers.toLocaleString('en-GB'), `${st.thisWeek} this week · ${st.lastWeek} last week`) +
-    tile('Average score', st.avg == null ? '–' : `${st.avg}<small> / 100</small>`, st.avg == null ? 'No practice yet' : `Across ${plural(st.scoredN, 'pupil')} who have practised`) +
+    tile('Average score', st.avg == null ? '-' : `${st.avg}<small> / 100</small>`, st.avg == null ? 'No practice yet' : `Across ${plural(st.scoredN, 'pupil')} who have practised`) +
     tile('Need support', st.support, st.judged ? `Out of ${st.judged} with ${ENOUGH_PAPERS}+ papers` : `Needs ${ENOUGH_PAPERS}+ papers to judge`, st.support ? 'alert' : ''));
 }
 
@@ -661,7 +713,8 @@ function renderTopics() {
     body = `<div class="tgroup">Needs most work</div>${weak.map(t => topicRow(t, ct, bench)).join('')}<div class="tgroup">Going well</div>${strong.map(t => topicRow(t, ct, bench)).join('')}`;
   }
   const toggle = tags.length > 7 ? `<button class="linkbtn" data-toggle-topics>${SHOW_ALL_TOPICS ? 'Show fewer topics' : 'Show all ' + tags.length + ' topics'}</button>` : '';
-  setH('topics', body + `<div class="key"><span><i></i>Tick = average for the same year group on SmartPaper</span></div>` + toggle);
+  const goNc = Object.keys(NC).length ? `<button class="linkbtn" data-goto="nc-card" style="display:block">See the curriculum statements behind these topics ↓</button>` : '';
+  setH('topics', body + `<div class="key"><span><i></i>Tick = average for the same year group on SmartPaper</span></div>` + toggle + goNc);
 }
 
 // ─── RENDER: weekly bars ─────────────────────────────────────────────────────
@@ -697,7 +750,7 @@ function renderYears() {
       <td>${link ? `<button class="year-link" data-scope="${link}">${esc(label)}</button>` : esc(label)}</td>
       <td>${st.pupils}</td>
       <td><div class="minibar"><div class="track"><div class="fill" style="width:${p}%"></div></div><span>${st.active} <span class="mut">(${p}%)</span></span></div></td>
-      <td>${st.avg == null ? '<span class="badge na">–</span>' : `<span class="badge ${scoreClass(st.avg)}">${st.avg}</span>`}</td>
+      <td>${st.avg == null ? '<span class="badge na">-</span>' : `<span class="badge ${scoreClass(st.avg)}">${st.avg}</span>`}</td>
       <td>${st.thisWeek}</td>
       <td>${weakest ? `${esc(topicLabel(weakest))} <span class="mut">${ct[weakest].acc}%</span>` : '<span class="mut">Not enough data</span>'}</td></tr>`;
   };
@@ -725,7 +778,7 @@ function sortedList(list) {
     return a.yearGroup - b.yearGroup || a.displayName.localeCompare(b.displayName);
   });
 }
-const trendHTML = t => t === 'up' ? '<span class="arrow-up">▲ Improving</span>' : t === 'down' ? '<span class="arrow-down">▼ Dropping</span>' : t === 'flat' ? '<span class="arrow-flat">► Steady</span>' : '<span class="mut">–</span>';
+const trendHTML = t => t === 'up' ? '<span class="arrow-up">▲ Improving</span>' : t === 'down' ? '<span class="arrow-down">▼ Dropping</span>' : t === 'flat' ? '<span class="arrow-flat">► Steady</span>' : '<span class="mut">-</span>';
 function filteredList() {
   const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
   return scoped().filter(s => (FILTER === 'all' || s.status === FILTER) && (!q || s.name.toLowerCase().includes(q) || s.displayName.toLowerCase().includes(q)));
@@ -743,7 +796,7 @@ function renderTable() {
     <tr class="clickable" tabindex="0" onclick="openDrawer('${esc(s.id)}')" onkeydown="if(event.key==='Enter')openDrawer('${esc(s.id)}')">
       <td><span class="pill st-${s.status}">${esc(ST[s.status].short)}</span></td>
       <td><b>${esc(nm(s))}</b> <span class="mut" style="font-size:.8rem">${esc(yearShort(s.yearGroup))}</span></td>
-      <td>${s.score == null || s.papers === 0 ? '<span class="badge na">–</span>' : `<span class="badge ${scoreClass(s.score)}">${s.score}</span>`}</td>
+      <td>${s.score == null || s.papers === 0 ? '<span class="badge na">-</span>' : `<span class="badge ${scoreClass(s.score)}">${s.score}</span>`}</td>
       <td>${s.papers}</td>
       <td>${s.thisWeek || '<span class="mut">0</span>'}</td>
       <td>${trendHTML(s.trend)}</td>
@@ -764,6 +817,19 @@ function verdictFor(s) {
     default: return `<b>${f} is practising steadily.</b> Score ${s.score} across ${plural(s.papers, 'paper')}.` + (wt ? ` Their weakest topic is ${wt} (${w.acc}%).` : '');
   }
 }
+// One pupil's curriculum statements, for the one-page summary.
+function pupilNcHTML(s) {
+  if (!Object.keys(NC).length) return '';
+  const p = pupilNc(s), f = esc(first(s));
+  const line = r => `<div class="ncp"><span><span class="nc-yr">${esc(ncYearShort(r.st))}</span>${esc(r.st.text)}</span><b>${esc(ncRight(r))}</b></div>`;
+  let h = `<div class="d-h">National curriculum</div>`;
+  if (!p.counted) return h + `<div class="none" style="border:0;padding-left:0">No statement has enough answers yet. One shows once ${f} has answered ${MIN_TOPIC_Q}+ questions on it.</div>`;
+  h += `<div class="mut" style="font-size:.8rem;margin-bottom:4px">${plural(p.counted, 'statement')} with enough answers, from ${f}'s most recent answers on each.</div>`;
+  const more = n => (n > 5 ? `<div class="mut" style="font-size:.8rem;padding-top:4px">and ${n - 5} more</div>` : '');
+  h += `<div style="font-weight:600;font-size:.88rem;margin-top:10px">To practise</div>` + (p.weak.length ? p.weak.slice(0, 5).map(line).join('') + more(p.weak.length) : `<div class="none" style="border:0;padding-left:0">Nothing under ${NC_WEAK_BELOW}% at the moment.</div>`);
+  if (p.secure.length) h += `<div style="font-weight:600;font-size:.88rem;margin-top:12px">Going well</div>` + p.secure.slice(0, 5).map(line).join('') + more(p.secure.length);
+  return h;
+}
 function openDrawer(id) {
   const s = STUDENTS.find(x => x.id === id);
   if (!s) return;
@@ -781,9 +847,9 @@ function openDrawer(id) {
     </div>
     <div class="verdict st-${s.status}">${verdictFor(s)}</div>
     <div class="d-tiles">
-      <div class="d-tile"><b>${s.score == null || !s.papers ? '–' : s.score}</b><span>Score (out of 100)</span></div>
+      <div class="d-tile"><b>${s.score == null || !s.papers ? '-' : s.score}</b><span>Score (out of 100)</span></div>
       <div class="d-tile"><b>${s.papers}</b><span>Practice papers</span></div>
-      <div class="d-tile"><b>${s.lastMs == null ? '–' : esc(humanizeMs(s.lastMs))}</b><span>Last practised</span></div>
+      <div class="d-tile"><b>${s.lastMs == null ? '-' : esc(humanizeMs(s.lastMs))}</b><span>Last practised</span></div>
     </div>
     ${s.trend ? `<div style="margin-top:12px;font-size:.88rem">Recent trend: ${trendHTML(s.trend)}</div>` : ''}
     ${themeCount(themeScores(accOf(s.topics))) >= 3 ? `<div class="d-h">Skills vs ${esc(yearName(s.yearGroup))} average</div>
@@ -791,6 +857,7 @@ function openDrawer(id) {
     <canvas class="radar" id="d-radar"></canvas>` : ''}
     <div class="d-h">Topics, weakest first</div>
     ${topics.length ? topics.slice(0, 8).map(tRow).join('') + `<div class="key"><span><i></i>Tick = average for ${esc(yearName(s.yearGroup))} on SmartPaper</span></div>` : `<div class="none" style="border:0;padding-left:0">No topic data yet. A topic appears once ${esc(first(s))} has answered ${MIN_TOPIC_Q}+ questions in it.</div>`}
+    ${pupilNcHTML(s)}
     <div class="d-h">Practice each week</div>
     <div class="wk" style="height:96px">${weeklyHTML(s.weekly, REPORT.week_starts || [])}</div>
     <div class="d-h">Latest papers</div>
@@ -905,13 +972,180 @@ function renderPupilRadar() {
   drawRadar(c, [{ scores: yearAverage(s.yearGroup), color: '#6354D6', filled: false }, { scores: mine, color: '#18B69E', filled: true }]);
 }
 
+// ─── NATIONAL CURRICULUM ─────────────────────────────────────────────────────
+// Years a statement belongs to, from its code: R.. = Reception (EYFS), KS3.. = Year 7, two leading
+// digits = a two-year band (34.. = Years 3 and 4, 56.. = Years 5 and 6), otherwise the leading digit.
+function ncYears(code) {
+  if (code.startsWith('KS3')) return [7];
+  if (code[0] === 'R') return [0];
+  const m = code.match(/^(\d)(\d)?/);
+  if (!m) return [];
+  return m[2] ? [parseInt(m[1], 10), parseInt(m[2], 10)] : [parseInt(m[1], 10)];
+}
+function ncYearShort(st) {
+  const y = st.years;
+  if (!y.length) return '';
+  if (y[0] === 0) return 'Rec';
+  if (y[0] === 7) return 'Y7';
+  return y.length > 1 ? `Y${y[0]}-${y[1]}` : `Y${y[0]}`;
+}
+function buildNc(report) {
+  const out = {}, bank = report.nc_bank || {};
+  (report.nc_statements || []).forEach(r => {
+    const [code, year, domain, text, topic] = r;
+    if (!code || !text) return;
+    out[code] = { code, year, domain: domain || '', text, topic, years: ncYears(code),
+      subject: MATHS.has(topic) ? 'maths' : 'english', bank: bank[code] || 0 };
+  });
+  return out;
+}
+const ncCodeSort = (a, b) => a.localeCompare(b, 'en', { numeric: true });
+// A pupil's figure counts once they have answered MIN_TOPIC_Q+ questions on the statement.
+const ncCounts = s => (code => s.nc[code] && s.nc[code].n >= MIN_TOPIC_Q);
+// Class figure for one statement over a list of pupils.
+function classNc(list, code) {
+  const practised = list.filter(s => s.nc[code]);
+  const vals = practised.filter(s => s.nc[code].n >= MIN_TOPIC_Q).map(s => s.nc[code].acc);
+  return { practised: practised.length, counted: vals.length, acc: vals.length >= MIN_CLASS_N ? Math.round(mean(vals)) : null };
+}
+// One row's state, in priority order. Used by the table, the filters and the summary line.
+function ncState(st, c) {
+  if (c.practised === 0) return st.bank ? 'unpractised' : 'absent';
+  if (c.acc == null) return 'few';
+  if (c.acc < NC_WEAK_BELOW) return 'weak';
+  if (c.acc >= NC_SECURE_FROM) return 'secure';
+  return 'mid';
+}
+const ncIsYearOf = (st, y) => st.years.includes(y);
+// Weakest statement with a class figure for this scope (for the summary line and the year table).
+function weakestNc(list, onlyYear, subject) {
+  let best = null;
+  Object.values(NC).forEach(st => {
+    if (onlyYear != null && !ncIsYearOf(st, onlyYear)) return;
+    if (subject && st.subject !== subject) return;
+    const c = classNc(list, st.code);
+    if (c.acc != null && c.acc < NC_WEAK_BELOW && (!best || c.acc < best.acc)) best = { st, acc: c.acc };
+  });
+  return best;
+}
+// A pupil's statements to practise / going well, weakest first.
+function pupilNc(s) {
+  const rows = Object.keys(s.nc).filter(ncCounts(s)).map(code => ({ st: NC[code], ...s.nc[code] }));
+  return {
+    weak: rows.filter(r => r.acc < NC_WEAK_BELOW).sort((a, b) => a.acc - b.acc || b.n - a.n),
+    secure: rows.filter(r => r.acc >= NC_SECURE_FROM).sort((a, b) => b.acc - a.acc || b.n - a.n),
+    counted: rows.length, answered: Object.keys(s.nc).length,
+  };
+}
+const ncRight = r => `${r.k} of ${r.n} right`;
+
+function ncRowHTML(st, c, list, showYear) {
+  const state = ncState(st, c);
+  const open = NC_OPEN === st.code;
+  let right;
+  if (state === 'absent') right = '<span class="ncstate">Not in SmartPaper yet</span>';
+  else if (state === 'unpractised') right = '<span class="ncstate">Not practised yet</span>';
+  else if (state === 'few') right = '<span class="ncstate">Too few answers so far</span>';
+  else right = `<span class="badge ${state === 'weak' ? 'low' : state === 'secure' ? 'high' : 'mid'}">${c.acc}%</span>${state === 'weak' ? '<span class="ncweak">Weak spot</span>' : ''}`;
+  const clickable = c.practised > 0;
+  const row = `<div class="ncrow ${clickable ? '' : 'static'}" ${clickable ? `role="button" tabindex="0" aria-expanded="${open}" data-nc="${esc(st.code)}"` : ''}>
+      <div class="t">${showYear ? `<span class="nc-yr">${esc(ncYearShort(st))}</span>` : ''}${esc(st.text)}<span class="code">${esc(st.code)}</span></div>
+      <div class="pp">${c.practised ? plural(c.practised, 'pupil') : ''}</div>
+      <div class="st">${right}</div>
+    </div>`;
+  if (!open || !clickable) return row;
+  // Who answered it, weakest first: the teacher can open any pupil's summary from here.
+  const who = list.filter(s => s.nc[st.code]).sort((a, b) => a.nc[st.code].acc - b.nc[st.code].acc || b.nc[st.code].n - a.nc[st.code].n);
+  const people = who.map(s => { const r = s.nc[st.code]; return `
+      <button class="person st-${s.status}" onclick="openDrawer('${esc(s.id)}')">
+        <span class="pav">${esc(initial(s))}</span>
+        <span class="pmain"><span class="pname">${esc(nm(s))}${SCOPE === 'all' ? `<span class="yr">${esc(yearShort(s.yearGroup))}</span>` : ''}</span>
+        <span class="preason" style="display:block">${esc(ncRight(r))}${r.n < MIN_TOPIC_Q ? ' (too few to count yet)' : ''}</span></span>
+        <span class="pgo">›</span>
+      </button>`; }).join('');
+  return row + `<div class="ncwho">${people || '<div class="none">Nobody yet.</div>'}</div>`;
+}
+
+function renderNc() {
+  const list = scoped();
+  const card = document.getElementById('nc-card');
+  if (!Object.keys(NC).length || !list.length) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  const subj = c => `<button class="fchip ${NC_SUBJECT === c ? 'active' : ''}" data-nc-subject="${c}">${c === 'maths' ? 'Maths' : 'English'}</button>`;
+  setH('nc-subjects', subj('maths') + subj('english'));
+
+  if (SCOPE === 'all') {
+    // Whole school: one line per year group; click a year to see its statements.
+    setT('nc-title', 'National curriculum across the school');
+    setT('nc-sub', `How each year group is doing against its own year's ${NC_SUBJECT === 'maths' ? 'maths' : 'English'} statements. Click a year to see every statement.`);
+    setH('nc-filters', '');
+    const years = [...new Set(STUDENTS.map(s => s.yearGroup))].sort((a, b) => a - b);
+    const rows = years.map(y => {
+      const pupils = STUDENTS.filter(s => s.yearGroup === y);
+      const sts = Object.values(NC).filter(st => st.subject === NC_SUBJECT && ncIsYearOf(st, y));
+      let practised = 0, weak = 0, inApp = 0;
+      sts.forEach(st => {
+        if (st.bank) inApp++;
+        const c = classNc(pupils, st.code);
+        if (c.practised) practised++;
+        if (c.acc != null && c.acc < NC_WEAK_BELOW) weak++;
+      });
+      const w = weakestNc(pupils, y, NC_SUBJECT);
+      const wHtml = w ? `${esc(w.st.text)} <span class="mut">${w.acc}%</span>` : '<span class="mut">None</span>';
+      return `<tr><td><button class="year-link" data-scope="${y}">${esc(yearName(y))}</button></td><td>${sts.length}</td><td>${inApp}</td><td>${practised}</td><td>${weak ? `<span class="badge low">${weak}</span>` : '<span class="mut">0</span>'}</td><td style="min-width:260px;font-size:.85rem">${wHtml}</td></tr>`;
+    }).join('');
+    setH('nc-body', `<div class="tablewrap"><table><thead><tr><th>Year</th><th>Statements</th><th>In SmartPaper</th><th>Practised</th><th>Weak spots</th><th>Weakest statement</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    return;
+  }
+
+  const y = parseInt(SCOPE, 10);
+  // Curriculum order within each domain, domains in the order they first appear (no repeated headings).
+  const byCode = Object.values(NC).filter(st => st.subject === NC_SUBJECT && ncIsYearOf(st, y)).sort((a, b) => ncCodeSort(a.code, b.code));
+  const domIdx = {}; byCode.forEach((st, i) => { if (!(st.domain in domIdx)) domIdx[st.domain] = i; });
+  const yearSts = byCode.slice().sort((a, b) => domIdx[a.domain] - domIdx[b.domain] || ncCodeSort(a.code, b.code));
+  const withC = yearSts.map(st => ({ st, c: classNc(list, st.code) }));
+  withC.forEach(x => (x.state = ncState(x.st, x.c)));
+  const nWeak = withC.filter(x => x.state === 'weak').length;
+  const nUnp = withC.filter(x => x.state === 'unpractised' || x.state === 'absent').length;
+  const nPract = withC.filter(x => x.c.practised).length;
+  if (!['all', 'weak', 'unpractised'].includes(NC_FILTER)) NC_FILTER = 'all';
+  const fchip = (k, label, n) => `<button class="fchip ${NC_FILTER === k ? 'active' : ''}" data-nc-filter="${k}">${label} ${n}</button>`;
+  setH('nc-filters', fchip('all', 'All', withC.length) + fchip('weak', 'Weak spots', nWeak) + fchip('unpractised', 'Not practised yet', nUnp));
+  setT('nc-title', `${yearName(y)} curriculum`);
+  const source = y === 0 ? 'Early Years Foundation Stage goals' : y === 7 ? 'key stage 3 programme of study' : 'national curriculum programme of study';
+  setT('nc-sub', `Every ${yearName(y)} ${NC_SUBJECT === 'maths' ? 'maths' : 'English'} statement from the ${source}, in the government's own wording. Click a statement to see who has answered it.`);
+
+  const shown = withC.filter(x => NC_FILTER === 'all' || (NC_FILTER === 'weak' ? x.state === 'weak' : (x.state === 'unpractised' || x.state === 'absent')));
+  let body = `<div class="nc-head"><b>${nPract} of ${yearSts.length}</b> statements practised by at least one pupil` + (nWeak ? `, <b>${plural(nWeak, 'weak spot')}</b>.` : '.') + '</div>';
+  if (!shown.length) body += `<div class="none" style="border:0">${NC_FILTER === 'weak' ? 'No weak spots at the moment.' : 'Nothing to show here.'}</div>`;
+  let dom = null;
+  shown.forEach(x => {
+    if (x.st.domain !== dom) { dom = x.st.domain; body += `<div class="ncdom">${esc(dom)}</div>`; }
+    body += ncRowHTML(x.st, x.c, list, false);
+  });
+
+  // Other years' content these pupils met (revision of earlier years, stretch from later ones).
+  if (NC_FILTER === 'all') {
+    const other = Object.values(NC).filter(st => st.subject === NC_SUBJECT && !ncIsYearOf(st, y))
+      .map(st => ({ st, c: classNc(list, st.code) })).filter(x => x.c.acc != null)
+      .sort((a, b) => a.c.acc - b.c.acc || ncCodeSort(a.st.code, b.st.code));
+    if (other.length) {
+      const list2 = NC_SHOW_OTHER ? other : other.slice(0, NC_OTHER_PREVIEW);
+      body += `<details class="nc-other" ${NC_OTHER_OPEN || NC_SHOW_OTHER || (NC_OPEN && other.some(o => o.st.code === NC_OPEN)) ? 'open' : ''}><summary data-nc-other-summary>Other years' content these pupils practised (${other.length}), weakest first</summary>` +
+        list2.map(x => ncRowHTML(x.st, x.c, list, true)).join('') +
+        (other.length > NC_OTHER_PREVIEW ? `<button class="linkbtn" data-nc-other>${NC_SHOW_OTHER ? 'Show fewer' : 'Show all ' + other.length}</button>` : '') + '</details>';
+    }
+  }
+  setH('nc-body', body);
+}
+
 // ─── EXPORT ──────────────────────────────────────────────────────────────────
 function exportCsv() {
   const cell = v => { const t = String(v == null ? '' : v); return /^[=+\-@]/.test(t) ? "'" + t : t; };
   const q = v => '"' + cell(v).replace(/"/g, '""') + '"';
-  const head = ['Pupil', 'Year group', 'Status', 'Score', 'Practice papers', 'Papers this week', 'Last practised', 'Weakest topic'];
-  const rows = sortedList(scoped()).map(s => { const w = weakestTopic(s.topics); return [s.displayName, yearName(s.yearGroup), ST[s.status].label, s.score == null || !s.papers ? '' : s.score, s.papers, s.thisWeek,
-    s.lastMs ? new Date(s.lastMs).toISOString().slice(0, 10) : '', w ? topicLabel(w.tag) : '']; });
+  const head = ['Pupil', 'Year group', 'Status', 'Score', 'Practice papers', 'Papers this week', 'Last practised', 'Weakest topic', 'Curriculum statement to practise'];
+  const rows = sortedList(scoped()).map(s => { const w = weakestTopic(s.topics), p = pupilNc(s).weak[0]; return [s.displayName, yearName(s.yearGroup), ST[s.status].label, s.score == null || !s.papers ? '' : s.score, s.papers, s.thisWeek,
+    s.lastMs ? new Date(s.lastMs).toISOString().slice(0, 10) : '', w ? topicLabel(w.tag) : '', p ? `${ncYearShort(p.st)} ${p.st.text} (${ncRight(p)})` : '']; });
   const csv = [head, ...rows].map(r => r.map(q).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
@@ -922,9 +1156,9 @@ function exportCsv() {
 // ─── WIRING ──────────────────────────────────────────────────────────────────
 function renderAll() {
   renderScopeBar(); renderHeader(); renderSummary(); renderTiles(); renderStatus(); renderNeed();
-  renderTopics(); renderWeekly(); renderClassRadar(); renderPupilRadar(); renderYears(); renderTable();
+  renderTopics(); renderWeekly(); renderNc(); renderClassRadar(); renderPupilRadar(); renderYears(); renderTable();
 }
-function setScope(key) { SCOPE = key; FILTER = 'all'; renderAll(); }
+function setScope(key) { SCOPE = key; FILTER = 'all'; NC_FILTER = 'all'; NC_OPEN = null; NC_SHOW_OTHER = false; NC_OTHER_OPEN = false; renderAll(); }
 function setFilter(key) { FILTER = FILTER === key ? 'all' : key; renderTable(); document.getElementById('pupils-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function applyNamesButton() {
   const b = document.getElementById('btn-names');
@@ -940,6 +1174,17 @@ document.addEventListener('click', e => {
   const ex = e.target.closest('[data-expand]');
   if (ex) { EXPANDED[ex.dataset.expand] = !EXPANDED[ex.dataset.expand]; renderNeed(); return; }
   if (e.target.closest('[data-toggle-topics]')) { SHOW_ALL_TOPICS = !SHOW_ALL_TOPICS; renderTopics(); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) { const t = document.getElementById(go.dataset.goto); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+  const ns = e.target.closest('[data-nc-subject]');
+  if (ns) { NC_SUBJECT = ns.dataset.ncSubject; NC_OPEN = null; renderNc(); return; }
+  const nf = e.target.closest('[data-nc-filter]');
+  if (nf) { NC_FILTER = nf.dataset.ncFilter; NC_OPEN = null; renderNc(); return; }
+  if (e.target.closest('[data-nc-other]')) { NC_SHOW_OTHER = !NC_SHOW_OTHER; NC_OTHER_OPEN = true; renderNc(); return; }
+  const sum = e.target.closest('[data-nc-other-summary]');
+  if (sum) { NC_OTHER_OPEN = !sum.parentElement.open; return; }   // the browser then toggles it
+  const nr = e.target.closest('[data-nc]');
+  if (nr && !e.target.closest('.person')) { NC_OPEN = NC_OPEN === nr.dataset.nc ? null : nr.dataset.nc; renderNc(); return; }
   const th = e.target.closest('#student-table th[data-sort]');
   if (th) { SORT = { col: th.dataset.sort, dir: SORT.col === th.dataset.sort ? -SORT.dir : (th.dataset.sort === 'name' || th.dataset.sort === 'status' ? 1 : -1) }; renderTable(); }
 });
@@ -953,10 +1198,16 @@ document.getElementById('btn-names').addEventListener('click', () => {
   applyNamesButton(); renderAll();
   if (document.getElementById('overlay').classList.contains('open') && SELECTED) openDrawer(SELECTED);
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDrawer(); return; }
+  const nr = (e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('[data-nc]');
+  if (nr) { e.preventDefault(); NC_OPEN = NC_OPEN === nr.dataset.nc ? null : nr.dataset.nc; renderNc();
+    const again = document.querySelector(`[data-nc="${CSS.escape(nr.dataset.nc)}"]`); if (again) again.focus(); }
+});
 
 function applyReport(report) {
   REPORT = report;
+  NC = buildNc(report);           // before the pupils: buildStudents keeps only known statements
   STUDENTS = buildStudents(report);
   BENCH_BY_YEAR = buildBenchmark(report);
   // Open on Year 6 (or the oldest year with pupils); a year with no pupils falls back to the same default.
