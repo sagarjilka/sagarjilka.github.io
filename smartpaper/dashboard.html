@@ -198,7 +198,7 @@
     .nc-head { font-size: 0.9rem; color: var(--ink); margin: 4px 0 6px; }
     .nc-head b { font-weight: 700; }
     .ncdom { font-size: 0.74rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--faint); margin: 18px 0 2px; }
-    .ncrow { display: grid; grid-template-columns: 1fr 96px 132px; gap: 12px; align-items: center; padding: 9px 6px; border-top: 1px solid var(--line); cursor: pointer; border-radius: 6px; }
+    .ncrow { display: grid; grid-template-columns: 1fr 104px 132px; gap: 12px; align-items: center; padding: 9px 6px; border-top: 1px solid var(--line); cursor: pointer; border-radius: 6px; }
     .ncrow:hover, .ncrow:focus { background: #FAF9FE; outline: 0; }
     .ncrow.static { cursor: default; } .ncrow.static:hover { background: none; }
     .ncrow .t { font-size: 0.88rem; line-height: 1.38; }
@@ -1050,7 +1050,7 @@ function ncRowHTML(st, c, list, showYear) {
   const clickable = c.practised > 0;
   const row = `<div class="ncrow ${clickable ? '' : 'static'}" ${clickable ? `role="button" tabindex="0" aria-expanded="${open}" data-nc="${esc(st.code)}"` : ''}>
       <div class="t">${showYear ? `<span class="nc-yr">${esc(ncYearShort(st))}</span>` : ''}${esc(st.text)}<span class="code">${esc(st.code)}</span></div>
-      <div class="pp">${c.practised ? plural(c.practised, 'pupil') : ''}</div>
+      <div class="pp" title="Pupils who have answered this. The class figure only counts pupils with ${MIN_TOPIC_Q}+ answers.">${c.practised ? plural(c.practised, 'pupil') + (c.acc != null && c.counted < c.practised ? `<br><span class="mut">${c.counted} counted</span>` : '') : ''}</div>
       <div class="st">${right}</div>
     </div>`;
   if (!open || !clickable) return row;
@@ -1116,7 +1116,7 @@ function renderNc() {
   setT('nc-sub', `Every ${yearName(y)} ${NC_SUBJECT === 'maths' ? 'maths' : 'English'} statement from the ${source}, in the government's own wording. Click a statement to see who has answered it.`);
 
   const shown = withC.filter(x => NC_FILTER === 'all' || (NC_FILTER === 'weak' ? x.state === 'weak' : (x.state === 'unpractised' || x.state === 'absent')));
-  let body = `<div class="nc-head"><b>${nPract} of ${yearSts.length}</b> statements practised by at least one pupil` + (nWeak ? `, <b>${plural(nWeak, 'weak spot')}</b>.` : '.') + '</div>';
+  let body = `<div class="nc-head"><b>${nPract} of ${yearSts.length}</b> statements practised by at least one pupil` + (nWeak ? `, <b>${plural(nWeak, 'weak spot')}</b>.` : '.') + `</div><div class="mut" style="font-size:.8rem;margin-bottom:4px">A class figure is the average of the pupils who have answered ${MIN_TOPIC_Q} or more questions on that statement ("counted"), using each pupil's most recent 10 answers.</div>`;
   if (!shown.length) body += `<div class="none" style="border:0">${NC_FILTER === 'weak' ? 'No weak spots at the moment.' : 'Nothing to show here.'}</div>`;
   let dom = null;
   shown.forEach(x => {
