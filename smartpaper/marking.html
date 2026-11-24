@@ -42,6 +42,15 @@
   .ans span{font-weight:700;word-break:break-word}
   .empty{text-align:center;color:var(--ink2);padding:40px 10px}
   details summary{cursor:pointer;color:var(--ink2);font-size:13px}
+  h2{font-size:17px;font-weight:800;margin:28px 0 4px}
+  .sig{display:block}
+  .sig .why{font-size:13px;color:var(--ink2);margin:6px 0 10px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:1px 7px;margin-right:6px}
+  .tag.amber{background:var(--amberL);color:var(--amber)}
+  .tag.violet{background:var(--violetL);color:var(--violet)}
+  .tag.red{background:var(--redL);color:var(--red)}
+  .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .acts .btn{padding:7px 12px;font-size:13.5px}
 </style>
 </head>
 <body>
@@ -51,7 +60,7 @@
   var ENDPOINT = 'https://nzeladoubwjtcgnddmim.supabase.co/functions/v1/marking-review';
   var LS_KEY = 'sp_admin_key'; // shared with admin.html
   var app = document.getElementById('app');
-  var items = [], lastSweep = null, message = '';
+  var items = [], signals = [], lastSweep = null, message = '';
 
   function lsGet(){ try { return localStorage.getItem(LS_KEY) || ''; } catch(e){ return ''; } }
   function lsSet(v){ try { v ? localStorage.setItem(LS_KEY, v) : localStorage.removeItem(LS_KEY); } catch(e){} }
@@ -65,6 +74,38 @@
       return { key: it.key.split(',').map(t).join(', '), given: it.given.split(',').map(t).join(', ') };
     }
     return { key: it.key.split('||').join('  or  '), given: it.given };
+  }
+
+  function optText(opts, id){
+    if (!opts || !Array.isArray(opts) || id == null) return id;
+    return String(id).split(',').map(function(x){ var o = opts.filter(function(o){ return o.id === x; })[0]; return o ? o.text + ' (' + x + ')' : x; }).join(', ');
+  }
+  var KIND = {
+    key_suspect: { label:'Explanation checker', cls:'violet', why:'When the app wrote this child an explanation, the checker thought the child\'s answer was right, or that our answer was wrong.' },
+    wrong_cluster: { label:'Same wrong answer', cls:'amber', why:'Several different children typed this same wrong answer. Usually a common mistake, but check our answer and the accepted answers are right.' },
+    low_success: { label:'Much harder than similar questions', cls:'red', why:'Far fewer children get this right than other questions on the same curriculum statement. Check for a wrong answer, two right answers, or a question that can\'t be read properly.' }
+  };
+  function signalCard(sg, i){
+    var d = sg.detail || {}, k = KIND[sg.kind] || { label: sg.kind, cls:'violet', why:'' };
+    var h = '<div class="card sig"><div class="meta"><span class="tag ' + k.cls + '">' + esc(k.label) + '</span>'
+      + (d.nc_code ? esc(d.nc_code) + ' · ' : '') + (d.live === false ? 'no longer in the question bank · ' : '')
+      + 'first seen ' + esc(day(sg.first_seen)) + '</div>'
+      + '<div class="q">' + esc(d.body) + '</div><div class="ans">'
+      + '<b>Our answer</b><span>' + esc(d.options ? optText(d.options, d.key) : String(d.key || '').split('||').join('  or  ')) + '</span>';
+    if (sg.kind === 'key_suspect') {
+      h += '<b>Child\'s answer</b><span>' + esc(d.options ? optText(d.options, d.given) : d.given) + '</span>'
+        + '<b>Checker said</b><span style="font-weight:500">' + esc((d.reasons || []).join(' · ')) + '</span>';
+    } else if (sg.kind === 'wrong_cluster') {
+      h += '<b>Wrong answer</b><span>' + esc(d.given) + '</span><b>Children</b><span>' + esc(d.children) + '</span>';
+    } else {
+      h += '<b>Right</b><span>' + esc(d.pct_right) + '% of ' + esc(d.children) + ' children (other questions on this statement: ' + esc(d.statement_pct_right) + '%)</span>';
+      if (d.top_wrong != null) h += '<b>Most common wrong</b><span>' + esc(d.options ? optText(d.options, d.top_wrong) : d.top_wrong) + ' (' + esc(d.top_wrong_children) + ' children)</span>';
+    }
+    h += '</div><div class="why">' + esc(k.why) + '</div>'
+      + (sg.note ? '<div class="note" style="margin:0 0 6px">' + esc(sg.note) + '</div>' : '')
+      + '<div class="acts"><button class="btn ghost sact" data-i="' + i + '" data-s="dismissed">Nothing wrong</button>'
+      + '<button class="btn teal sact" data-i="' + i + '" data-s="fixed">Fixed</button></div></div>';
+    return h;
   }
 
   function call(body){
@@ -82,7 +123,7 @@
   function load(){
     if (!lsGet()) return gate();
     app.innerHTML = '<p class="sub">Loading…</p>';
-    call({ action:'list' }).then(function(d){ items = d.items || []; lastSweep = d.lastSweep; render(); })
+    call({ action:'list' }).then(function(d){ items = d.items || []; signals = d.signals || []; lastSweep = d.lastSweep; render(); })
       .catch(function(e){ if (/not accepted/.test(e.message)) lsSet(''); gate(e.message); });
   }
 
@@ -107,15 +148,27 @@
           + '</div></div>';
       });
     }
+    h += '<h2>Things to look at</h2><p class="sub">Signs that a question itself may be wrong, found by the same weekly check. Nothing here changes any marks. '
+      + 'Choose <b>Nothing wrong</b> if it is a genuine mistake by children, or <b>Fixed</b> once the question has been corrected (and any children who were right re-marked).</p>';
+    if (!signals.length) h += '<div class="empty">Nothing to look at.</div>';
+    signals.forEach(function(sg, i){ h += signalCard(sg, i); });
     h += '<div class="bar"><span class="grow"></span><button class="btn ghost" id="run">Run the check now</button></div>';
     app.innerHTML = h;
 
     document.getElementById('out').onclick = function(){ lsSet(''); gate(); };
     document.getElementById('run').onclick = function(){
       this.disabled = true; this.textContent = 'Checking…';
-      call({ action:'sweep' }).then(function(r){ message = 'Check finished: ' + r.checked + ' new answers looked at, ' + r.found + ' found.'; load(); })
+      call({ action:'sweep' }).then(function(r){ message = 'Check finished: ' + r.checked + ' new answers looked at, ' + r.found + ' found, ' + (r.newSignals || 0) + ' new things to look at.'; load(); })
         .catch(function(e){ message = e.message; render(); });
     };
+    Array.prototype.forEach.call(document.querySelectorAll('.sact'), function(b){
+      b.onclick = function(){
+        var sg = signals[+b.dataset.i], st = b.dataset.s;
+        b.disabled = true;
+        call({ action:'signal', keys:[sg.key], status: st }).then(function(){ message = st === 'fixed' ? 'Marked as fixed.' : 'Marked as nothing wrong.'; load(); })
+          .catch(function(e){ message = e.message; render(); });
+      };
+    });
     if (!items.length) return;
     var all = document.getElementById('all');
     all.onchange = function(){ Array.prototype.forEach.call(document.querySelectorAll('.pick'), function(c){ c.checked = all.checked; }); };
